@@ -1,0 +1,37 @@
+
+.todolist_wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: lightgoldenrodyellow;
+    border: 1px solid aquamarine;
+    padding: 20px;
+}
+
+ul.todolist_tasks{
+    padding: 0;
+}
+
+
+
+ul.todolist_tasks li{
+    max-width: 250px;
+    list-style: none;
+    padding:  10px 25px 10px 15px;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+    display: flex;
+    border-radius:20px ;
+
+}
+ul.todolist_tasks li button{
+ margin-left: auto;
+
+
+}
+ul.todolist_tasks li input{
+    margin-right: 10px;
+}
+ul.todolist_tasks li span{
+    margin-right: 10px;
+}
