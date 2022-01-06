@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import s from "./Todolist.module.css"
+import {Button} from "./components/Button";
 
 export type TasksType = {
     id: string
@@ -43,6 +44,9 @@ export function Todolist(props: TodolistPropsType) {
     const filteredTask=(value:string)=> {
         props.filteredTask(value);
     }
+    const blockButton=()=>{
+        props.addTask(newTaskTitle);
+    }
 
 
     return (
@@ -55,8 +59,9 @@ export function Todolist(props: TodolistPropsType) {
                        className={s.addtask}
                        type="text"
                        placeholder="add task"/>
-                <button className={s.btn_title} onClick={addTask}>+
-                </button>
+                {/*<button className={s.btn_title} onClick={addTask}>+*/}
+                {/*</button>*/}
+                <Button name={'+'} callback={blockButton}/>
             </div>
             <ul className={s.todolist_tasks}>
                 {props.tasks.map(el => <li key={el.id}><input type="checkbox"
