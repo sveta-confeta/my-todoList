@@ -41,43 +41,46 @@ export function Todolist(props: TodolistPropsType) {
     // const filreredTaskActive = () => props.filteredTask('Active');
     // const filteredTaskCompleted=() => props.filteredTask('Completed');
 
-    const filteredTask=(value:string)=> {
+    const filteredTask = (value: string) => {
         props.filteredTask(value);
     }
-    const blockButton=()=>{
+    const blockButton = () => {
         props.addTask(newTaskTitle);
+
+        const removeTaskHandler = (tId: string) =>
+            props.removeTask(tId);
+
+
+        return (
+            <div className={s.todolist_wrapper}>
+                <div className={s.title}>{props.title}</div>
+                <div className={s.input_wrapper}>
+                    {/*<input value={newTaskTitle}*/}
+                    {/*       onKeyPress={keyPress}*/}
+                    {/*       onChange={onChangeHandler}*/}
+                    {/*       className={s.addtask}*/}
+                    {/*       type="text"*/}
+                    {/*       placeholder="add task"/>*/}
+                    {/*<button className={s.btn_title} onClick={addTask}>+*/}
+                    {/*</button>*/}
+                    <Button name={'+'} callback={blockButton}/>
+                </div>
+                <ul className={s.todolist_tasks}>
+                    {props.tasks.map(el => <li key={el.id}><input type="checkbox"
+                                                                  checked={el.isDone}/><span>{el.task}</span>
+                        {/*<button onClick={() => props.removeTask(el.id)}>x</button>*/}
+                        <Button name={'x'} callback={() => removeTaskHandler(el.id)}/>
+                    </li>)}
+
+                </ul>
+                <div className={s.btn_set}>
+                    <button onClick={() => filteredTask('All')}>All</button>
+                    <button onClick={() => filteredTask('Active')}>Active</button>
+                    <button onClick={() => filteredTask('Completed')}>Completed</button>
+                </div>
+
+            </div>
+
+        )
+
     }
-
-
-    return (
-        <div className={s.todolist_wrapper}>
-            <div className={s.title}>{props.title}</div>
-            <div className={s.input_wrapper}>
-                <input value={newTaskTitle}
-                       onKeyPress={keyPress}
-                       onChange={onChangeHandler}
-                       className={s.addtask}
-                       type="text"
-                       placeholder="add task"/>
-                {/*<button className={s.btn_title} onClick={addTask}>+*/}
-                {/*</button>*/}
-                <Button name={'+'} callback={blockButton}/>
-            </div>
-            <ul className={s.todolist_tasks}>
-                {props.tasks.map(el => <li key={el.id}><input type="checkbox"
-                                                              checked={el.isDone}/><span>{el.task}</span>
-                    <button onClick={() => props.removeTask(el.id)}>x</button>
-                </li>)}
-
-            </ul>
-            <div className={s.btn_set}>
-                <button onClick={()=>filteredTask('All')}>All</button>
-                <button onClick={()=>filteredTask('Active')}>Active</button>
-                <button onClick={()=>filteredTask('Completed')}>Completed</button>
-            </div>
-
-        </div>
-
-    )
-
-}
