@@ -35,3 +35,12 @@ ul.todolist_tasks li input{
 ul.todolist_tasks li span{
     margin-right: 10px;
 }
+ /* классы для предупреждения в инпуте*/
+.error {
+    border: red 1px solid;
+}
+
+.errorMessage {
+    color: red;
+}
+

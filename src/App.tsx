@@ -37,7 +37,9 @@ function App() {
     const filteredTask = (value: string) => {
         setFilter(value);
     }
-    // const addTodolist( ()=>{})
+   const chengeCheckBoxStatus=(id:string,value:boolean)=>{
+      setTasks(tasks.map(m=>m.id===id ? {...m,isDone:value}: m))
+   }
 
     return (
         <div className="App">
@@ -48,6 +50,7 @@ function App() {
                 removeTask={removeTask}
                 filteredTask={filteredTask}
                 addTask={addTask}
+                chengeCheckBoxStatus={chengeCheckBoxStatus}
             />
 
         </div>
