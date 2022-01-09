@@ -43,4 +43,14 @@ ul.todolist_tasks li span{
 .errorMessage {
     color: red;
 }
+/*цвет кнопок*/
+.activeFilter {
+    background-color: aquamarine;
+}
+/* цвет выполненных тасок*/
+.isDone {
+    opacity: 0.5;
+}
+
+
 

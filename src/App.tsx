@@ -22,6 +22,7 @@ function App() {
         let newTask = {id: v1(), task : value, isDone: true};
         setTasks( [newTask,...tasks]);
 
+
     }
 
     let [filter, setFilter] = useState('All');
@@ -51,6 +52,7 @@ function App() {
                 filteredTask={filteredTask}
                 addTask={addTask}
                 chengeCheckBoxStatus={chengeCheckBoxStatus}
+                filter={filter}
             />
 
         </div>

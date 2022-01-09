@@ -5,23 +5,28 @@ type InputPropsType = {
     newTaskTitle: string
     setNewTaskTitle: (newTaskTitle: string) => void
     addTask: (value: string) => void
+    error:boolean
+    setError:(value:boolean)=>void
 
 }
 
 export const Input = (props: InputPropsType) => {
-    let [error, setError] = useState(false); //хук для бордера инпута красный-не красный
+
 
     const keyPress = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {   //функция которая добавляет таску по клику на ентер
             const trimmedTitle = props.newTaskTitle.trim();
             if (trimmedTitle) {
-                props.addTask(trimmedTitle)
+                props.addTask(trimmedTitle);
+                props.setNewTaskTitle(' ')
+            }else{
+                props.setError(true);
             }
-            props.setNewTaskTitle(' ')
         }
     }
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        props.setError(false);
         props.setNewTaskTitle(event.currentTarget.value)
     }//cобытие инпута onChange
 
@@ -30,7 +35,7 @@ export const Input = (props: InputPropsType) => {
             <input value={props.newTaskTitle}
                    onKeyPress={keyPress}
                    onChange={onChangeHandler}
-                   className={`${s.addtask} + ${error ? s.error:' '}`}
+                   className={`${s.addtask} + ${props.error ? s.error:' '}`}
                    type="text"
                    placeholder="add task"/>
         </div>
