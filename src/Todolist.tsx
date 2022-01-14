@@ -14,10 +14,11 @@ export type TodolistPropsType = {
     title: string
     tasks: Array<TasksType>
     removeTask: (id: string) => void
-    filteredTask: (value: string) => void
+    filteredTask: (value: string,todolistID:string) => void
     addTask: (value: string) => void
     chengeCheckBoxStatus: (id:string,value: boolean) => void
     filter:string
+    todolistID:string
 }
 
 
@@ -33,7 +34,7 @@ export function Todolist(props: TodolistPropsType) {
     // const filteredTaskCompleted=() => props.filteredTask('Completed');
 
     const filteredTask = (value: string) => {
-        props.filteredTask(value);
+        props.filteredTask(value,props.todolistID);
     }
 
 
