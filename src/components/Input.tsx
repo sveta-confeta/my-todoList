@@ -4,9 +4,10 @@ import s from "../Todolist.module.css";
 type InputPropsType = {
     newTaskTitle: string
     setNewTaskTitle: (newTaskTitle: string) => void
-    addTask: (value: string) => void
+    addTask: (value: string, todolistID:string) => void
     error:boolean
     setError:(value:boolean)=>void
+    todolistID:string
 
 }
 
@@ -17,7 +18,7 @@ export const Input = (props: InputPropsType) => {
         if (event.key === 'Enter') {   //функция которая добавляет таску по клику на ентер
             const trimmedTitle = props.newTaskTitle.trim();
             if (trimmedTitle) {
-                props.addTask(trimmedTitle);
+                props.addTask(trimmedTitle,props.todolistID);
                 props.setNewTaskTitle(' ')
             }else{
                 props.setError(true);

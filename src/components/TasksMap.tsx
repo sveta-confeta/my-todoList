@@ -5,15 +5,16 @@ import {TasksType} from "../Todolist";
 
 type TasksMapPropsTYpe={
     tasks: Array<TasksType>
-    removeTask: (id: string) => void
-    chengeCheckBoxStatus: (id:string,value: boolean) => void
+    removeTask: (id: string, todolistID:string) => void
+    chengeCheckBoxStatus: (id:string,value: boolean,todolistID:string) => void
+    todolistID:string
 }
 
 export const TasksMap = (props:TasksMapPropsTYpe) => {
     const removeTaskHandler = (tId: string) =>
-        props.removeTask(tId);
+        props.removeTask(tId,props. todolistID);
     const onChangeCheckbox=(elID:string,value:boolean)=>{
-        props.chengeCheckBoxStatus(elID, value);
+        props.chengeCheckBoxStatus(elID, value,props.todolistID);
 
     }
     return (

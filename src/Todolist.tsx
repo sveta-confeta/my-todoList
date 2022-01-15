@@ -3,6 +3,8 @@ import s from "./Todolist.module.css"
 import {Button} from "./components/Button";
 import {Input} from "./components/Input";
 import {TasksMap} from "./components/TasksMap";
+import {StateType} from "./App";
+
 
 export type TasksType = {
     id: string
@@ -12,11 +14,11 @@ export type TasksType = {
 }
 export type TodolistPropsType = {
     title: string
-    tasks: Array<TasksType>
-    removeTask: (id: string) => void
+    tasks:Array<StateType>
+    removeTask: (id: string,todolistID:string) => void
     filteredTask: (value: string,todolistID:string) => void
-    addTask: (value: string) => void
-    chengeCheckBoxStatus: (id:string,value: boolean) => void
+    addTask: (value: string,todolistID:string) => void
+    chengeCheckBoxStatus: (id:string,value: boolean,todolistID:string) => void
     filter:string
     todolistID:string
 }
@@ -37,8 +39,6 @@ export function Todolist(props: TodolistPropsType) {
         props.filteredTask(value,props.todolistID);
     }
 
-
-
     const blockButton = () => {
         addTaskButton();
     }
@@ -46,7 +46,7 @@ export function Todolist(props: TodolistPropsType) {
     const addTaskButton=()=>{
         const trimmedTitle = newTaskTitle.trim();
         if (trimmedTitle) {
-            props.addTask(trimmedTitle);
+            props.addTask(trimmedTitle,props.todolistID);
             setNewTaskTitle(' ');
         }else{
             setError(true);
@@ -58,20 +58,13 @@ export function Todolist(props: TodolistPropsType) {
         <div className={s.todolist_wrapper}>
             <div className={s.title}>{props.title}</div>
             <div className={s.input_wrapper}>
-                <Input newTaskTitle={newTaskTitle} setNewTaskTitle={setNewTaskTitle} addTask={props.addTask} error={error} setError={setError}/>
-                {/*<input value={newTaskTitle}*/}
-                {/*       onKeyPress={keyPress}*/}
-                {/*       onChange={onChangeHandler}*/}
-                {/*       className={s.addtask}*/}
-                {/*       type="text"*/}
-                {/*       placeholder="add task"/>*/}
-                {/*<button className={s.btn_title} onClick={addTask}>+*/}
-                {/*</button>*/}
+                <Input newTaskTitle={newTaskTitle}  todolistID={ props.todolistID} setNewTaskTitle={setNewTaskTitle} addTask={props.addTask} error={error} setError={setError}/>
                 <Button name={'+'} callback={blockButton}/>
                 {error ? <div className={s.errorMessage}>Title is required</div> : ''}
             </div>
             {/*map отдельно*/}
-            <TasksMap tasks={props.tasks} removeTask={props.removeTask} chengeCheckBoxStatus={props.chengeCheckBoxStatus}/>
+            {/* @ts-ignore*/}
+            <TasksMap tasks={props.tasks}  todolistID={props.todolistID} removeTask={props.removeTask} chengeCheckBoxStatus={props.chengeCheckBoxStatus}/>
             {/*<ul className={s.todolist_tasks}>*/}
             {/*    {props.tasks.map(el => <li key={el.id} className={el.isDone ? s.isDone: '' }><input type="checkbox"*/}
             {/*                                                  checked={el.isDone}*/}

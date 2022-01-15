@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {TasksType, Todolist} from "./Todolist";
+
  type todolistType={
      id:string
      titleTodolist:string
      filter:string
  }
 
- type StateType={
+ export type StateType={
      [key:string]: Array<TasksType>
  }
 function App() {
@@ -19,10 +20,6 @@ function App() {
         {id: todolistID_1,titleTodolist:'What to learn',filter:'All'},
         {id: todolistID_2,titleTodolist:'What to read',filter:'All'},
     ])
-
-    const todolistTitle: string = "Tasks";
-
-
 
     let [tasks, setTasks] = useState<StateType>({
       [todolistID_1]  : [
@@ -56,26 +53,31 @@ function App() {
     }
 
     const filteredTask = (value: string,todolistID:string) => {
-        setFilter(value);
+     let copyTodolist=todolists.map(m=>m.id===todolistID ? {...m,filter:value}:m);
+     setTodolists(copyTodolist);
     }
 
 
     return (
         <div className="App">
             {todolists.map(m=>{
+                let tasksFilter=tasks[m.id];
+
                 if (m.filter === 'Active') {
-                    tasks = tasks.filter(f => f.isDone); //в массив данных записывается профильтрованный массив данных и он уходит в тудулист по пропсам
+
+                    tasksFilter = tasks[m.id].filter(f => f.isDone); //в массив данных записывается профильтрованный массив данных и он уходит в тудулист по пропсам
                 }
                 if (m.filter === 'Completed') {
-                    tasks = tasks.filter(f => !f.isDone);
+
+                    tasksFilter = tasks[m.id].filter(f => !f.isDone);
                 }
                 return(
                     <Todolist
                         key={m.id}
                         todolistID={m.id}
-                        titleTodolist={m.titleTodolist}
-                        title={todolistTitle}
-                        tasks={tasks}
+                        title={m.titleTodolist}
+                        // @ts-ignore
+                        tasks={tasksFilter}
                         removeTask={removeTask}
                         filteredTask={filteredTask}
                         addTask={addTask}
@@ -84,6 +86,7 @@ function App() {
                     />
                 )
             })}
+
 
 
         </div>
