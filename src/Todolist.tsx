@@ -21,6 +21,7 @@ export type TodolistPropsType = {
     chengeCheckBoxStatus: (id:string,value: boolean,todolistID:string) => void
     filter:string
     todolistID:string
+    removeTodolist:(todolistID:string)=>void
 }
 
 
@@ -52,11 +53,18 @@ export function Todolist(props: TodolistPropsType) {
             setError(true);
         }
     }
+    const removeTodolists= () => {
+      removeTodolist();
+    }
+    const removeTodolist = () => {
+      props.removeTodolist(props.todolistID)
+    }
 
 
     return (
         <div className={s.todolist_wrapper}>
             <div className={s.title}>{props.title}</div>
+            <Button name={'X'} callback={removeTodolists}/>
             <div className={s.input_wrapper}>
                 <Input newTaskTitle={newTaskTitle}  todolistID={ props.todolistID} setNewTaskTitle={setNewTaskTitle} addTask={props.addTask} error={error} setError={setError}/>
                 <Button name={'+'} callback={blockButton}/>

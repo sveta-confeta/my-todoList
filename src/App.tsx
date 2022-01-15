@@ -49,13 +49,20 @@ function App() {
     const chengeCheckBoxStatus=(id:string,value:boolean,todolistID:string)=>{
         const copyTasks={...tasks};
        copyTasks[todolistID]=tasks[todolistID].map(m=>m.id===id ? {...m,isDone:value}: m)
-        setTasks(copyTasks)
+        setTasks(copyTasks);
+       //то же самое но одной строкой:
+       //  setTasks(...tasks,[todolistID]:tasks[todolistID].map(m=>m.id===id ? {...m,isDone:value}: m));
     }
 
     const filteredTask = (value: string,todolistID:string) => {
      let copyTodolist=todolists.map(m=>m.id===todolistID ? {...m,filter:value}:m);
      setTodolists(copyTodolist);
+        //то же самое но одной строкой:
+        //setTodolist(todolist.map(m=> m.id===todolistID ? {...m,filter:value}: m)
     }
+const removeTodolist=(todolistID:string)=>{
+        setTodolists(todolists.filter(f=> f.id!==todolistID) )
+}
 
 
     return (
@@ -83,6 +90,7 @@ function App() {
                         addTask={addTask}
                         chengeCheckBoxStatus={chengeCheckBoxStatus}
                         filter={m.filter}
+                        removeTodolist={removeTodolist}
                     />
                 )
             })}
