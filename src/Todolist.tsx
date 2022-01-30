@@ -4,6 +4,7 @@ import {Button} from "./components/Button";
 import {Input} from "./components/Input";
 import {TasksMap} from "./components/TasksMap";
 import {StateType} from "./App";
+import {AddItemForm} from "./components/AddItemForm";
 
 
 export type TasksType = {
@@ -26,10 +27,11 @@ export type TodolistPropsType = {
 
 
 export function Todolist(props: TodolistPropsType) {
-    //хук для инпута:
-    const [newTaskTitle, setNewTaskTitle] = useState(' ');//useState for input
+ const addTask=(newTaskTitle:string)=>{
+     props.addTask(newTaskTitle,props.todolistID)
+ }
 
-    const [error, setError] = useState(false); //хук для бордера инпута красный-не красный
+
 
     //вместо 3х функций фильтрации тасок напишем одну функцию:
     // const filteredTaskAll = () => props.filteredTask('All');
@@ -40,19 +42,7 @@ export function Todolist(props: TodolistPropsType) {
         props.filteredTask(value,props.todolistID);
     }
 
-    const blockButton = () => {
-        addTaskButton();
-    }
 
-    const addTaskButton=()=>{
-        const trimmedTitle = newTaskTitle.trim();
-        if (trimmedTitle) {
-            props.addTask(trimmedTitle,props.todolistID);
-            setNewTaskTitle(' ');
-        }else{
-            setError(true);
-        }
-    }
     const removeTodolists= () => {
       removeTodolist();
     }
@@ -66,9 +56,8 @@ export function Todolist(props: TodolistPropsType) {
             <div className={s.title}>{props.title}</div>
             <Button name={'X'} callback={removeTodolists}/>
             <div className={s.input_wrapper}>
-                <Input newTaskTitle={newTaskTitle}  todolistID={ props.todolistID} setNewTaskTitle={setNewTaskTitle} addTask={props.addTask} error={error} setError={setError}/>
-                <Button name={'+'} callback={blockButton}/>
-                {error ? <div className={s.errorMessage}>Title is required</div> : ''}
+                <AddItemForm addTask={addTask}/>
+
             </div>
             {/*map отдельно*/}
             {/* @ts-ignore*/}
