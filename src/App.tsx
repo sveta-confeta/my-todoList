@@ -69,11 +69,19 @@ const addTodolists=(titleTodolist:string)=>{
         setTodolists([...todolists,{id:newTodolistID,titleTodolist: titleTodolist,filter:'All'}])
     setTasks({...tasks,[newTodolistID]:[]});
 }
+const apdateTask=(todolistID:string,taskID:string,title:string)=>{
+        const copyTask={...tasks};
+        copyTask[todolistID]=tasks[todolistID].map(t=>t.id===taskID ? {...t,task:title}: t);
+        setTasks(copyTask);
+}
+const titleTodolist=(title:string,todolistID:string)=>{
+        setTodolists(todolists.map(m=>todolistID===m.id ? {...m,titleTodolist:title} : m));
+}
 
 
     return (
         <div className="App">
-            <AddItemForm  addTask={addTodolists}/>
+            <AddItemForm addTask={addTodolists}/>
 
             {todolists.map(m=>{
                 let tasksFilter=tasks[m.id];
@@ -99,12 +107,11 @@ const addTodolists=(titleTodolist:string)=>{
                         chengeCheckBoxStatus={chengeCheckBoxStatus}
                         filter={m.filter}
                         removeTodolist={removeTodolist}
+                        apdateTask={apdateTask}
+                        titleTodolist={titleTodolist}
                     />
                 )
             })}
-
-
-
         </div>
     );
 }
