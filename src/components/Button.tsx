@@ -1,22 +1,20 @@
 import React from 'react';
+import {Button, IconButton} from "@mui/material";
+import {Delete} from "@mui/icons-material";
+
 type ButtonPropsType={
     name:string
     callback:()=>void
 }
 
-export const Button = (props:ButtonPropsType) => {
+export const ButtonForm = (props:ButtonPropsType) => {
     const onClickHandler=()=>{
         props.callback() }
-    const error = props.name ? 'class': ''
     return (
-      <button onClick={onClickHandler} className={error}>
-          {props.name === 'x' ? 'Icon Dash' : props.name}
-      </button>
+        props.name === 'x' ?
+        <IconButton aria-label="delete" onClick={onClickHandler} style={{minHeight:'10px',maxWidth:'10px' }} ><Delete/> </IconButton> :
+             <Button variant="contained" style={{maxWidth: '37px', minHeight: '38px', minWidth: '37px', maxHeight: '38px'}}
+                     color="success" onClick={onClickHandler}>{props.name}</Button>
     );
 };
-// function (name)=>{
-//     switch (name)
-//     case 'x' {return 'Icon'}
-//
-//
-// }
+

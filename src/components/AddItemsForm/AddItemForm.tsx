@@ -1,14 +1,14 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import {Input} from "./Input";
-import {Button} from "./Button";
-import s from "../Todolist.module.css";
+import {Input} from "../Input";
+import s from "./AddItemForm.module.css";
+import {ButtonForm} from "../Button";
 
-type AddItemFormPropsType={
-    addTask:(title:string)=>void
+type AddItemFormPropsType = {
+    addTask: (title: string) => void
 
 }
 
-export const AddItemForm = (props:AddItemFormPropsType) => {
+export const AddItemForm = (props: AddItemFormPropsType) => {
 
 
     //хук для инпута:
@@ -18,19 +18,19 @@ export const AddItemForm = (props:AddItemFormPropsType) => {
     const blockButton = () => {
         addTaskButton();
     }
-    const addTaskButton=()=>{
+    const addTaskButton = () => {
         const trimmedTitle = newTaskTitle.trim();
         if (trimmedTitle) {
             props.addTask(trimmedTitle);
             setNewTaskTitle(' ');
-        }else{
+        } else {
             setError(true);
         }
     }
 
     const keyPress = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {   //функция которая добавляет таску по клику на ентер
-           addTaskButton();
+            addTaskButton();
         }
     }
 
@@ -41,9 +41,12 @@ export const AddItemForm = (props:AddItemFormPropsType) => {
 
     return (
         <div>
-            <Input onChangeHandler={onChangeHandler} newTaskTitle={newTaskTitle} keyPress={keyPress} error={error}/>
-            <Button name={'+'} callback={blockButton}/>
-            {error ? <div className={s.errorMessage}>Title is required</div> : ''}
+            <div className={s.wrapper}>
+                <Input onChangeHandler={onChangeHandler} newTaskTitle={newTaskTitle} keyPress={keyPress} error={error}/>
+                <ButtonForm name={'+'} callback={blockButton}/>
+            </div>
+            {/*{error ? <div className={s.errorMessage}>Title is required</div> : ''}*/}
+
         </div>
     );
 };

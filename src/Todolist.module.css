@@ -6,6 +6,7 @@
     background-color: lightgoldenrodyellow;
     border: 1px solid aquamarine;
     padding: 20px;
+    max-width: 250px;
 }
 
 ul.todolist_tasks{
@@ -36,13 +37,7 @@ ul.todolist_tasks li span{
     margin-right: 10px;
 }
  /* классы для предупреждения в инпуте*/
-.error {
-    border: red 1px solid;
-}
 
-.errorMessage {
-    color: red;
-}
 /*цвет кнопок*/
 .activeFilter {
     background-color: aquamarine;
@@ -50,6 +45,24 @@ ul.todolist_tasks li span{
 /* цвет выполненных тасок*/
 .isDone {
     opacity: 0.5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.notDone{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.wrapperForm{
+    display: flex;
+    align-items: center;
+}
+h3{
+    margin-right: 20px;
+}
+.btn_set{
+    margin-top: auto;
 }
 
 

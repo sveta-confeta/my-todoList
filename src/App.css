@@ -3,6 +3,21 @@ body {
  display: flex;
  justify-content: center;
  align-items: center;
+ padding: 40px;
+}
+
+.App{
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.appWrapper{
+ display: flex;
+ justify-content: space-around;
+ margin-top: 50px;
+ gap: 30px;
+
 }
 
 
