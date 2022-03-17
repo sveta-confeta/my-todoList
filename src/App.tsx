@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {TasksType, Todolist} from "./Todolist";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
+import {addTaskAC, apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC, TasksReducer} from "./reducers/tasksReducer";
+import {filteredTaskAC, TodolistReducer} from "./reducers/todolistsReducer";
 
-type todolistType = {
+export type todolistType = {
     id: string
     titleTodolist: string
     filter: string
@@ -18,12 +20,12 @@ function App() {
     const todolistID_1 = v1();
     const todolistID_2 = v1();
 
-    let [todolists, setTodolists] = useState<Array<todolistType>>([
+    let [todolists, dispatchTodolists] = useReducer(TodolistReducer, [
         {id: todolistID_1, titleTodolist: 'What to learn', filter: 'All'},
         {id: todolistID_2, titleTodolist: 'What to read', filter: 'All'},
-    ])
+    ]);
 
-    let [tasks, setTasks] = useState<StateType>({
+    let [tasks, dispatchTasks] = useReducer(TasksReducer, {
         [todolistID_1]: [
             {id: v1(), task: "название1 из инпут", isDone: false},
             {id: v1(), task: "название2 из инпут", isDone: true},
@@ -36,32 +38,29 @@ function App() {
         ]
     });
 
-    const removeTask = (taskID: string, todolistID: string) => {
-        const copyTasks = {...tasks};
-        copyTasks[todolistID] = tasks[todolistID].filter(t => t.id !== taskID); //функция удаления
-        setTasks(copyTasks)
+    const removeTask = (todolistID: string, taskID: string) => {
+        // const copyTasks = {...tasks};
+        // copyTasks[todolistID] = tasks[todolistID].filter(t => t.id !== taskID); //функция удаления
+        // setTasks(copyTasks)
+        dispatchTasks(removeTaskAC(todolistID, taskID))
     }
 
-    const addTask = (value: string, todolistID: string) => { //функция добавить таску через инпут
-        const copyTasks = {...tasks};
-        copyTasks[todolistID] = [{id: v1(), task: value, isDone: false}, ...tasks[todolistID]];
-        setTasks(copyTasks);
+    const addTask = (todolistID: string, value: string) => { //функция добавить таску через инпут
+        // const copyTasks = {...tasks};
+        // copyTasks[todolistID] = [{id: v1(), task: value, isDone: false}, ...tasks[todolistID]];
+        // setTasks(copyTasks);
+        dispatchTasks(addTaskAC(todolistID, value))
     }
 
 
-    const chengeCheckBoxStatus = (id: string, value: boolean, todolistID: string) => {
-        const copyTasks = {...tasks};
-        copyTasks[todolistID] = tasks[todolistID].map(m => m.id === id ? {...m, isDone: value} : m)
-        setTasks(copyTasks);
-        //то же самое но одной строкой:
-        //  setTasks(...tasks,[todolistID]:tasks[todolistID].map(m=>m.id===id ? {...m,isDone:value}: m));
+    const chengeCheckBoxStatus = (todolistID: string, id: string, value: boolean) => {
+        // {...tasks,[todolistID]:tasks[todolistID].map(m=>m.id===id ? {...m,isDone:value}: m)
+        dispatchTasks(chengeCheckBoxStatusAC(todolistID, id, value));
     }
 
-    const filteredTask = (value: string, todolistID: string) => {
-        let copyTodolist = todolists.map(m => m.id === todolistID ? {...m, filter: value} : m);
-        setTodolists(copyTodolist);
-        //то же самое но одной строкой:
+    const filteredTask = (todolistID:string,value: string) => {
         //setTodolist(todolist.map(m=> m.id===todolistID ? {...m,filter:value}: m)
+        dispatchTodolists(filteredTaskAC( todolistID,value))
     }
     const removeTodolist = (todolistID: string) => {
         setTodolists(todolists.filter(f => f.id !== todolistID))
@@ -72,9 +71,10 @@ function App() {
         setTasks({...tasks, [newTodolistID]: []});
     }
     const apdateTask = (todolistID: string, taskID: string, title: string) => {
-        const copyTask = {...tasks};
-        copyTask[todolistID] = tasks[todolistID].map(t => t.id === taskID ? {...t, task: title} : t);
-        setTasks(copyTask);
+        // const copyTask = {...tasks};
+        // copyTask[todolistID] = tasks[todolistID].map(t => t.id === taskID ? {...t, task: title} : t);
+        // setTasks(copyTask);
+        dispatchTasks(apdateTaskAC(todolistID, taskID, title));
     }
     const titleTodolist = (title: string, todolistID: string) => {
         setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));

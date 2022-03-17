@@ -18,15 +18,15 @@ export type TasksType = {
 export type TodolistPropsType = {
     title: string
     tasks:Array<StateType>
-    removeTask: (id: string,todolistID:string) => void
-    filteredTask: (value: string,todolistID:string) => void
-    addTask: (value: string,todolistID:string) => void
-    chengeCheckBoxStatus: (id:string,value: boolean,todolistID:string) => void
+    removeTask: (todolistID:string,id: string) => void
+    filteredTask: (todolistID:string,value: string) => void
+    addTask: (todolistID:string,value: string) => void
+    chengeCheckBoxStatus: (todolistID:string,id:string,value:boolean) => void
     filter:string
     todolistID:string
     removeTodolist:(todolistID:string)=>void
-    apdateTask:(title:string,todolistID:string,taskID:string)=>void
-    titleTodolist:(title:string,todolistID:string)=>void
+    apdateTask:(todolistID:string,taskID:string,title:string)=>void
+    titleTodolist:(todolistID:string,title:string)=>void
 }
 
 
