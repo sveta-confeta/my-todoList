@@ -1,12 +1,13 @@
 import {StateType} from "../App";
 import {v1} from "uuid";
 
- type ActionType = removeTaskACType | addTaskACType | chengeCheckBoxStatusACType|apdateTaskACType;
+ type ActionType = removeTaskACType | addTaskACType | chengeCheckBoxStatusACType|apdateTaskACType|addTodolistsACType;
 
 type removeTaskACType=ReturnType<typeof removeTaskAC>;
 type addTaskACType=ReturnType<typeof addTaskAC>;
 type chengeCheckBoxStatusACType=ReturnType<typeof chengeCheckBoxStatusAC>
 type apdateTaskACType=ReturnType<typeof apdateTaskAC>
+type addTodolistsACType=ReturnType<typeof addTodolistsAC>
 
 export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
     switch (action.type) {
@@ -17,9 +18,14 @@ export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
             let newObj={id: v1(), task: action.value, isDone: false};
             return {...state,[action.todolistID]:[newObj, ...state[action.todolistID]]}
         }
-        case 'CHENGE-STATUS-CHECKBOX':
+        case 'CHENGE-STATUS-CHECKBOX':{
            return {...state,[action.todolistID]:state[action.todolistID].map(m=>m.id===action.id ? {...m,isDone:action.value}: m)}
-
+        }
+        case  'ADD-TODOLIST': {
+            // let newTodolist = {id: action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'};
+            // return [newTodolist, ...state];
+            return  {...state, [action.newTodolistID]: []}
+        }
         default:
             return state;
     }
@@ -59,4 +65,11 @@ export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
          title,
      } as const
  };
+export const addTodolistsAC = (titleTodolist: string) => {
+    return {
+        type: 'ADD-TODOLIST',
+        titleTodolist,
+        newTodolistID:v1(),
+    } as const
+};
 

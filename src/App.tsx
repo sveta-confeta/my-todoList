@@ -4,7 +4,13 @@ import {v1} from "uuid";
 import {TasksType, Todolist} from "./Todolist";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import {addTaskAC, apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC, TasksReducer} from "./reducers/tasksReducer";
-import {filteredTaskAC, TodolistReducer} from "./reducers/todolistsReducer";
+import {
+    addTodolistsAC,
+    filteredTaskAC,
+    removeTodolistAC,
+    titleTodolistAC,
+    TodolistReducer
+} from "./reducers/todolistsReducer";
 
 export type todolistType = {
     id: string
@@ -63,12 +69,16 @@ function App() {
         dispatchTodolists(filteredTaskAC( todolistID,value))
     }
     const removeTodolist = (todolistID: string) => {
-        setTodolists(todolists.filter(f => f.id !== todolistID))
+        // setTodolists(todolists.filter(f => f.id !== todolistID))
+        dispatchTodolists(removeTodolistAC(todolistID))
     }
     const addTodolists = (titleTodolist: string) => {
-        const newTodolistID = v1();
-        setTodolists([...todolists, {id: newTodolistID, titleTodolist: titleTodolist, filter: 'All'}])
-        setTasks({...tasks, [newTodolistID]: []});
+        // [...todolists, {id: newTodolistID, titleTodolist: titleTodolist, filter: 'All' //для тодолистредьюсер
+        // const newTodolistID = v1();
+        // {...tasks, [newTodolistID]: []}//для таскредьюсер
+        let action=addTodolistsAC(titleTodolist);//чтоб мы не повторяли вызов функции 2 раза
+        dispatchTodolists(action);
+        dispatchTasks(action);
     }
     const apdateTask = (todolistID: string, taskID: string, title: string) => {
         // const copyTask = {...tasks};
@@ -76,8 +86,9 @@ function App() {
         // setTasks(copyTask);
         dispatchTasks(apdateTaskAC(todolistID, taskID, title));
     }
-    const titleTodolist = (title: string, todolistID: string) => {
-        setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));
+    const titleTodolist = (todolistID: string,title: string) => {
+        // setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));
+        dispatchTodolists(titleTodolistAC( todolistID,title))
     }
 
 
