@@ -21,6 +21,9 @@ export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
         case 'CHENGE-STATUS-CHECKBOX':{
            return {...state,[action.todolistID]:state[action.todolistID].map(m=>m.id===action.id ? {...m,isDone:action.value}: m)}
         }
+        case  'APDATE-TASK':{
+            return {...state,[action.todolistID]:state[action.todolistID].map(t => t.id === action.taskID ? {...t, task: action.title} : t)}
+        }
         case  'ADD-TODOLIST': {
             // let newTodolist = {id: action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'};
             // return [newTodolist, ...state];
