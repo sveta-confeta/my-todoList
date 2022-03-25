@@ -40,7 +40,7 @@ export const filteredTaskAC = (todolistID: string, value: string) => {
 export const removeTodolistAC = (todolistID: string) => {
     return {
         type: 'REMOVE-TODOLIST',
-        todolistID,
+        todolistID:v1(),
     } as const
 };
 export const titleTodolistAC = (todolistID: string, title: string) => {
@@ -55,6 +55,6 @@ export const addTodolistsAC = (titleTodolist: string) => {
     return {
         type: 'ADD-TODOLIST',
         titleTodolist,
-         newTodolistID:v1(),
+         newTodolistID:v1(), //генерируем 1 id и для тудулист и тасок
     } as const
 };

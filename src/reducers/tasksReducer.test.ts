@@ -133,9 +133,20 @@ test ( 'ADD-TODOLIST',()=>{
     let newTitle='newTodolist';
 
 
-    const endState=TasksReducer(startState,addTodolistsAC(newTitle))
+    const endState=TasksReducer(startState,addTodolistsAC(newTitle,));
 
-    expect(endState[][0].task).toBe(  "название1 из инпут");
-    expect(endState[todolistID_1][1].task).toBe('ggggg');
+
+    const keys = Object.keys(endState);
+    const newKey = keys.find(k => k != "todolistId1" && k != "todolistId2");
+    if (!newKey) {
+        throw Error("new key should be added")
+    }
+
+    expect(keys.length).toBe(3);
+    expect(endState[newKey]).toEqual([]);
+
+
+    // expect(endState[todolistID_1][0].task).toBe(  "название1 из инпут");
+    // expect(endState[todolistID_1][1].task).toBe('ggggg');
 
 });
