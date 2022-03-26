@@ -1,14 +1,14 @@
 import React from 'react';
 import s from "../Todolist.module.css";
-import {TasksType} from "../Todolist";
 import EditSpan from "./EditSpan";
 import {ButtonForm} from "./Button";
 import {Checkbox} from "@mui/material";
+import {TasksType} from "../Todolist";
 
 type TasksMapPropsTYpe = {
-    tasks: Array<TasksType>
+    tasks:TasksType[]
     removeTask: (id: string, todolistID: string) => void
-    chengeCheckBoxStatus: (id: string, value: boolean, todolistID: string) => void
+    chengeCheckBoxStatus: (todolistID:string,id:string,value:boolean) => void
     todolistID: string
     apdateTask: (title: string, todolistID: string, taskID: string) => void
 }
@@ -23,12 +23,12 @@ export const TasksMap = (props: TasksMapPropsTYpe) => {
         props.removeTask(tId, props.todolistID);
 
     const onChangeCheckbox = (elID: string, value: boolean) => {
-        props.chengeCheckBoxStatus(elID, value, props.todolistID);
+        props.chengeCheckBoxStatus(props.todolistID,elID, value);
 
     }
     return (
         <ul className={s.todolist_tasks}>
-            {props.tasks.map(el => <li key={el.id} >
+            {props.tasks.map( el => <li key={el.id}>
                 {/*<input type="checkbox"*/}
                 {/*       checked={el.isDone}*/}
                 {/*       onChange={(event) => onChangeCheckbox(el.id, event.currentTarget.checked)}/>*/}

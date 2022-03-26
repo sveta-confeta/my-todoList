@@ -1,6 +1,6 @@
 import {StateType} from "../App";
 import {v1} from "uuid";
-import {removeTodolistAC} from "./todolistsReducer";
+import {removeTodolistAC,addTodolistsACType} from "./todolistsReducer";
 
  type ActionType = removeTaskACType | addTaskACType | chengeCheckBoxStatusACType|apdateTaskACType|addTodolistsACType|removeTodolistACType;
 
@@ -8,7 +8,6 @@ type removeTaskACType=ReturnType<typeof removeTaskAC>;
 type addTaskACType=ReturnType<typeof addTaskAC>;
 type chengeCheckBoxStatusACType=ReturnType<typeof chengeCheckBoxStatusAC>
 type apdateTaskACType=ReturnType<typeof apdateTaskAC>
-type addTodolistsACType=ReturnType<typeof addTodolistsAC>
 type removeTodolistACType = ReturnType<typeof removeTodolistAC>
 
 export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
@@ -33,7 +32,8 @@ export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
         }
         case "REMOVE-TODOLIST":{
            let newState= {...state}
-            return delete newState
+             delete newState[action.todolistID];
+           return newState
         }
         default:
             return state;
@@ -74,12 +74,5 @@ export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
          title,
      } as const
  };
-export const addTodolistsAC = (titleTodolist: string) => {
-    return {
-        type: 'ADD-TODOLIST',
-        titleTodolist,
-        newTodolistID:v1(), //генерируем 1 id и для тудулист и тасок
 
-    } as const
-};
 

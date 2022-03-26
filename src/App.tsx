@@ -45,9 +45,6 @@ function App() {
     });
 
     const removeTask = (todolistID: string, taskID: string) => {
-        // const copyTasks = {...tasks};
-        // copyTasks[todolistID] = tasks[todolistID].filter(t => t.id !== taskID); //функция удаления
-        // setTasks(copyTasks)
         dispatchTasks(removeTaskAC(todolistID, taskID))
     }
 
@@ -112,7 +109,6 @@ function App() {
                             key={m.id}
                             todolistID={m.id}
                             title={m.titleTodolist}
-                            //@ts-ignore
                             tasks={tasksFilter}
                             removeTask={removeTask}
                             filteredTask={filteredTask}

@@ -2,12 +2,12 @@ import {v1} from "uuid";
 import {StateType} from "../App";
 import {
     addTaskAC,
-    addTodolistsAC,
     apdateTaskAC,
     chengeCheckBoxStatusAC,
     removeTaskAC,
     TasksReducer
 } from "./tasksReducer";
+import {addTodolistsAC} from "./todolistsReducer";
 
 test ( "REMOVE-TASK",()=>{
 
@@ -31,7 +31,10 @@ test ( "REMOVE-TASK",()=>{
     const endState=TasksReducer(startState,removeTaskAC(todolistID_2,'4'))
 
     expect(endState[todolistID_2].length).toBe(2);
+    expect(endState[todolistID_1].length).toBe(3);
     expect(endState[todolistID_1][0].task).toBe( "название1 из инпут");
+    expect(endState[todolistID_2].every(t=> t.id!=='4')).toBeTruthy(); //это метод как фильтр,мап-пробегается по каждому элементу
+    //массива и должен вернуть все id кроме той, что мы удалили.и проверка что каждый элемент не равен id 4
 });
 test ( 'ADD-TASK',()=>{
 
@@ -114,17 +117,13 @@ test ( 'APDATE-TASK',()=>{
 });
 test ( 'ADD-TODOLIST',()=>{
 
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
-
-
     const startState:StateType={
-        [todolistID_1]: [
+        ['todolistID_1']: [
             {id: '1', task: "название1 из инпут", isDone: false},
             {id: '2', task: "название2 из инпут", isDone: true},
             {id: '3', task: "название3 из инпут", isDone: true},
         ],
-        [todolistID_2]: [
+        ['todolistID_2']: [
             {id: '4', task: "название1 из инпут", isDone: false},
             {id: '5', task: "название2 из инпут", isDone: true},
             {id: '6', task: "название3 из инпут", isDone: true},
@@ -133,20 +132,17 @@ test ( 'ADD-TODOLIST',()=>{
     let newTitle='newTodolist';
 
 
-    const endState=TasksReducer(startState,addTodolistsAC(newTitle,));
+    const endState=TasksReducer(startState,addTodolistsAC(newTitle));
 
 
-    const keys = Object.keys(endState);
-    const newKey = keys.find(k => k != "todolistId1" && k != "todolistId2");
-    if (!newKey) {
+    const keys = Object.keys(endState);//возращает массив в виде строковых ключей передаваемого обьекта
+    const newKey = keys.find(k => k != 'todolistID_1' && k != 'todolistID_2'); //записываем в переменную ключ который не равняется ни одному из тодолистов
+    if (!newKey) { //если не нашелся такой ключ то выдать ошибку
         throw Error("new key should be added")
     }
 
-    expect(keys.length).toBe(3);
-    expect(endState[newKey]).toEqual([]);
+    expect(keys.length).toBe(3);//в массиве кеу должно теперь быть 3 строковых ключа
 
-
-    // expect(endState[todolistID_1][0].task).toBe(  "название1 из инпут");
-    // expect(endState[todolistID_1][1].task).toBe('ggggg');
+    expect(endState[newKey]).toEqual([]); //если новый ключ нашелся то он должен быть равен пустому массиву
 
 });

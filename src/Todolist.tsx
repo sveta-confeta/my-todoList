@@ -17,7 +17,7 @@ export type TasksType = {
 }
 export type TodolistPropsType = {
     title: string
-    tasks:Array<StateType>
+    tasks:TasksType[]
     removeTask: (todolistID:string,id: string) => void
     filteredTask: (todolistID:string,value: string) => void
     addTask: (todolistID:string,value: string) => void
@@ -32,7 +32,7 @@ export type TodolistPropsType = {
 
 export function Todolist(props: TodolistPropsType) {
  const addTask=(newTaskTitle:string)=>{
-     props.addTask(newTaskTitle,props.todolistID)
+     props.addTask(props.todolistID,newTaskTitle)
  }
 
 
@@ -43,13 +43,9 @@ export function Todolist(props: TodolistPropsType) {
     // const filteredTaskCompleted=() => props.filteredTask('Completed');
 
     const filteredTask = (value: string) => {
-        props.filteredTask(value,props.todolistID);
+        props.filteredTask(props.todolistID,value);
     }
 
-
-    const removeTodolists= () => {
-      removeTodolist();
-    }
     const removeTodolist = () => {
       props.removeTodolist(props.todolistID)
     }
@@ -64,7 +60,7 @@ export function Todolist(props: TodolistPropsType) {
         <div className={s.todolist_wrapper}>
             <div className={s.wrapperForm}>
             <h3><EditSpan title={props.title} apdateTask={(title:string)=>callbackTitleTodolist(title)}/></h3>
-            <ButtonForm name={'x'} callback={removeTodolists}/>
+            <ButtonForm name={'x'} callback={removeTodolist}/>
             </div>
             <div className={s.input_wrapper}>
                 <AddItemForm addTask={addTask}/>
@@ -73,14 +69,8 @@ export function Todolist(props: TodolistPropsType) {
             {/*map отдельно*/}
             <TasksMap
                 apdateTask={props.apdateTask}
-                //@ts-ignore
                 tasks={props.tasks}  todolistID={props.todolistID} removeTask={props.removeTask} chengeCheckBoxStatus={props.chengeCheckBoxStatus}/>
 
-            {/*<div className={s.btn_set}>*/}
-            {/*    <button className ={props.filter==='All' ? s.activeFilter : '' } onClick={() => filteredTask('All')}>All</button>*/}
-            {/*    <button className={props.filter==='Active' ? s.activeFilter : '' } onClick={() => filteredTask('Active')}>Active</button>*/}
-            {/*    <button className={props.filter==='Completed' ? s.activeFilter : '' } onClick={() => filteredTask('Completed')}>Completed</button>*/}
-            {/*</div>*/}
             <ButtonGroup  className={s.btn_set} variant="contained">
                 <Button  style={{fontSize:'13px',border:'1px solid grey'}}  color ={props.filter==='All' ? "success" : "inherit" } onClick={() => filteredTask('All')}>All</Button>
                 <Button  style={{fontSize:'13px',border:'1px solid grey' }}  color ={props.filter==='Active' ? "success" : "inherit"  } onClick={() => filteredTask('Active')}>Active</Button>
