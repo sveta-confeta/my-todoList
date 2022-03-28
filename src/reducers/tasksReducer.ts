@@ -1,6 +1,6 @@
 import {StateType} from "../App";
 import {v1} from "uuid";
-import {removeTodolistAC,addTodolistsACType} from "./todolistsReducer";
+import {removeTodolistAC, addTodolistsACType, todolistsTasksID} from "./todolistsReducer";
 
  type ActionType = removeTaskACType | addTaskACType | chengeCheckBoxStatusACType|apdateTaskACType|addTodolistsACType|removeTodolistACType;
 
@@ -10,7 +10,20 @@ type chengeCheckBoxStatusACType=ReturnType<typeof chengeCheckBoxStatusAC>
 type apdateTaskACType=ReturnType<typeof apdateTaskAC>
 type removeTodolistACType = ReturnType<typeof removeTodolistAC>
 
-export const TasksReducer = (state:StateType, action:ActionType):StateType=> {
+const initialState:StateType={
+    [todolistsTasksID.todolistID_1]: [
+        {id: v1(), task: "название1 из инпут", isDone: false},
+        {id: v1(), task: "название2 из инпут", isDone: true},
+        {id: v1(), task: "название3 из инпут", isDone: true},
+    ],
+    [todolistsTasksID.todolistID_2]: [
+        {id: v1(), task: "название1 из инпут", isDone: false},
+        {id: v1(), task: "название2 из инпут", isDone: true},
+        {id: v1(), task: "название3 из инпут", isDone: true},
+    ]
+};
+
+export const TasksReducer = (state:StateType=initialState, action:ActionType):StateType=> {
     switch (action.type) {
         case "REMOVE-TASK":{
             return {...state,[action.todolistID]:state[action.todolistID].filter(t => t.id !== action.taskID)}

@@ -3,17 +3,22 @@ import {useReducer} from "react";
 import {addTodolistsAC, filteredTaskAC, removeTodolistAC, titleTodolistAC, TodolistReducer} from "./todolistsReducer";
 import {todolistType} from "../App";
 
+let  todolistID_1: string; //вынесем переменные глобально.чтоб их видели тесты
+let  todolistID_2: string;
+let startState: Array<todolistType>;
+///////// вынесем наши стартовые данные  наверх.они одинаковые для каждого теста
+beforeEach(() => {
+    todolistID_1 = v1();
+    todolistID_2= v1();
+    startState = [
+        {id:  todolistID_1, titleTodolist: "What to learn", filter: "All"},
+        {id:  todolistID_2, titleTodolist: "What to buy", filter: "All"}
+    ]
+});
+
 test('FILTERED-TASK', ()=>{
 
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
-
     let newFilter='Completed';
-
-    const startState: Array<todolistType>=[
-        {id: todolistID_1, titleTodolist: 'What to learn', filter: 'All'},
-        {id: todolistID_2, titleTodolist: 'What to read', filter: 'All'},
-    ];
 
     const endState=TodolistReducer(startState,filteredTaskAC(todolistID_1,newFilter));
 
@@ -23,14 +28,6 @@ test('FILTERED-TASK', ()=>{
 
 test('REMOVE-TODOLIST', ()=>{
 
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
-
-    const startState: Array<todolistType>=[
-        {id: todolistID_1, titleTodolist: 'What to learn', filter: 'All'},
-        {id: todolistID_2, titleTodolist: 'What to read', filter: 'All'},
-    ];
-
     const endState=TodolistReducer(startState,removeTodolistAC(todolistID_1));
 
     expect(endState.length).toBe(1);
@@ -38,15 +35,7 @@ test('REMOVE-TODOLIST', ()=>{
 
 test('TITLE-TODOLIST', ()=>{
 
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
-
     let newTitle='What to watch TV';
-
-    const startState: Array<todolistType>=[
-        {id: todolistID_1, titleTodolist: 'What to learn', filter: 'All'},
-        {id: todolistID_2, titleTodolist: 'What to read', filter: 'All'},
-    ];
 
     const endState=TodolistReducer(startState,titleTodolistAC(todolistID_1,newTitle));
 
@@ -56,14 +45,8 @@ test('TITLE-TODOLIST', ()=>{
 
 test('ADD-TODOLIST', ()=>{
 
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
     let newTitle='What to watch TV';
 
-    const startState: Array<todolistType>=[
-        {id: todolistID_1, titleTodolist: 'What to learn', filter: 'All'},
-        {id: todolistID_2, titleTodolist: 'What to read', filter: 'All'},
-    ];
 
     const endState=TodolistReducer(startState,addTodolistsAC(newTitle));
 
