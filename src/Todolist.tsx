@@ -20,14 +20,14 @@ export type TodolistPropsType = {
     title: string //это не меняется
     tasks:Array<TasksType> //а это каждый раз приходит разное, в зависимости от фильтра получается всегда новый обьект
     //поэтому фильтрацию мы будем делать в самом тудулисте
-    removeTask: (todolistID:string,id: string) => void
+
     filteredTask: (todolistID:string,value: string) => void
     addTask: (todolistID:string,value: string) => void
-    chengeCheckBoxStatus: (todolistID:string,id:string,value:boolean) => void
+
     filter:string
     todolistID:string//это не меняется
     removeTodolist:(todolistID:string)=>void
-    apdateTask:(todolistID:string,taskID:string,title:string)=>void
+
     titleTodolist:(todolistID:string,title:string)=>void
 }
 
@@ -82,8 +82,8 @@ export const Todolist=React.memo((props: TodolistPropsType)=> {
             </div>
             {/*map отдельно*/}
             <TasksMap
-                apdateTask={props.apdateTask}
-                tasks={tasksFilter}  todolistID={props.todolistID} removeTask={props.removeTask} chengeCheckBoxStatus={props.chengeCheckBoxStatus}/>
+
+                  todolistID={props.todolistID}/>
             {/*MaterialUI использует под капотом React.memo -только нет useCallback/нужно оборачивать*/}
             <ButtonGroup  className={s.btn_set} variant="contained">
                 <Button  style={{fontSize:'13px',border:'1px solid grey'}}  color ={props.filter==='All' ? "success" : "inherit" } onClick={() => filteredTask('All')}>All</Button>

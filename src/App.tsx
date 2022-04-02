@@ -51,9 +51,6 @@ function App() {
 
     const dispatch=useDispatch() //1диспатч на все редьюсеры
 
-    const removeTask =useCallback(  (todolistID: string, taskID: string) => {
-        dispatch(removeTaskAC(todolistID, taskID))
-    },[dispatch,removeTaskAC]);
 
     const addTask =useCallback(  (todolistID: string, value: string) => { //функция добавить таску через инпут
         // const copyTasks = {...tasks};
@@ -63,10 +60,6 @@ function App() {
     },[dispatch,addTaskAC])
 
 
-    const chengeCheckBoxStatus =useCallback( (todolistID: string, id: string, value: boolean) => {
-        // {...tasks,[todolistID]:tasks[todolistID].map(m=>m.id===id ? {...m,isDone:value}: m)
-        dispatch(chengeCheckBoxStatusAC(todolistID, id, value));
-    },[dispatch,chengeCheckBoxStatusAC])
 
     const filteredTask = useCallback((todolistID:string,value: string) => {
         //setTodolist(todolist.map(m=> m.id===todolistID ? {...m,filter:value}: m)
@@ -87,12 +80,7 @@ function App() {
 
     },[dispatch,addTodolistsAC])
 
-    const apdateTask = useCallback((todolistID: string, taskID: string, title: string) => {
-        // const copyTask = {...tasks};
-        // copyTask[todolistID] = tasks[todolistID].map(t => t.id === taskID ? {...t, task: title} : t);
-        // setTasks(copyTask);
-        dispatch(apdateTaskAC(todolistID, taskID, title));
-    },[ dispatch,apdateTaskAC]);
+
 
     const titleTodolist =useCallback( (todolistID: string,title: string) => {
         // setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));
@@ -114,13 +102,10 @@ function App() {
                             todolistID={m.id}
                             title={m.titleTodolist}
                             tasks={tasks[m.id]}
-                            removeTask={removeTask}
                             filteredTask={filteredTask}
                             addTask={addTask}
-                            chengeCheckBoxStatus={chengeCheckBoxStatus}
                             filter={m.filter}
                             removeTodolist={removeTodolist}
-                            apdateTask={apdateTask}
                             titleTodolist={titleTodolist}
                         />
                     )
