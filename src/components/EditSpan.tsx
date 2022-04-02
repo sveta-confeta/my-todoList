@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState,} from 'react';
+import React, {ChangeEvent, useCallback, useState,} from 'react';
 import {TextField} from "@mui/material";
 
 
@@ -8,17 +8,19 @@ type EditSpanPropsType={
     apdateTask:(title:string)=>void
 }
 
-const EditSpan = (props:EditSpanPropsType) =>{
+const EditSpan = React.memo((props:EditSpanPropsType) =>{
     const[title,setTitle]=useState<string>(props.title); //для импута
     const[editMode,setEditMode]=useState<boolean>(false);//для редактирования
+
     const onChangeHandler=(event:ChangeEvent<HTMLInputElement>)=>{
         setTitle(event.currentTarget.value)
     }
-    const onBlurHanter=()=>{
+    const onBlurHanter= useCallback(()=>{
         props.apdateTask(title)
         setEditMode(false);
-    }
-    const onChangeDoubleClick=()=>{
+    },[ props.apdateTask]);
+
+    const onChangeDoubleClick= ()=>{
         setEditMode(true);
     }
 
@@ -37,6 +39,6 @@ const EditSpan = (props:EditSpanPropsType) =>{
         : <span onDoubleClick={ onChangeDoubleClick}>{props.title}</span>
 
     );
-};
+});
 
 export default EditSpan;

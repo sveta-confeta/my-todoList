@@ -1,5 +1,4 @@
 import {v1} from "uuid";
-import {useReducer} from "react";
 import {addTodolistsAC, filteredTaskAC, removeTodolistAC, titleTodolistAC, TodolistReducer} from "./todolistsReducer";
 import {todolistType} from "../App";
 

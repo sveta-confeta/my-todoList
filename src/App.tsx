@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useCallback, useReducer} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {TasksType, Todolist} from "./Todolist";
@@ -51,49 +51,53 @@ function App() {
 
     const dispatch=useDispatch() //1диспатч на все редьюсеры
 
-    const removeTask = (todolistID: string, taskID: string) => {
+    const removeTask =useCallback(  (todolistID: string, taskID: string) => {
         dispatch(removeTaskAC(todolistID, taskID))
-    }
+    },[dispatch,removeTaskAC]);
 
-    const addTask = (todolistID: string, value: string) => { //функция добавить таску через инпут
+    const addTask =useCallback(  (todolistID: string, value: string) => { //функция добавить таску через инпут
         // const copyTasks = {...tasks};
         // copyTasks[todolistID] = [{id: v1(), task: value, isDone: false}, ...tasks[todolistID]];
         // setTasks(copyTasks);
         dispatch(addTaskAC(todolistID, value))
-    }
+    },[dispatch,addTaskAC])
 
 
-    const chengeCheckBoxStatus = (todolistID: string, id: string, value: boolean) => {
+    const chengeCheckBoxStatus =useCallback( (todolistID: string, id: string, value: boolean) => {
         // {...tasks,[todolistID]:tasks[todolistID].map(m=>m.id===id ? {...m,isDone:value}: m)
         dispatch(chengeCheckBoxStatusAC(todolistID, id, value));
-    }
+    },[dispatch,chengeCheckBoxStatusAC])
 
-    const filteredTask = (todolistID:string,value: string) => {
+    const filteredTask = useCallback((todolistID:string,value: string) => {
         //setTodolist(todolist.map(m=> m.id===todolistID ? {...m,filter:value}: m)
         dispatch(filteredTaskAC( todolistID,value))
-    }
-    const removeTodolist = (todolistID: string) => {
+    },[ dispatch,filteredTaskAC]);
+
+    const removeTodolist =useCallback( (todolistID: string) => {
         // setTodolists(todolists.filter(f => f.id !== todolistID))
         dispatch(removeTodolistAC(todolistID))
-    }
-    const addTodolists = (titleTodolist: string) => {
+    },[dispatch,removeTodolistAC]);
+
+    const addTodolists =useCallback(  (titleTodolist: string) => {
         // [...todolists, {id: newTodolistID, titleTodolist: titleTodolist, filter: 'All' //для тодолистредьюсер
         // const newTodolistID = v1();
         // {...tasks, [newTodolistID]: []}//для таскредьюсер
         let action=addTodolistsAC(titleTodolist);//чтоб мы не повторяли вызов функции 2 раза
         dispatch(action);
 
-    }
-    const apdateTask = (todolistID: string, taskID: string, title: string) => {
+    },[dispatch,addTodolistsAC])
+
+    const apdateTask = useCallback((todolistID: string, taskID: string, title: string) => {
         // const copyTask = {...tasks};
         // copyTask[todolistID] = tasks[todolistID].map(t => t.id === taskID ? {...t, task: title} : t);
         // setTasks(copyTask);
         dispatch(apdateTaskAC(todolistID, taskID, title));
-    }
-    const titleTodolist = (todolistID: string,title: string) => {
+    },[ dispatch,apdateTaskAC]);
+
+    const titleTodolist =useCallback( (todolistID: string,title: string) => {
         // setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));
         dispatch(titleTodolistAC( todolistID,title))
-    }
+    },[ dispatch,titleTodolistAC]);
 
 
     return (
@@ -101,22 +105,15 @@ function App() {
             <AddItemForm addTask={addTodolists}/>
             <div className={'appWrapper'}>
                 {todolists.map(m => {
-                    let tasksFilter = tasks[m.id];
 
-                    if (m.filter === 'Active') {
 
-                        tasksFilter = tasks[m.id].filter(f => f.isDone); //в массив данных записывается профильтрованный массив данных и он уходит в тудулист по пропсам
-                    }
-                    if (m.filter === 'Completed') {
 
-                        tasksFilter = tasks[m.id].filter(f => !f.isDone);
-                    }
                     return (
                         <Todolist
                             key={m.id}
                             todolistID={m.id}
                             title={m.titleTodolist}
-                            tasks={tasksFilter}
+                            tasks={tasks[m.id]}
                             removeTask={removeTask}
                             filteredTask={filteredTask}
                             addTask={addTask}

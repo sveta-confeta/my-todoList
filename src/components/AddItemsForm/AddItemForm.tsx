@@ -7,9 +7,8 @@ type AddItemFormPropsType = {
     addTask: (title: string) => void
 
 }
-
-export const AddItemForm = (props: AddItemFormPropsType) => {
-
+//эта универсальная компоента.поэтому внутри нее у нас не может быть подключения к редаксу.только через пропсы
+export const AddItemForm =React.memo( (props: AddItemFormPropsType) => {
 
     //хук для инпута:
     const [newTaskTitle, setNewTaskTitle] = useState(' ');//useState for input
@@ -49,5 +48,5 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
 
         </div>
     );
-};
+});
 

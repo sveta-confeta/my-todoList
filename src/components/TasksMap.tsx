@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import s from "../Todolist.module.css";
 import EditSpan from "./EditSpan";
 import {ButtonForm} from "./Button";
@@ -6,7 +6,7 @@ import {Checkbox} from "@mui/material";
 import {TasksType} from "../Todolist";
 
 type TasksMapPropsTYpe = {
-    tasks:TasksType[]
+    tasks:Array<TasksType>
     removeTask: (id: string, todolistID: string) => void
     chengeCheckBoxStatus: (todolistID:string,id:string,value:boolean) => void
     todolistID: string
@@ -15,18 +15,17 @@ type TasksMapPropsTYpe = {
 
 export const TasksMap = (props: TasksMapPropsTYpe) => {
 
-    const callbackApdateTask = (elID: string, title: string) => {
+    const callbackApdateTask =useCallback( (elID: string, title: string) => {
         props.apdateTask(props.todolistID, elID, title)
-    }
+    },[ props.apdateTask,props.todolistID])
 
-    const removeTaskHandler = (tId: string) =>
-        props.removeTask(tId, props.todolistID);
+    const removeTaskHandler =useCallback( (tId: string) => props.removeTask(tId, props.todolistID),[props.removeTask,props.todolistID])
 
-    const onChangeCheckbox = (elID: string, value: boolean) => {
+    const onChangeCheckbox =useCallback( (elID: string, value: boolean) => {
         props.chengeCheckBoxStatus(props.todolistID,elID, value);
-
-    }
+    },[ props.chengeCheckBoxStatus,props.todolistID])
     return (
+        //MaterialUI использует под капотом React.memo -только нет useCallback/нужно оборачивать
         <ul className={s.todolist_tasks}>
             {props.tasks.map( el => <li key={el.id}>
                 {/*<input type="checkbox"*/}
