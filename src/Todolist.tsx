@@ -1,6 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react';
 import s from "./Todolist.module.css"
-import {TasksMap} from "./components/TasksMap";
+import {TasksMap} from "./components/TaskMap/TasksMap";
 import {StateType} from "./App";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import EditSpan from "./components/EditSpan";

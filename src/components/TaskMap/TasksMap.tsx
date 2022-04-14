@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
-import s from "../Todolist.module.css";
-import EditSpan from "./EditSpan";
-import {ButtonForm} from "./Button";
+import s from "../../Todolist.module.css";
+import EditSpan from "../EditSpan";
+import {ButtonForm} from "../Button";
 import {Checkbox} from "@mui/material";
-import {TasksType} from "../Todolist";
+import {TasksType} from "../../Todolist";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../redux/redux-store";
-import {apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC} from "../reducers/tasksReducer";
+import {AppRootStateType} from "../../redux/redux-store";
+import {apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC} from "../../reducers/tasksReducer";
 
 type TasksMapPropsType = {
     // tasks:Array<TasksType> //будем делать через Redux
@@ -24,17 +24,17 @@ export const TasksMap = React.memo(({ todolistID}: TasksMapPropsType) => {
 
     const callbackApdateTask = useCallback((elID: string, title: string) => {
         dispatch(apdateTaskAC(todolistID,elID, title))
-    }, [dispatch, apdateTaskAC])
+    }, [dispatch, apdateTaskAC,todolistID])
 
     const removeTaskHandler = useCallback((tId: string) => {
         dispatch(removeTaskAC(todolistID,tId))
-    }, [dispatch,removeTaskAC])
+    }, [dispatch,removeTaskAC,todolistID])
 
 
     const onChangeCheckbox = useCallback((elID: string, value: boolean) => {
 
         dispatch(chengeCheckBoxStatusAC(todolistID,elID, value))
-    }, [dispatch,chengeCheckBoxStatusAC])
+    }, [dispatch,chengeCheckBoxStatusAC,todolistID])
 
     return (
         //MaterialUI использует под капотом React.memo -только нет useCallback/нужно оборачивать
