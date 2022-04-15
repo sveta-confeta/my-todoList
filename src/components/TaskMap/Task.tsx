@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {Checkbox} from "@mui/material";
 import s from "../../Todolist.module.css";
-import EditSpan from "../EditSpan";
+import EditSpan from "../EditSpan/EditSpan";
 import {ButtonForm} from "../Button";
 import {useDispatch, useSelector} from "react-redux";
 import {apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC} from "../../reducers/tasksReducer";

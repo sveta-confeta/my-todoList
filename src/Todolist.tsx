@@ -3,7 +3,7 @@ import s from "./Todolist.module.css"
 import {TasksMap} from "./components/TaskMap/TasksMap";
 import {StateType} from "./App";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
-import EditSpan from "./components/EditSpan";
+import EditSpan from "./components/EditSpan/EditSpan";
 import {ButtonForm} from "./components/Button";
 import {Button, ButtonGroup} from "@mui/material";
 
