@@ -95,14 +95,14 @@ export const GetTasks = () => {
     const [todolistID, setTodolistID] = useState<string>('') //нужны локальгые стейты для отображения на ui
 
 
-   const getTasks=()=>{
-       todolistApi.getTasks(todolistID)
-           .then(res => {
-               setState(res.data.items)//[] пусто
-           })
-   }
+    const getTasks = () => {
+        todolistApi.getTasks(todolistID)
+            .then(res => {
+                setState(res.data.items)//[] пусто
+            })
+    }
 
-   const onchangeHandlerID = (e: ChangeEvent<HTMLInputElement>) => {
+    const onchangeHandlerID = (e: ChangeEvent<HTMLInputElement>) => {
         setTodolistID(e.currentTarget.value)
     }
 
@@ -187,7 +187,15 @@ export const UpdateTask = () => {
 
     const updateHandler = () => {
 
-        todolistApi.updateTask(todolistID, taskTitle,taskID)
+        todolistApi.updateTask(todolistID, taskID, {
+            deadline: '',
+            description: description,
+            priority: priority,
+            completed: false,
+            startDate: '',
+            status: status,
+            title: taskTitle,
+        })
             .then(res => {
                 setState(res.data)
             })
@@ -199,13 +207,13 @@ export const UpdateTask = () => {
     const onchangeHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setTaskTitle(e.currentTarget.value)
     }
-    const taskHandlerID=(e: ChangeEvent<HTMLInputElement>) => {
+    const taskHandlerID = (e: ChangeEvent<HTMLInputElement>) => {
         setTaskID(e.currentTarget.value)
     }
-    const descriptionHandler=(e: ChangeEvent<HTMLInputElement>) => {
+    const descriptionHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setDescription(e.currentTarget.value)
     }
-    const statusHandlerTitle=(e: ChangeEvent<HTMLInputElement>) => {
+    const statusHandlerTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setStatus(+e.currentTarget.value)
     }
 
@@ -214,8 +222,8 @@ export const UpdateTask = () => {
             <input placeholder={'todolistID'} value={todolistID} onChange={onchangeHandlerID}/><br/>
             <input placeholder={'taskID'} value={taskID} onChange={taskHandlerID}/><br/>
             <input placeholder={'taskTitle'} value={taskTitle} onChange={onchangeHandlerTitle}/><br/>
-            <input placeholder={'taskTitle'} value={description} onChange={descriptionHandler}/><br/>
-            <input placeholder={'taskTitle'} value={status} onChange={statusHandlerTitle}/><br/>
+            <input placeholder={'description'} value={description} onChange={descriptionHandler}/><br/>
+            <input placeholder={'status'} value={status} onChange={statusHandlerTitle}/><br/>
             <button onClick={updateHandler}>update task</button>
         </div>
     </div>
