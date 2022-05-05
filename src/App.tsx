@@ -1,18 +1,18 @@
-import React, {useCallback, useReducer} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {v1} from "uuid";
+
 import {TasksType, Todolist} from "./Todolist";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
-import {addTaskAC, apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC, TasksReducer} from "./reducers/tasksReducer";
+import {addTaskAC} from "./reducers/tasksReducer";
 import {
-    addTodolistsAC,
+    addTodolistsAC, AllTodolistsType,
     filteredTaskAC,
     removeTodolistAC,
     titleTodolistAC,
-    TodolistReducer
 } from "./reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./redux/redux-store";
+import {todolistApi} from "./api/ todolist-api";
 
 export type todolistType = {
     id: string
@@ -47,10 +47,15 @@ function App() {
     // });
 
     const tasks=useSelector<AppRootStateType,StateType>(state=>state.tasks);
-    const todolists=useSelector<AppRootStateType,Array<todolistType>>(state=>state.todolists);
+    const todolists=useSelector<AppRootStateType,Array<AllTodolistsType>>(state=>state.todolists);
 
-    const dispatch=useDispatch() //1диспатч на все редьюсеры
+    const dispatch=useDispatch()
+     useEffect(()=>{
+         todolistApi.getTodolist().then((res)=>{ //get запрос за тодолистами
 
+           res.data
+         })
+     },[]) //1 раз нужно получить тодолисты
 
     const addTask =useCallback(  (todolistID: string, value: string) => { //функция добавить таску через инпут
         // const copyTasks = {...tasks};
@@ -100,7 +105,7 @@ function App() {
                         <Todolist
                             key={m.id}
                             todolistID={m.id}
-                            title={m.titleTodolist}
+                            title={m.title}
                             tasks={tasks[m.id]}
                             filteredTask={filteredTask}
                             addTask={addTask}
