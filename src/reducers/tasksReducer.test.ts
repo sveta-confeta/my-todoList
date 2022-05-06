@@ -7,7 +7,7 @@ import {
     removeTaskAC,
     TasksReducer
 } from "./tasksReducer";
-import {addTodolistsAC} from "./todolistsReducer";
+import {addTodolistsAC, ApiTodolistsType, getTodolistsAC} from "./todolistsReducer";
 
 let startState:StateType;
 
@@ -82,5 +82,27 @@ test ( 'ADD-TODOLIST',()=>{
     expect(keys.length).toBe(3);//в массиве кеу должно теперь быть 3 строковых ключа
 
     expect(endState[newKey]).toEqual([]); //если новый ключ нашелся то он должен быть равен пустому массиву
+
+});
+
+test ( 'GET-TODOLIST i tasks',()=>{  //получили с "сервера" тодолисты и теперь нам нужно добавть место для тасок
+    //{[id]:[],[id]:[],},те добавить пустые массивы
+
+
+    let action=getTodolistsAC([
+        {id: '1', title: "What to learn",addedDate:'',order:1},
+        {id: '2', title: "What to buy",addedDate:'',order:2},
+    ]);
+
+    const endState=TasksReducer({},action);
+
+
+    const keys = Object.keys(endState);//возращает массив в виде строковых ключей передаваемого обьекта
+
+
+    expect(keys.length).toBe(2);//в массиве кеу должно теперь быть 3 строковых ключа
+
+    expect(endState['1']).toEqual([]);
+    expect(endState['2']).toEqual([]);
 
 });
