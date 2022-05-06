@@ -1,5 +1,8 @@
 
 import {v1} from "uuid";
+import {Dispatch} from "redux";
+import {AppRootStateType} from "../redux/redux-store";
+import {todolistApi} from "../api/ todolist-api";
 
 type ActionType = filteredTaskACType | removeTodolistACType | titleTodolistACType | addTodolistsACType | getTodolistsACType;
 type filteredTaskACType = ReturnType<typeof filteredTaskAC>
@@ -94,3 +97,10 @@ export const getTodolistsAC = (todolists:Array<ApiTodolistsType> ) => {
 
     } as const
 };
+
+export const todolistsThunk=(dispatch:Dispatch)=>{
+    todolistApi.getTodolist().then((res)=>{ //get запрос за тодолистами
+
+      dispatch(getTodolistsAC(res.data))
+    })
+}

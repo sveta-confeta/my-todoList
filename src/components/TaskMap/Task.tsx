@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC} from "../../reducers/tasksReducer";
 import {AppRootStateType} from "../../redux/redux-store";
 import {TasksType} from "../../Todolist";
-import {todolistType} from "../../App";
+import {AllTodolistsType} from "../../reducers/todolistsReducer";
 
 type TaskPropsType={
     // changeTaskStatus: (id: string,newIsDoneValue: boolean,todolistID:string) => void
@@ -19,7 +19,8 @@ type TaskPropsType={
 }
 
 export const Task = (props:TaskPropsType) => {
-    const todolist=useSelector<AppRootStateType,todolistType>(state=> state.todolists.filter(f=>f.id ==props.todolistID)[0])
+    // const todolist=useSelector<AppRootStateType,AllTodolistsType[]>(state=> state.todolists.filter(f=>f.id ==props.todolistID)[0])
+    const todolist=useSelector<AppRootStateType,AllTodolistsType>(state=> state.todolists.filter(f=> f.id===props.todolistID)[0])
     const tasks=useSelector<AppRootStateType,TasksType>(state=> state.tasks[props.todolistID].filter(f=> f.id==props.taskID)[0])
     const dispatch = useDispatch();
 

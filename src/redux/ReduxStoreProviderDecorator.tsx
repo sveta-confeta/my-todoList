@@ -17,20 +17,20 @@ const rootReducer = combineReducers({
 })
 
 const initialGlobalState = {
-    todolists: [    //стартовый стейт для сторибук
-        {id: "todolistId1", titleTodolist: "What to learn", filter: "All"},
-        {id: "todolistId2", titleTodolist: "What to buy", filter: "All"}
-    ] ,
-    tasks: {
-        ["todolistId1"]: [
-            {id: '1', task: "HTML&CSS", isDone: true},
-            {id: '2', task: "JS", isDone: false}
-        ],
-        ["todolistId2"]: [
-            {id: v1(), task: "Milk", isDone: true},
-            {id: v1(), task: "React Book", isDone: true}
-        ]
-    }
+    // todolists: [    //стартовый стейт для сторибук
+    //     {id: "todolistId1", titleTodolist: "What to learn", filter: "All"},
+    //     {id: "todolistId2", titleTodolist: "What to buy", filter: "All"},
+    // ] ,
+    // tasks: {
+    //     ["todolistId1"]: [
+    //         {id: '1', task: "HTML&CSS", isDone: true},
+    //         {id: '2', task: "JS", isDone: false}
+    //     ],
+    //     ["todolistId2"]: [
+    //         {id: v1(), task: "Milk", isDone: true},
+    //         {id: v1(), task: "React Book", isDone: true}
+    //     ]
+    // }
 };
 //storyBookStore-отправляем в провайдер:
  export const storyBookStore = createStore(rootReducer, initialGlobalState as AppRootStateType);

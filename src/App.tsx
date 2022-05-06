@@ -6,9 +6,9 @@ import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import {addTaskAC} from "./reducers/tasksReducer";
 import {
     addTodolistsAC, AllTodolistsType,
-    filteredTaskAC,
+    filteredTaskAC, getTodolistsAC,
     removeTodolistAC,
-    titleTodolistAC,
+    titleTodolistAC, todolistsThunk,
 } from "./reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./redux/redux-store";
@@ -50,11 +50,9 @@ function App() {
     const todolists=useSelector<AppRootStateType,Array<AllTodolistsType>>(state=>state.todolists);
 
     const dispatch=useDispatch()
-     useEffect(()=>{
-         todolistApi.getTodolist().then((res)=>{ //get запрос за тодолистами
 
-           res.data
-         })
+     useEffect(()=>{
+        todolistsThunk(dispatch);
      },[]) //1 раз нужно получить тодолисты
 
     const addTask =useCallback(  (todolistID: string, value: string) => { //функция добавить таску через инпут
