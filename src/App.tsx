@@ -1,27 +1,24 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
 
-import {TasksType, Todolist} from "./Todolist";
+import { Todolist} from "./Todolist";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import {addTaskAC} from "./reducers/tasksReducer";
 import {
     addTodolistsAC, AllTodolistsType,
-    filteredTaskAC, getTodolistsAC,
+    filteredTaskAC,
     removeTodolistAC,
     titleTodolistAC, todolistsThunk,
 } from "./reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./redux/redux-store";
-import {todolistApi} from "./api/ todolist-api";
+import {ItemType, todolistApi} from "./api/ todolist-api";
 
-export type todolistType = {
-    id: string
-    titleTodolist: string
-    filter: string
-}
+
+
 
 export type StateType = {
-    [key: string]: Array<TasksType>
+    [key: string]: Array<ItemType>
 }
 
 function App() {
@@ -52,7 +49,7 @@ function App() {
     const dispatch=useDispatch()
 
      useEffect(()=>{
-        todolistsThunk(dispatch);
+         dispatch(todolistsThunk);
      },[]) //1 раз нужно получить тодолисты
 
     const addTask =useCallback(  (todolistID: string, value: string) => { //функция добавить таску через инпут
@@ -93,7 +90,10 @@ function App() {
 
     return (
         <div className="App">
+            <div className={'CreateTodolists'}>
             <AddItemForm addTask={addTodolists}/>
+            </div>
+
             <div className={'appWrapper'}>
                 {todolists.map(m => {
 

@@ -4,8 +4,9 @@ import {
     removeTodolistAC,
     addTodolistsACType,
     todolistsTasksID,
-    ApiTodolistsType, getTodolistsACType
+    getTodolistsACType, getTodolistsAC
 } from "./todolistsReducer";
+import {ItemType, TaskPriorities, TaskStatuses, todolistApi} from "../api/ todolist-api";
 
 type ActionType =
     removeTaskACType
@@ -14,25 +15,27 @@ type ActionType =
     | apdateTaskACType
     | addTodolistsACType
     | removeTodolistACType
-    | getTodolistsACType;
+    | getTodolistsACType
+    | getTasksACType;
 
 type removeTaskACType = ReturnType<typeof removeTaskAC>;
 type addTaskACType = ReturnType<typeof addTaskAC>;
 type chengeCheckBoxStatusACType = ReturnType<typeof chengeCheckBoxStatusAC>
 type apdateTaskACType = ReturnType<typeof apdateTaskAC>
 type removeTodolistACType = ReturnType<typeof removeTodolistAC>
+type getTasksACType = ReturnType<typeof getTasksAC>
 
 
 const initialState: StateType = {
     [todolistsTasksID.todolistID_1]: [
-        {id: v1(), task: "название1 из инпут", isDone: false},
-        {id: v1(), task: "название2 из инпут", isDone: true},
-        {id: v1(), task: "название3 из инпут", isDone: true},
+        // {id: v1(), title: "название1 из инпут", isDone: false},
+        // {id: v1(), title: "название2 из инпут", isDone: true},
+        // {id: v1(), title: "название3 из инпут", isDone: true},
     ],
     [todolistsTasksID.todolistID_2]: [
-        {id: v1(), task: "название1 из инпут", isDone: false},
-        {id: v1(), task: "название2 из инпут", isDone: true},
-        {id: v1(), task: "название3 из инпут", isDone: true},
+        // {id: v1(), title: "название1 из инпут", isDone: false},
+        // {id: v1(), title: "название2 из инпут", isDone: true},
+        // {id: v1(), title: "название3 из инпут", isDone: true},
     ]
 };
 
@@ -41,8 +44,13 @@ export const TasksReducer = (state: StateType = initialState, action: ActionType
         case "REMOVE-TASK": {
             return {...state, [action.todolistID]: state[action.todolistID].filter(t => t.id !== action.taskID)}
         }
-        case 'ADD-TASK': {
-            let newObj = {id: v1(), task: action.value, isDone: false};
+        case 'ADD-TASK': { //это добавить одну таску
+            // completed: required(boolean
+            let newObj: ItemType = {
+                id: v1(), title: action.value,
+                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: action.todolistID,
+                order: 0, addedDate: ''
+            };
             return {...state, [action.todolistID]: [newObj, ...state[action.todolistID]]}
         }
         case 'CHENGE-STATUS-CHECKBOX': {
@@ -50,7 +58,7 @@ export const TasksReducer = (state: StateType = initialState, action: ActionType
                 ...state,
                 [action.todolistID]: state[action.todolistID].map(m => m.id === action.id ? {
                     ...m,
-                    isDone: action.value
+                    status: action.status
                 } : m)
             }
         }
@@ -59,7 +67,7 @@ export const TasksReducer = (state: StateType = initialState, action: ActionType
                 ...state,
                 [action.todolistID]: state[action.todolistID].map(t => t.id === action.taskID ? {
                     ...t,
-                    task: action.title
+                    title: action.title
                 } : t)
             }
         }
@@ -76,10 +84,15 @@ export const TasksReducer = (state: StateType = initialState, action: ActionType
         case  'GET-TODOLISTS': {
             const copyState = {...state}
             action.todolists.forEach(tl => {
-                copyState[tl.id]=[];
+                copyState[tl.id] = [];
             })
             return copyState;
         }
+        // case 'GET-TASKS':{
+        //     const copyState = {...state}
+        //     copyState[action....]=action.tasks;
+        //     return copyState;
+        // }
         default:
             return state;
     }
@@ -102,12 +115,12 @@ export const addTaskAC = (todolistID: string, value: string) => {
     } as const
 };
 
-export const chengeCheckBoxStatusAC = (todolistID: string, id: string, value: boolean) => {
+export const chengeCheckBoxStatusAC = (todolistID: string, id: string, status:TaskStatuses) => {
     return {
         type: 'CHENGE-STATUS-CHECKBOX',
         todolistID,
         id,
-        value,
+        status,
     } as const
 };
 
@@ -119,6 +132,21 @@ export const apdateTaskAC = (todolistID: string, taskID: string, title: string) 
         title,
     } as const
 };
+export const getTasksAC = (tasks:ItemType[] ) => { //c апи пришли все таски
+    return {
+        type: 'GET-TASKS',
+        tasks,
+    } as const
+};
+
+
+// export const tasksThunk = (dispatch: Dispatch) => {
+//     const todolistID = ' '; //заглушка
+//     todolistApi.getTasks(todolistID).then((res) => { //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
+//
+//         dispatch(getTodolistsAC(res.data))
+//     })
+// }
 
 
 

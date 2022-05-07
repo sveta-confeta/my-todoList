@@ -1,21 +1,16 @@
-import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react';
+import React, { useCallback} from 'react';
 import s from "./Todolist.module.css"
 import {TasksMap} from "./components/TaskMap/TasksMap";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import EditSpan from "./components/EditSpan/EditSpan";
 import {ButtonForm} from "./components/Button";
 import {Button, ButtonGroup} from "@mui/material";
+import {ItemType} from "./api/ todolist-api";
 
 
-export type TasksType = {
-    id: string
-    task: string
-    isDone: boolean
-
-}
 export type TodolistPropsType = {
     title: string //это не меняется
-    tasks: Array<TasksType> //а это каждый раз приходит разное, в зависимости от фильтра получается всегда новый обьект
+    tasks: Array<ItemType> //а это каждый раз приходит разное, в зависимости от фильтра получается всегда новый обьект
     //поэтому фильтрацию мы будем делать в самом тудулисте
 
     filteredTask: (todolistID: string, value: string) => void

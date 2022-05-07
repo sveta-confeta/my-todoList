@@ -1,27 +1,25 @@
-import {v1} from "uuid";
 import {StateType} from "../App";
-import {
-    addTaskAC,
-    apdateTaskAC,
-    chengeCheckBoxStatusAC,
-    removeTaskAC,
-    TasksReducer
-} from "./tasksReducer";
-import {addTodolistsAC, ApiTodolistsType, getTodolistsAC} from "./todolistsReducer";
+import {addTaskAC, apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC, TasksReducer} from "./tasksReducer";
+import {addTodolistsAC, getTodolistsAC} from "./todolistsReducer";
+import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 
 let startState:StateType;
 
 beforeEach(()=>{
     startState={
-        ['todolistID_1']: [
-            {id: '1', task: "название1 из инпут", isDone: false},
-            {id: '2', task: "название2 из инпут", isDone: true},
-            {id: '3', task: "название3 из инпут", isDone: true},
+        ["todolistId1"]: [
+            { id: '1', title: 'Css', description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId1",
+                order: 0, addedDate: ''},
+            {id: '2', title: 'JS',
+                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: "todolistId1",
+                order: 0, addedDate: ''}
         ],
-        ['todolistID_2']: [
-            {id: '4', task: "название1 из инпут", isDone: false},
-            {id: '5', task: "название2 из инпут", isDone: true},
-            {id: '6', task: "название3 из инпут", isDone: true},
+        ["todolistId2"]: [
+            { id: '1', title:  "Milk", description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId2",
+                order: 0, addedDate: ''},
+            {id: '2', title:  "React Book",
+                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId:"todolistId2",
+                order: 0, addedDate: ''}
         ]
     };
 })
@@ -32,7 +30,7 @@ test ( "REMOVE-TASK",()=>{
 
     expect(endState['todolistID_2'].length).toBe(2);
     expect(endState['todolistID_1'].length).toBe(3);
-    expect(endState['todolistID_1'][0].task).toBe( "название1 из инпут");
+    expect(endState['todolistID_1'][0].title).toBe( "название1 из инпут");
     expect(endState['todolistID_2'].every(t=> t.id!=='4')).toBeTruthy(); //это метод как фильтр,мап-пробегается по каждому элементу
     //массива и должен вернуть все id кроме той, что мы удалили.и проверка что каждый элемент не равен id 4
 });
@@ -43,25 +41,25 @@ test ( 'ADD-TASK',()=>{
     const endState=TasksReducer(startState,addTaskAC('todolistID_2',newTitle))
 
     expect(endState['todolistID_2'].length).toBe(4);
-    expect(endState['todolistID_2'][0].task).toBe( "название4 из инпут");
+    expect(endState['todolistID_2'][0].title).toBe( "название4 из инпут");
 });
 
 test ( 'CHENGE-STATUS-CHECKBOX',()=>{
 
 
 
-    const endState=TasksReducer(startState,chengeCheckBoxStatusAC('todolistID_1','1',true))
+    const endState=TasksReducer(startState,chengeCheckBoxStatusAC('todolistID_1','1',TaskStatuses.New))
 
-    expect(endState['todolistID_1'][0].isDone).toBe(true);
-    expect(endState['todolistID_2'][0].isDone).toBe( false);
+    expect(endState['todolistID_1'][0].status).toBe(TaskStatuses.Completed);
+    expect(endState['todolistID_2'][0].status).toBe( TaskStatuses.New);
 });
 
 test ( 'APDATE-TASK',() => {
     let newTitle='ggggg';
     const endState=TasksReducer(startState,apdateTaskAC('todolistID_1','2',newTitle))
 
-    expect(endState['todolistID_2'][0].task).toBe(  "название1 из инпут");
-    expect(endState['todolistID_1'][1].task).toBe('ggggg');
+    expect(endState['todolistID_2'][0].title).toBe(  "название1 из инпут");
+    expect(endState['todolistID_1'][1].title).toBe('ggggg');
 
 });
 test ( 'ADD-TODOLIST',()=>{

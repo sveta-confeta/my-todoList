@@ -6,6 +6,7 @@ import {
     removeTodolistAC,
     TodolistReducer
 } from "./todolistsReducer";
+import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 
 test('ids should be equals', () => {
     const startTasksState: StateType = {};
@@ -30,15 +31,19 @@ test('ids should be equals', () => {
 
 test('property with todolistId should be deleted', () => {
     const startState: StateType = {
-        "todolistId1": [
-            { id: "1",  task: "CSS", isDone: false },
-            { id: "2",  task: "JS", isDone: true },
-            { id: "3",  task: "React", isDone: false }
+        ["todolistId1"]: [
+            { id: '1', title: 'Css', description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId1",
+                order: 0, addedDate: ''},
+            {id: '2', title: 'JS',
+                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: "todolistId1",
+                order: 0, addedDate: ''}
         ],
-        "todolistId2": [
-            { id: "1",  task: "bread", isDone: false },
-            { id: "2",  task: "milk", isDone: true },
-            { id: "3",  task: "tea", isDone: false }
+        ["todolistId2"]: [
+            { id: '1', title:  "Milk", description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId2",
+                order: 0, addedDate: ''},
+            {id: '2', title:  "React Book",
+                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId:"todolistId2",
+                order: 0, addedDate: ''}
         ]
     };
 

@@ -80,12 +80,11 @@ type TasksResponseType = {
     "totalCount": number,
     "error": null,
 }
-type ItemType= {
+ export type ItemType= { //get tasks
     description: string,
     title: string,
-    completed: boolean,
-    status: number
-    priority: number
+    status:TaskStatuses, //вместо isDone :обращение по номеру
+    priority:TaskPriorities,
     startDate: string
     deadline: string,
     id: string,
@@ -93,6 +92,23 @@ type ItemType= {
     order: number,
     addedDate:string,
 }
+export enum TaskStatuses { //вместо isDone идет перечисление
+    New = 0,//isDone-false-не выполнено
+    InProgress = 1,
+    Completed = 2, //isDone-true-выполнено
+    Draft = 3
+}
+//сonst a:TaskStatuses=TaskStatuses.InProgress// как пример обращения к свойству
+//const a:TaskStatuses=1;
+
+export enum TaskPriorities {
+    Low = 0,
+    Middle = 1,
+    Hi = 2,
+    Urgently = 3,
+    Later = 4
+}
+
  type UpdateTask={  //for put
      title: string,
      description: string,

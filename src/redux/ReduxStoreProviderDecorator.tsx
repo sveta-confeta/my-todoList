@@ -10,30 +10,39 @@ import {AppRootStateType} from "./redux-store";
 import {v1} from "uuid";
 import {TasksReducer} from "../reducers/tasksReducer";
 import {TodolistReducer} from "../reducers/todolistsReducer";
+import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 
 const rootReducer = combineReducers({
     tasks: TasksReducer,
     todolists:TodolistReducer,
 })
 
-const initialGlobalState = {
-    // todolists: [    //стартовый стейт для сторибук
-    //     {id: "todolistId1", titleTodolist: "What to learn", filter: "All"},
-    //     {id: "todolistId2", titleTodolist: "What to buy", filter: "All"},
-    // ] ,
-    // tasks: {
-    //     ["todolistId1"]: [
-    //         {id: '1', task: "HTML&CSS", isDone: true},
-    //         {id: '2', task: "JS", isDone: false}
-    //     ],
-    //     ["todolistId2"]: [
-    //         {id: v1(), task: "Milk", isDone: true},
-    //         {id: v1(), task: "React Book", isDone: true}
-    //     ]
-    // }
+const initialGlobalState:AppRootStateType = {
+    todolists: [    //стартовый стейт для сторибук
+        {id: "todolistId1", title: "What to learn", filter: "All", "addedDate": '',
+            "order": 0},
+        {id: "todolistId2", title: "What to buy", filter: "All", "addedDate": '',
+            "order": 0},
+    ] ,
+    tasks: {
+        ["todolistId1"]: [
+            { id: '1', title: 'Css', description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId1",
+                           order: 0, addedDate: ''},
+            {id: '2', title: 'JS',
+                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: "todolistId1",
+                order: 0, addedDate: ''}
+        ],
+        ["todolistId2"]: [
+            { id: '1', title:  "Milk", description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId2",
+                order: 0, addedDate: ''},
+            {id: '2', title:  "React Book",
+                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId:"todolistId2",
+                order: 0, addedDate: ''}
+        ]
+    }
 };
 //storyBookStore-отправляем в провайдер:
- export const storyBookStore = createStore(rootReducer, initialGlobalState as AppRootStateType);
+ export const storyBookStore = createStore(rootReducer, initialGlobalState);
 
 
 export const ReduxStoreProviderDecorator=(storyFn: () => React.ReactNode) => {

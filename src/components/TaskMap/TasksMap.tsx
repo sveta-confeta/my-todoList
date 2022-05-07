@@ -1,10 +1,10 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import s from "../../Todolist.module.css";
-import {TasksType} from "../../Todolist";
 
 import {AppRootStateType} from "../../redux/redux-store";
 import {Task} from "./Task";
 import {useSelector} from "react-redux";
+import {ItemType, TaskStatuses} from "../../api/ todolist-api";
 
 type TasksMapPropsType = {
     // tasks:Array<TasksType> //будем делать через Redux
@@ -17,16 +17,16 @@ type TasksMapPropsType = {
 }
 
 export const TasksMap = React.memo(({ todolistID,filter}: TasksMapPropsType) => {
-    const tasks = useSelector<AppRootStateType, Array<TasksType>>(state => state.tasks[todolistID]); //filter возращает массив-а нам нужен 1 обьект в массиве
+    const tasks = useSelector<AppRootStateType, Array<ItemType>>(state => state.tasks[todolistID]); //filter возращает массив-а нам нужен 1 обьект в массиве
     let tasksFilter = tasks;
 
     if (filter === 'Active') {
 
-        tasksFilter = tasks.filter(f => f.isDone); //в массив данных записывается профильтрованный массив данных и он уходит в тудулист по пропсам
+        tasksFilter = tasks.filter(f => f.status===TaskStatuses.New); //в массив данных записывается профильтрованный массив данных и он уходит в тудулист по пропсам
     }
-    if (filter === 'Completed') {
+    if (filter === 'Completed') { //выполненные таски
 
-        tasksFilter = tasks.filter(f => !f.isDone);
+        tasksFilter = tasks.filter(f => f.status===TaskStatuses.Completed); //true значит,выполненные
     }
 
     return (

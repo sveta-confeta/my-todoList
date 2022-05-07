@@ -1,7 +1,6 @@
 
 import {v1} from "uuid";
 import {Dispatch} from "redux";
-import {AppRootStateType} from "../redux/redux-store";
 import {todolistApi} from "../api/ todolist-api";
 
 type ActionType = filteredTaskACType | removeTodolistACType | titleTodolistACType | addTodolistsACType | getTodolistsACType;
@@ -39,16 +38,16 @@ export const TodolistReducer = (state: Array<AllTodolistsType>=initialState, act
         case 'TITLE-TODOLIST': {
             return state.map(m => action.todolistID === m.id ? {...m, titleTodolist: action.title} : m)
         }
-        case  'ADD-TODOLIST': {
+        case  'ADD-TODOLIST': { //добавить еще один тодолист
             return [{
                 id: action.newTodolistID,
                 title: action.titleTodolist,
                 filter: 'All',
                 addedDate: '',
-                order: 0
+                order: 0,
             }, ...state]
         }
-        case  'GET-TODOLISTS': {
+        case  'GET-TODOLISTS': { //добавть с апишки все тодолисты с нуля
             return action.todolists.map(m=>{
                 return {...m,filter:'All'}
             })
@@ -98,7 +97,7 @@ export const getTodolistsAC = (todolists:Array<ApiTodolistsType> ) => {
     } as const
 };
 
-export const todolistsThunk=(dispatch:Dispatch)=>{
+export const todolistsThunk=(dispatch:Dispatch )=>{
     todolistApi.getTodolist().then((res)=>{ //get запрос за тодолистами
 
       dispatch(getTodolistsAC(res.data))
