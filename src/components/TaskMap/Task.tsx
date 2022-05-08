@@ -1,9 +1,9 @@
-import React, {ChangeEvent, useCallback} from 'react';
+import React, {ChangeEvent, useCallback, useEffect} from 'react';
 import {Checkbox} from "@mui/material";
 import EditSpan from "../EditSpan/EditSpan";
 import {ButtonForm} from "../Button";
 import {useDispatch, useSelector} from "react-redux";
-import {apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC} from "../../reducers/tasksReducer";
+import {apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC, TasksDeleteThunkCreator} from "../../reducers/tasksReducer";
 import {AppRootStateType} from "../../redux/redux-store";
 import {AllTodolistsType} from "../../reducers/todolistsReducer";
 import {ItemType, TaskStatuses} from "../../api/ todolist-api";
@@ -24,13 +24,18 @@ export const Task = (props:TaskPropsType) => {
     const tasks=useSelector<AppRootStateType,ItemType>(state=> state.tasks[props.todolistID].filter(f=> f.id==props.taskID)[0])
     const dispatch = useDispatch();
 
+
     const callbackApdateTask = useCallback((elID: string, title: string) => {
         dispatch(apdateTaskAC(props.todolistID,elID, title))
     }, [dispatch, apdateTaskAC,props.todolistID])
 
-    const removeTaskHandler = useCallback((tId: string) => {
-        dispatch(removeTaskAC(props.todolistID,tId))
-    }, [dispatch,removeTaskAC,props.todolistID])
+    // const removeTaskHandler = useCallback((tId: string) => {
+    //     dispatch(removeTaskAC(props.todolistID,tId))
+    // }, [dispatch,removeTaskAC,props.todolistID])
+
+    const removeTaskHandler = useCallback((tId: string) => {  //удаление тасок
+        dispatch(TasksDeleteThunkCreator(props.todolistID,tId)) //вместо АС диспатчим в санккреатор, который будет диспатчить в АС
+    }, [])
 
 const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{    //!!!!!!!!!!!!!!
     let doneValue= event.currentTarget.checked; //в чекед сидит либо тру либо фолз

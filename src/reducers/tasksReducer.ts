@@ -4,9 +4,10 @@ import {
     removeTodolistAC,
     addTodolistsACType,
     todolistsTasksID,
-    getTodolistsACType, getTodolistsAC
+    getTodolistsACType,
 } from "./todolistsReducer";
 import {ItemType, TaskPriorities, TaskStatuses, todolistApi} from "../api/ todolist-api";
+import {Dispatch} from "redux";
 
 type ActionType =
     removeTaskACType
@@ -88,11 +89,12 @@ export const TasksReducer = (state: StateType = initialState, action: ActionType
             })
             return copyState;
         }
-        // case 'GET-TASKS':{
-        //     const copyState = {...state}
-        //     copyState[action....]=action.tasks;
-        //     return copyState;
-        // }
+        case 'GET-TASKS':{
+            //debugger
+            const copyState = {...state}
+            copyState[action.todolistID]=action.tasks;
+            return copyState;
+        }
         default:
             return state;
     }
@@ -132,21 +134,26 @@ export const apdateTaskAC = (todolistID: string, taskID: string, title: string) 
         title,
     } as const
 };
-export const getTasksAC = (tasks:ItemType[] ) => { //c апи пришли все таски
+export const getTasksAC = (tasks:ItemType[],todolistID: string) => { //c апи пришли все таски
     return {
         type: 'GET-TASKS',
         tasks,
+        todolistID
     } as const
 };
 
 
-// export const tasksThunk = (dispatch: Dispatch) => {
-//     const todolistID = ' '; //заглушка
-//     todolistApi.getTasks(todolistID).then((res) => { //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
-//
-//         dispatch(getTodolistsAC(res.data))
-//     })
-// }
+export const TasksThunkCreator = (todolistID:string) => (dispatch: Dispatch) => {
+    todolistApi.getTasks(todolistID).then((res) => { //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
+        dispatch(getTasksAC(res.data.items,todolistID))
+    })
+}
+
+export const TasksDeleteThunkCreator=(todolistID:string,taskID:string)=>(dispatch: Dispatch)=>{
+    todolistApi.deleteTask(todolistID,taskID).then(res=>{  //удаление тасок
+        dispatch(removeTaskAC(todolistID,taskID))
+    })
+}
 
 
 

@@ -1,4 +1,4 @@
-import React, { useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import s from "./Todolist.module.css"
 import {TasksMap} from "./components/TaskMap/TasksMap";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
@@ -6,6 +6,8 @@ import EditSpan from "./components/EditSpan/EditSpan";
 import {ButtonForm} from "./components/Button";
 import {Button, ButtonGroup} from "@mui/material";
 import {ItemType} from "./api/ todolist-api";
+import { TasksThunkCreator} from "./reducers/tasksReducer";
+import {useDispatch} from "react-redux";
 
 
 export type TodolistPropsType = {
@@ -25,7 +27,13 @@ export type TodolistPropsType = {
 
 
 export const Todolist = React.memo((props: TodolistPropsType) => {
-    console.log('Todolist')
+    //console.log('Todolist')
+    const dispatch=useDispatch()
+
+    useEffect(()=>{  // вызов get запрос тасок
+        dispatch(TasksThunkCreator(props.todolistID)); //мне нужны таски. вот вам айди тодолиста -отдайте мне таски в этот тодолист!!!
+    },[]) //1 раз нужно получить тодолисты
+
 
     const addTask = useCallback((newTaskTitle: string) => {
         props.addTask(props.todolistID, newTaskTitle)
