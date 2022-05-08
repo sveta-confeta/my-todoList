@@ -34,12 +34,12 @@ export const todolistApi = {
      deleteTask(todolistID:string,taskId:string){
        return instance.delete<CommonResponseType<{}>>(`todo-lists/${todolistID}/tasks/${taskId}`)
      },
-    createTask(todolistID:string ,title:string){
-        return  instance.post<CommonResponseType<ItemType>>(`todo-lists/${todolistID}/tasks`,{title:title})
+    createTask(todolistID:string ,title:string){ //в каком тодолисте будет создание тасок и с каким названием
+        return  instance.post<CommonResponseType<{item:ItemType}>>(`todo-lists/${todolistID}/tasks`,{title:title})
 
     },
     updateTask(todolistID:string ,taskID:string, elems:UpdateTask ){
-        return  instance.put<CommonResponseType<ItemType>>(`todo-lists/${todolistID}/tasks/${taskID}`,elems )
+        return  instance.put<CommonResponseType<{item:ItemType}>>(`todo-lists/${todolistID}/tasks/${taskID}`,elems )
 
     },
 

@@ -3,7 +3,7 @@ import './App.css';
 
 import { Todolist} from "./Todolist";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
-import {addTaskAC} from "./reducers/tasksReducer";
+import {addTaskAC, TasksAddThunkCreator} from "./reducers/tasksReducer";
 import {
     addTodolistsAC, AllTodolistsType,
     filteredTaskAC,
@@ -56,7 +56,7 @@ function App() {
         // const copyTasks = {...tasks};
         // copyTasks[todolistID] = [{id: v1(), task: value, isDone: false}, ...tasks[todolistID]];
         // setTasks(copyTasks);
-        dispatch(addTaskAC(todolistID, value))
+        dispatch(TasksAddThunkCreator(todolistID, value))
     },[dispatch,addTaskAC])
 
 

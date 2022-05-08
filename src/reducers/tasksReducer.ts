@@ -46,13 +46,12 @@ export const TasksReducer = (state: StateType = initialState, action: ActionType
             return {...state, [action.todolistID]: state[action.todolistID].filter(t => t.id !== action.taskID)}
         }
         case 'ADD-TASK': { //это добавить одну таску
-            // completed: required(boolean
-            let newObj: ItemType = {
-                id: v1(), title: action.value,
-                description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: action.todolistID,
-                order: 0, addedDate: ''
-            };
-            return {...state, [action.todolistID]: [newObj, ...state[action.todolistID]]}
+            // let newObj: ItemType = {
+            //     id: v1(), title: action.value,
+            //     description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: action.todolistID,
+            //     order: 0, addedDate: ''
+            // };
+            return {...state, [action.item.todoListId]: [ action.item,...state[action.item.todoListId]]}
         }
         case 'CHENGE-STATUS-CHECKBOX': {
             return {
@@ -109,13 +108,15 @@ export const removeTaskAC = (todolistID: string, taskID: string) => {
     } as const
 };
 
-export const addTaskAC = (todolistID: string, value: string) => {
+export const addTaskAC = (item:ItemType) => {
     return {
         type: 'ADD-TASK',
-        todolistID,
-        value,
+        item
     } as const
 };
+
+
+
 
 export const chengeCheckBoxStatusAC = (todolistID: string, id: string, status:TaskStatuses) => {
     return {
@@ -150,8 +151,16 @@ export const TasksThunkCreator = (todolistID:string) => (dispatch: Dispatch) => 
 }
 
 export const TasksDeleteThunkCreator=(todolistID:string,taskID:string)=>(dispatch: Dispatch)=>{
-    todolistApi.deleteTask(todolistID,taskID).then(res=>{  //удаление тасок
+    todolistApi.deleteTask(todolistID,taskID).then(res=>{  //удаление тасок delete запрос
         dispatch(removeTaskAC(todolistID,taskID))
+    })
+}
+
+export const TasksAddThunkCreator=(todolistID:string,title:string)=>(dispatch: Dispatch)=>{
+    todolistApi.createTask(todolistID,title).then(res=>{  //добавление тасок в уже созданные тодолисты
+        // -мы посылаем название таски и id тодолиста- post запрос
+        debugger
+        dispatch(addTaskAC(res.data.data.item))
     })
 }
 
