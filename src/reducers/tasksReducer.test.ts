@@ -1,5 +1,5 @@
 import {StateType} from "../App";
-import {addTaskAC, apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC, TasksReducer} from "./tasksReducer";
+import {addTaskAC, apdateTaskAC, chengeCheckBoxStatusAC, getTasksAC, removeTaskAC, TasksReducer} from "./tasksReducer";
 import {addTodolistsAC, getTodolistsAC} from "./todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 
@@ -36,12 +36,12 @@ test ( "REMOVE-TASK",()=>{
 });
 test ( 'ADD-TASK',()=>{
 
-    let newTitle= "название4 из инпут";
 
-    const endState=TasksReducer(startState,addTaskAC('todolistID_2',newTitle))
+    let task=startState["todolistId1"][0];
 
-    expect(endState['todolistID_2'].length).toBe(4);
-    expect(endState['todolistID_2'][0].title).toBe( "название4 из инпут");
+    const endState=TasksReducer(startState,addTaskAC(task));
+
+    expect(endState["todolistId1"][0].title).toBe( 'Css');
 });
 
 test ( 'CHENGE-STATUS-CHECKBOX',()=>{
@@ -102,5 +102,21 @@ test ( 'GET-TODOLIST i tasks',()=>{  //получили с "сервера" то
 
     expect(endState['1']).toEqual([]);
     expect(endState['2']).toEqual([]);
+
+});
+test ( 'get tasks for api',()=>{
+
+
+  const action=getTasksAC(startState["todolistId1"],"todolistId1");
+
+    const endState=TasksReducer({"todolistId1":[],"todolistId2":[]},action)
+
+
+
+
+    expect(endState["todolistId1"].length).toBe(2);// в тодолисте с таким ключом сидит 2 таски
+    expect(endState["todolistId2"].length).toBe(0);// в тодолисте с таким ключом сидит 2 таски
+
+
 
 });
