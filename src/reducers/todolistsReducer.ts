@@ -103,3 +103,10 @@ export const todolistsThunk=(dispatch:Dispatch )=>{
       dispatch(getTodolistsAC(res.data))
     })
 }
+
+export const todolistDeleteThunkCreatop=(todolistID:string)=>(dispatch:Dispatch )=>{
+    todolistApi.deleteTodolist(todolistID).then((res)=>{ //удаление тодолистов
+        dispatch(removeTodolistAC(todolistID))
+    })
+}
+

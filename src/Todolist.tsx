@@ -32,7 +32,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 
     useEffect(()=>{  // вызов get запрос тасок
         dispatch(TasksThunkCreator(props.todolistID)); //мне нужны таски. вот вам айди тодолиста -отдайте мне таски в этот тодолист!!!
-    },[]) //1 раз нужно получить тодолисты
+    },[]) //1 раз нужно получить тодолисты //те что лежат сейчас на сервере
 
 
     const addTask = useCallback((newTaskTitle: string) => {
