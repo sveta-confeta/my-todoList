@@ -3,7 +3,13 @@ import {Checkbox} from "@mui/material";
 import EditSpan from "../EditSpan/EditSpan";
 import {ButtonForm} from "../Button";
 import {useDispatch, useSelector} from "react-redux";
-import {apdateTaskAC, chengeCheckBoxStatusAC, removeTaskAC, TasksDeleteThunkCreator} from "../../reducers/tasksReducer";
+import {
+    apdateTaskAC,
+    chengeCheckBoxStatusAC,
+    removeTaskAC,
+    TasksDeleteThunkCreator,
+    TaskUpdateStatusThunkCreator
+} from "../../reducers/tasksReducer";
 import {AppRootStateType} from "../../redux/redux-store";
 import {AllTodolistsType} from "../../reducers/todolistsReducer";
 import {ItemType, TaskStatuses} from "../../api/ todolist-api";
@@ -41,10 +47,9 @@ const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{    //!!!!!!!!!!!!!
     let doneValue= event.currentTarget.checked; //в чекед сидит либо тру либо фолз
     onChangeCheckbox(tasks.id, doneValue ? TaskStatuses.Completed :TaskStatuses.New)
 }
-    const onChangeCheckbox = useCallback((elID: string, status:TaskStatuses) => {
-
-        dispatch(chengeCheckBoxStatusAC(props.todolistID,elID, status))
-    }, [dispatch,chengeCheckBoxStatusAC,props.todolistID])
+    const onChangeCheckbox = useCallback((elID: string, status:TaskStatuses) => { //изменения статуса таски
+        dispatch( TaskUpdateStatusThunkCreator(props.todolistID,elID, status)) //диспатчим в санку .пут запрос
+    }, [dispatch,props.todolistID])
     return (
         <div>
             <Checkbox color="success" checked={tasks.status===TaskStatuses.Completed}//было tasks.isDone

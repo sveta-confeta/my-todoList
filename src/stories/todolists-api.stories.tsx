@@ -191,7 +191,6 @@ export const UpdateTask = () => {
             deadline: '',
             description: description,
             priority: priority,
-            completed: false,
             startDate: '',
             status: status,
             title: taskTitle,

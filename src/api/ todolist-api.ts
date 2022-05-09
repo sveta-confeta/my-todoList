@@ -109,10 +109,9 @@ export enum TaskPriorities {
     Later = 4
 }
 
- type UpdateTask={  //for put
+ export type UpdateTask={  //for put
      title: string,
      description: string,
-     completed: boolean,
      status: number,
      priority: number,
      startDate: string,

@@ -6,8 +6,9 @@ import {
     todolistsTasksID,
     getTodolistsACType,
 } from "./todolistsReducer";
-import {ItemType, TaskPriorities, TaskStatuses, todolistApi} from "../api/ todolist-api";
+import {ItemType, TaskPriorities, TaskStatuses, todolistApi, UpdateTask} from "../api/ todolist-api";
 import {Dispatch} from "redux";
+import {AppRootStateType} from "../redux/redux-store";
 
 type ActionType =
     removeTaskACType
@@ -159,10 +160,40 @@ export const TasksDeleteThunkCreator=(todolistID:string,taskID:string)=>(dispatc
 export const TasksAddThunkCreator=(todolistID:string,title:string)=>(dispatch: Dispatch)=>{
     todolistApi.createTask(todolistID,title).then(res=>{  //добавление тасок в уже созданные тодолисты
         // -мы посылаем название таски и id тодолиста- post запрос
-        debugger
         dispatch(addTaskAC(res.data.data.item))
     })
 }
 
+export const  TaskUpdateStatusThunkCreator=(todolistID:string,taskID:string,status:TaskStatuses)=>(dispatch: Dispatch,getState:()=>AppRootStateType)=> { //getState функция которая возращает стейт всего приложения
+    const state = getState(); //здесь теперь весь стейт чтоб из него можно было достать нужные значения
+    const allTasks = state.tasks;//все таски
+    //debugger
+    //теперь получаем таски для конкретного тудулиста
+    const tasksForTodolists = allTasks[todolistID]; //сдесь все таски для тодолиста на который кликаем.
+    const currentTask = tasksForTodolists.find(f  => { //файнд находит нужную таску и выпрыгивает
+        return f.id === taskID
+    });
 
+    if (currentTask) { //find нужна проверка
+        const elems: UpdateTask = {
+            title: currentTask.title,
+            description: currentTask.description,
+            status: status,
+            priority: currentTask.priority,
+            startDate: currentTask.startDate,
+            deadline: currentTask.deadline
+        }
+
+
+        //теперь нам нужно в currentTask изменить статус,
+        //  const elems:any={...currentTask,status:status} //делаем копию currentTask и говорим замени мне status на status из параметров которые пришли
+
+        todolistApi.updateTask(todolistID, taskID, elems).then(res => {  //в саночку нужно положить каким то образом elems который ждет апишка
+            // -мы посылаем название таски и id тодолиста- put запрос
+           // debugger
+            dispatch(chengeCheckBoxStatusAC(todolistID, taskID, status))
+        })
+    }
+
+}
 
