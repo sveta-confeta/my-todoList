@@ -8,7 +8,7 @@ import {
     addTodolistsAC, AllTodolistsType,
     filteredTaskAC,
     removeTodolistAC,
-    titleTodolistAC, todolistDeleteThunkCreatop, todolistsThunk,
+    titleTodolistAC, todolistAddThunkCreatop, todolistDeleteThunkCreatop, todolistsThunk,
 } from "./reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./redux/redux-store";
@@ -75,7 +75,7 @@ function App() {
         // [...todolists, {id: newTodolistID, titleTodolist: titleTodolist, filter: 'All' //для тодолистредьюсер
         // const newTodolistID = v1();
         // {...tasks, [newTodolistID]: []}//для таскредьюсер
-        let action=addTodolistsAC(titleTodolist);//чтоб мы не повторяли вызов функции 2 раза
+        let action=todolistAddThunkCreatop(titleTodolist);//чтоб мы не повторяли вызов функции 2 раза
         dispatch(action);
 
     },[])

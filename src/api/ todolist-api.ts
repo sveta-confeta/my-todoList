@@ -1,4 +1,5 @@
 import axios from "axios";
+import {ApiTodolistsType} from "../reducers/todolistsReducer";
 
 export const instance = axios.create({
     withCredentials: true,
@@ -12,12 +13,12 @@ export const instance = axios.create({
 
 export const todolistApi = {
     getTodolist() {
-        const promise = instance.get<TodoType[]>(`todo-lists`)
+        const promise = instance.get<ApiTodolistsType[]>(`todo-lists`)
         return promise;
     },
     createNewTodolist(titleTodolist: string) {
         return instance.post<CommonResponseType<{
-            item: TodoType[],
+            item: ApiTodolistsType,
         }>>('todo-lists', {title: titleTodolist})
     },
     deleteTodolist(todolistId: string) {
@@ -46,12 +47,12 @@ export const todolistApi = {
 }
 
 
-type TodoType = {
-    "id": string,
-    "title": string,
-    "addedDate": string,
-    "order": number,
-}
+// export type TodoType = {
+//     "id": string,
+//     "title": string,
+//     "addedDate": string,
+//     "order": number,
+// }
 type CommonResponseType<T> = { //общий тип
     resultCode: number,  //закидываем одинаковую часть для всех
     fieldsErrors: string[],

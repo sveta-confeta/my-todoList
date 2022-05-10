@@ -1,7 +1,7 @@
 
 import {v1} from "uuid";
 import {Dispatch} from "redux";
-import {todolistApi} from "../api/ todolist-api";
+import {ItemType, todolistApi} from "../api/ todolist-api";
 
 type ActionType = filteredTaskACType | removeTodolistACType | titleTodolistACType | addTodolistsACType | getTodolistsACType;
 type filteredTaskACType = ReturnType<typeof filteredTaskAC>
@@ -39,14 +39,10 @@ export const TodolistReducer = (state: Array<AllTodolistsType>=initialState, act
             return state.map(m => action.todolistID === m.id ? {...m, titleTodolist: action.title} : m)
         }
         case  'ADD-TODOLIST': { //добавить еще один тодолист
-            return [{
-                id: action.newTodolistID,
-                title: action.titleTodolist,
-                filter: 'All',
-                addedDate: '',
-                order: 0,
-            }, ...state]
-        }
+            let  newTodolist:AllTodolistsType={...action.item,filter:'All'};
+             return [newTodolist,...state]
+
+            }
         case  'GET-TODOLISTS': { //добавть с апишки все тодолисты с нуля
             return action.todolists.map(m=>{
                 return {...m,filter:'All'}
@@ -81,11 +77,11 @@ export const titleTodolistAC = (todolistID: string, title: string) => {
     } as const
 };
 
-export const addTodolistsAC = (titleTodolist: string) => {
+export const addTodolistsAC = (item:ApiTodolistsType) => {
     return {
         type: 'ADD-TODOLIST',
-        titleTodolist,
-         newTodolistID:v1(), //генерируем 1 id и для тудулист и тасок
+       item,
+        // newTodolistID:v1(), //генерируем 1 id и для тудулист и тасок если нет апи
     } as const
 };
 
@@ -107,6 +103,11 @@ export const todolistsThunk=(dispatch:Dispatch )=>{
 export const todolistDeleteThunkCreatop=(todolistID:string)=>(dispatch:Dispatch )=>{
     todolistApi.deleteTodolist(todolistID).then((res)=>{ //удаление тодолистов
         dispatch(removeTodolistAC(todolistID))
+    })
+}
+export const todolistAddThunkCreatop=(title:string)=>(dispatch:Dispatch )=>{
+    todolistApi.createNewTodolist(title).then((res)=>{ //удаление тодолистов
+        dispatch(addTodolistsAC(res.data.data.item))
     })
 }
 
