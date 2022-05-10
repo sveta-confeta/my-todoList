@@ -12,7 +12,13 @@ test('ids should be equals', () => {
     const startTasksState: StateType = {};
     const startTodolistsState:  Array<AllTodolistsType> = [];
 
-    const action = addTodolistsAC("new todolist");
+    let item= {
+        "id": '3',
+        "title": 'REACT',
+        "addedDate": '',
+        "order": 4,
+    }
+    const action = addTodolistsAC(item);
 
     const endTasksState =  TasksReducer(startTasksState, action) //в результате будет создана 'ggg':[]
     const endTodolistsState = TodolistReducer(startTodolistsState, action)//в результате будет создана {id:action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'}
@@ -21,8 +27,8 @@ test('ids should be equals', () => {
     const idFromTasks = keys[0];
     const idFromTodolists = endTodolistsState[0].id;
 
-    expect(idFromTasks).toBe(action.newTodolistID);
-    expect(idFromTodolists).toBe(action.newTodolistID);
+    expect(idFromTasks).toBe(action.item.id); //ключи должны совпадать
+    expect(idFromTodolists).toBe(action.item.id); //ключи должны совпадать
     expect(idFromTodolists).toBe(idFromTasks);
 });
 
