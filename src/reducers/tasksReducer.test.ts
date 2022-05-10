@@ -26,13 +26,13 @@ beforeEach(()=>{
 
 test ( "REMOVE-TASK",()=>{
 
-    const endState=TasksReducer(startState,removeTaskAC('todolistID_2','4'))
+    const endState=TasksReducer(startState,removeTaskAC("todolistId2",'2'))
 
-    expect(endState['todolistID_2'].length).toBe(2);
-    expect(endState['todolistID_1'].length).toBe(3);
-    expect(endState['todolistID_1'][0].title).toBe( "название1 из инпут");
-    expect(endState['todolistID_2'].every(t=> t.id!=='4')).toBeTruthy(); //это метод как фильтр,мап-пробегается по каждому элементу
-    //массива и должен вернуть все id кроме той, что мы удалили.и проверка что каждый элемент не равен id 4
+    expect(endState["todolistId2"].length).toBe(1);
+    expect(endState["todolistId1"].length).toBe(2);
+    expect(endState["todolistId1"][0].title).toBe( 'Css');
+    expect(endState["todolistId2"].every(t=> t.id!=='2')).toBeTruthy(); //это метод как фильтр,мап-пробегается по каждому элементу
+    //массива и должен вернуть все id кроме той, что мы удалили.и проверка что каждый элемент не равен id 2
 });
 test ( 'ADD-TASK',()=>{
 
@@ -48,31 +48,33 @@ test ( 'CHENGE-STATUS-CHECKBOX',()=>{
 
 
 
-    const endState=TasksReducer(startState,chengeCheckBoxStatusAC('todolistID_1','1',TaskStatuses.New))
+    const endState=TasksReducer(startState,chengeCheckBoxStatusAC("todolistId1",'1',TaskStatuses.New))
 
-    expect(endState['todolistID_1'][0].status).toBe(TaskStatuses.Completed);
-    expect(endState['todolistID_2'][0].status).toBe( TaskStatuses.New);
+    expect(endState["todolistId1"][0].status).toBe(TaskStatuses.New);
+    expect(endState["todolistId2"][0].status).toBe( TaskStatuses.New);
 });
 
 test ( 'APDATE-TASK',() => {
     let newTitle='ggggg';
-    const endState=TasksReducer(startState,apdateTaskAC('todolistID_1','2',newTitle))
+    const endState=TasksReducer(startState,apdateTaskAC("todolistId1",'2',newTitle))
 
-    expect(endState['todolistID_2'][0].title).toBe(  "название1 из инпут");
-    expect(endState['todolistID_1'][1].title).toBe('ggggg');
+    expect(endState["todolistId2"][0].title).toBe(  "Milk");
+    expect(endState["todolistId1"][1].title).toBe('ggggg');
 
 });
 test ( 'ADD-TODOLIST',()=>{
 
-
-    let newTitle='newTodolist';
-
-
-    const endState=TasksReducer(startState,addTodolistsAC(newTitle));
+    let item= {
+        "id": '3',
+        "title": 'REACT',
+        "addedDate": '',
+        "order": 4,
+    }
+    const endState=TasksReducer(startState,addTodolistsAC(item));
 
 
     const keys = Object.keys(endState);//возращает массив в виде строковых ключей передаваемого обьекта
-    const newKey = keys.find(k => k != 'todolistID_1' && k != 'todolistID_2'); //записываем в переменную ключ который не равняется ни одному из тодолистов
+    const newKey = keys.find(k => k != "todolistId1" && k != "todolistId2"); //записываем в переменную ключ который не равняется ни одному из тодолистов
     if (!newKey) { //если не нашелся такой ключ то выдать ошибку
         throw Error("new key should be added")
     }

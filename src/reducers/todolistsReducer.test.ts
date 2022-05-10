@@ -45,17 +45,23 @@ test('TITLE-TODOLIST', ()=>{
     const endState=TodolistReducer(startState,titleTodolistAC(todolistID_1,newTitle));
 
     expect(endState[0].title).toBe(newTitle);
-    expect(endState[1].title).toBe(  'What to read');
+    expect(endState[1].title).toBe(   "What to buy");
 })
 
 test('ADD-TODOLIST', ()=>{
 
-    let newTitle='What to watch TV';
+
+    let item= {
+        "id": '3',
+        "title": 'REACT',
+        "addedDate": '',
+        "order": 4,
+    }
 
 
-    const endState=TodolistReducer(startState,addTodolistsAC(newTitle));
+    const endState=TodolistReducer(startState,addTodolistsAC(item));
 
-    expect(endState[2].title).toBe(newTitle);
+     expect(endState[0].title).toBe('REACT');
     expect(endState.length).toBe(  3);
 
 })
