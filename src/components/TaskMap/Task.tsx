@@ -8,7 +8,7 @@ import {
     chengeCheckBoxStatusAC,
     removeTaskAC,
     TasksDeleteThunkCreator,
-    TaskUpdateStatusThunkCreator
+    TaskUpdateStatusThunkCreator, TaskUpdateTitleThunkCreator
 } from "../../reducers/tasksReducer";
 import {AppRootStateType} from "../../redux/redux-store";
 import {AllTodolistsType} from "../../reducers/todolistsReducer";
@@ -32,7 +32,7 @@ export const Task = (props:TaskPropsType) => {
 
 
     const callbackApdateTask = useCallback((elID: string, title: string) => {
-        dispatch(apdateTaskAC(props.todolistID,elID, title))
+        dispatch(TaskUpdateTitleThunkCreator(props.todolistID,elID, title))
     }, [dispatch, apdateTaskAC,props.todolistID])
 
     // const removeTaskHandler = useCallback((tId: string) => {

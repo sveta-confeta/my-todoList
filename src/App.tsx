@@ -5,10 +5,9 @@ import { Todolist} from "./Todolist";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import {addTaskAC, TasksAddThunkCreator} from "./reducers/tasksReducer";
 import {
-    addTodolistsAC, AllTodolistsType,
+    AllTodolistsType,
     filteredTaskAC,
-    removeTodolistAC,
-    titleTodolistAC, todolistAddThunkCreatop, todolistDeleteThunkCreatop, todolistsThunk,
+    titleTodolistThunkCreator, todolistAddThunkCreator, todolistDeleteThunkCreator, todolistsThunk,
 } from "./reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./redux/redux-store";
@@ -68,14 +67,14 @@ function App() {
 
     const removeTodolist =useCallback( (todolistID: string) => {
         // setTodolists(todolists.filter(f => f.id !== todolistID))
-        dispatch(todolistDeleteThunkCreatop(todolistID))
+        dispatch(todolistDeleteThunkCreator(todolistID))
     },[dispatch]);
 
     const addTodolists =useCallback(  (titleTodolist: string) => {
         // [...todolists, {id: newTodolistID, titleTodolist: titleTodolist, filter: 'All' //для тодолистредьюсер
         // const newTodolistID = v1();
         // {...tasks, [newTodolistID]: []}//для таскредьюсер
-        let action=todolistAddThunkCreatop(titleTodolist);//чтоб мы не повторяли вызов функции 2 раза
+        let action=todolistAddThunkCreator(titleTodolist);//чтоб мы не повторяли вызов функции 2 раза
         dispatch(action);
 
     },[])
@@ -84,8 +83,8 @@ function App() {
 
     const titleTodolist =useCallback( (todolistID: string,title: string) => {
         // setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));
-        dispatch(titleTodolistAC( todolistID,title))
-    },[ dispatch,titleTodolistAC]);
+        dispatch(titleTodolistThunkCreator(todolistID,title))
+    },[ ]);
 
 
     return (

@@ -13,13 +13,13 @@ const EditSpan = React.memo((props:EditSpanPropsType) =>{
     const[editMode,setEditMode]=useState<boolean>(false);//для редактирования
 
     const onChangeHandler=(event:ChangeEvent<HTMLInputElement>)=>{
+        //debugger
         setTitle(event.currentTarget.value)
     }
-    const onBlurHanter= useCallback(()=>{
+    const onBlurHanter= (()=>{
         props.apdateTask(title)
         setEditMode(false);
-    },[ props.apdateTask]);
-
+    });
     const onChangeDoubleClick= ()=>{
         setEditMode(true);
     }
@@ -34,7 +34,7 @@ const EditSpan = React.memo((props:EditSpanPropsType) =>{
               value={title}
               onChange={onChangeHandler}
               size={'small'} id="outlined-basic"
-               variant="standard" color={"success"}/>
+              variant="standard" color={"success"}/>
           // <input onChange={onChangeHandler} value={title} autoFocus onBlur={onBlurHanter}/>
         : <span onDoubleClick={ onChangeDoubleClick}>{props.title}</span>
 

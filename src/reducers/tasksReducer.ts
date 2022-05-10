@@ -196,3 +196,33 @@ export const  TaskUpdateStatusThunkCreator=(todolistID:string,taskID:string,stat
 
 }
 
+export const  TaskUpdateTitleThunkCreator=(todolistID:string,taskID:string,title:string)=>(dispatch: Dispatch,getState:()=>AppRootStateType)=> { //getState функция которая возращает стейт всего приложения
+    const state = getState(); //здесь теперь весь стейт чтоб из него можно было достать нужные значения
+    const allTasks = state.tasks;//все таски
+    //debugger
+    //теперь получаем таски для конкретного тудулиста
+    const tasksForTodolists = allTasks[todolistID]; //сдесь все таски для тодолиста на который кликаем.
+    const currentTask = tasksForTodolists.find(f  => { //файнд находит нужную таску и выпрыгивает
+        return f.id === taskID
+    });
+
+    if (currentTask) { //find нужна проверка
+        const elems: UpdateTask = {
+            title: title, //из параметров обновится
+            description: currentTask.description,
+            status: currentTask.status,
+            priority: currentTask.priority,
+            startDate: currentTask.startDate,
+            deadline: currentTask.deadline
+        }
+
+        //теперь нам нужно в currentTask изменить title
+        todolistApi.updateTask(todolistID, taskID, elems).then(res => {  //в саночку нужно положить каким то образом elems который ждет апишка
+            // -мы посылаем название таски и id тодолиста- put запрос
+            // debugger
+            dispatch(apdateTaskAC(todolistID, taskID, title))
+        })
+    }
+
+}
+

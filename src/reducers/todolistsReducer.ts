@@ -36,7 +36,7 @@ export const TodolistReducer = (state: Array<AllTodolistsType>=initialState, act
             return state.filter(f => f.id !== action.todolistID)
         }
         case 'TITLE-TODOLIST': {
-            return state.map(m => action.todolistID === m.id ? {...m, titleTodolist: action.title} : m)
+            return state.map(m => action.todolistID === m.id ? {...m, title: action.title} : m)
         }
         case  'ADD-TODOLIST': { //добавить еще один тодолист
             let  newTodolist:AllTodolistsType={...action.item,filter:'All'};
@@ -100,14 +100,19 @@ export const todolistsThunk=(dispatch:Dispatch )=>{
     })
 }
 
-export const todolistDeleteThunkCreatop=(todolistID:string)=>(dispatch:Dispatch )=>{
+export const todolistDeleteThunkCreator=(todolistID:string)=>(dispatch:Dispatch )=>{
     todolistApi.deleteTodolist(todolistID).then((res)=>{ //удаление тодолистов
         dispatch(removeTodolistAC(todolistID))
     })
 }
-export const todolistAddThunkCreatop=(title:string)=>(dispatch:Dispatch )=>{
+export const todolistAddThunkCreator=(title:string)=>(dispatch:Dispatch )=>{
     todolistApi.createNewTodolist(title).then((res)=>{ //удаление тодолистов
         dispatch(addTodolistsAC(res.data.data.item))
     })
 }
 
+export const titleTodolistThunkCreator=(todolistID:string,title:string)=>(dispatch:Dispatch )=>{
+    todolistApi.updateTodoTitle(todolistID,title).then((res)=>{ //удаление тодолистов
+        dispatch( titleTodolistAC(todolistID,title))
+    })
+}
