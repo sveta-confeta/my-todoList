@@ -1,4 +1,4 @@
-import {StateType} from "../App";
+import {StateType} from "../app/App";
 import {addTaskAC, apdateTaskAC, chengeCheckBoxStatusAC, getTasksAC, removeTaskAC, TasksReducer} from "./tasksReducer";
 import {addTodolistsAC, getTodolistsAC} from "./todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";

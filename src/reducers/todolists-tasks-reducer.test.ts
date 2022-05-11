@@ -1,4 +1,4 @@
-import {StateType} from "../App";
+import {StateType} from "../app/App";
 import { TasksReducer} from "./tasksReducer";
 import {
     addTodolistsAC,

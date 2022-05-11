@@ -1,17 +1,17 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
 
-import { Todolist} from "./Todolist";
-import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
-import {addTaskAC, TasksAddThunkCreator} from "./reducers/tasksReducer";
+import { Todolist} from "../Todolist";
+import {AddItemForm} from "../components/AddItemsForm/AddItemForm";
+import {addTaskAC, TasksAddThunkCreator} from "../reducers/tasksReducer";
 import {
     AllTodolistsType,
     filteredTaskAC,
     titleTodolistThunkCreator, todolistAddThunkCreator, todolistDeleteThunkCreator, todolistsThunk,
-} from "./reducers/todolistsReducer";
+} from "../reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./redux/redux-store";
-import {ItemType, todolistApi} from "./api/ todolist-api";
+import {AppRootStateType} from "../redux/redux-store";
+import {ItemType, todolistApi} from "../api/ todolist-api";
 
 
 
