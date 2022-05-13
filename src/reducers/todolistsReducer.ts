@@ -1,6 +1,7 @@
 import {v1} from "uuid";
 import {Dispatch} from "redux";
 import { todolistApi} from "../api/ todolist-api";
+import {setAppStatusAC} from "./appReducer";
 
 
 
@@ -50,8 +51,9 @@ export const getTodolistsAC = (todolists: Array<ApiTodolistsType>) => ({type: 'G
 
 
 export const todolistsThunk = (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     todolistApi.getTodolist().then((res) => { //get запрос за тодолистами
-
+        dispatch(setAppStatusAC('failed'))
         dispatch(getTodolistsAC(res.data))
     })
 }
@@ -78,6 +80,7 @@ export type ActionType = ReturnType<typeof filteredTaskAC>
     | ReturnType<typeof addTodolistsAC>
     | ReturnType<typeof titleTodolistAC>
     | ReturnType<typeof getTodolistsAC>
+| ReturnType<typeof setAppStatusAC>
 
 export type ApiTodolistsType = {
     "id": string,

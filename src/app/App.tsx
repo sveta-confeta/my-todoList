@@ -10,8 +10,11 @@ import {
     titleTodolistThunkCreator, todolistAddThunkCreator, todolistDeleteThunkCreator, todolistsThunk,
 } from "../reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../redux/redux-store";
+import {AppRootStateType, useAppSelector} from "../redux/redux-store";
 import {ItemType, todolistApi} from "../api/ todolist-api";
+import CircularProgress from "@mui/material/CircularProgress";
+import {RequestStatusType} from "../reducers/appReducer";
+
 
 
 
@@ -44,6 +47,7 @@ function App() {
 
     const tasks=useSelector<AppRootStateType,StateType>(state=>state.tasks);
     const todolists=useSelector<AppRootStateType,Array<AllTodolistsType>>(state=>state.todolists);
+    const status=useAppSelector<RequestStatusType>(state=>state.app.status); //для крутилки
 
     const dispatch=useDispatch()
 
@@ -89,6 +93,9 @@ function App() {
 
     return (
         <div className="App">
+            {/*крутилка:*/}
+            { status==='loading' && <CircularProgress disableShrink/> }
+
             <div className={'CreateTodolists'}>
             <AddItemForm addTask={addTodolists}/>
             </div>

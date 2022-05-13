@@ -6,8 +6,6 @@
 
 import {combineReducers, createStore} from "redux";
 import {Provider} from "react-redux";
-import {AppRootStateType} from "./redux-store";
-import {v1} from "uuid";
 import {TasksReducer} from "../reducers/tasksReducer";
 import {TodolistReducer} from "../reducers/todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
@@ -17,7 +15,7 @@ const rootReducer = combineReducers({
     todolists:TodolistReducer,
 })
 
-const initialGlobalState:AppRootStateType = {
+const initialGlobalState = {
     todolists: [    //стартовый стейт для сторибук
         {id: "todolistId1", title: "What to learn", filter: "All", "addedDate": '',
             "order": 0},
