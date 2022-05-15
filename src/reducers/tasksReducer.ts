@@ -7,6 +7,7 @@ import {
 import {ItemType, TaskStatuses, todolistApi, UpdateTask} from "../api/ todolist-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../redux/redux-store";
+import {errorAppMessageAC, setAppStatusAC} from "./appReducer";
 
 
 const initialState: StateType = {
@@ -95,21 +96,31 @@ export const getTasksAC = (tasks: ItemType[], todolistID: string) =>  //c апи
 
 
 export const TasksThunkCreator = (todolistID: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     todolistApi.getTasks(todolistID).then((res) => { //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
+        dispatch(setAppStatusAC('failed'))
         dispatch(getTasksAC(res.data.items, todolistID))
     })
 }
 
 export const TasksDeleteThunkCreator = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     todolistApi.deleteTask(todolistID, taskID).then(res => {  //удаление тасок delete запрос
+        dispatch(setAppStatusAC('failed'))
         dispatch(removeTaskAC(todolistID, taskID))
     })
 }
 
 export const TasksAddThunkCreator = (todolistID: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     todolistApi.createTask(todolistID, title).then(res => {  //добавление тасок в уже созданные тодолисты
-        // -мы посылаем название таски и id тодолиста- post запрос
-        dispatch(addTaskAC(res.data.data.item))
+        if(res.data.resultCode===0){ //если нет ошибки то выполни добавление тасок
+            dispatch(setAppStatusAC('failed'))
+            dispatch(addTaskAC(res.data.data.item)) // -мы посылаем название таски и id тодолиста- post запрос
+        }else{
+            dispatch(setAppStatusAC('failed')) //опять же убираем крутилку
+            dispatch(errorAppMessageAC(res.data.messages[0]));
+        }
     })
 }
 
@@ -133,10 +144,11 @@ export const TaskUpdateStatusThunkCreator = (todolistID: string, taskID: string,
         }
         //теперь нам нужно в currentTask изменить статус,
         //  const elems:any={...currentTask,status:status} //делаем копию currentTask и говорим замени мне status на status из параметров которые пришли
-
+        dispatch(setAppStatusAC('loading'))
         todolistApi.updateTask(todolistID, taskID, elems).then(res => {  //в саночку нужно положить каким то образом elems который ждет апишка
             // -мы посылаем название таски и id тодолиста- put запрос
             // debugger
+            dispatch(setAppStatusAC('failed'))
             dispatch(chengeCheckBoxStatusAC(todolistID, taskID, status))
         })
     }
@@ -162,8 +174,9 @@ export const TaskUpdateTitleThunkCreator = (todolistID: string, taskID: string, 
         }
         //теперь нам нужно в currentTask изменить статус,
         //  const elems:any={...currentTask,status:status} //делаем копию currentTask и говорим замени мне status на status из параметров которые пришли
-
+        dispatch(setAppStatusAC('loading'))
         todolistApi.updateTask(todolistID, taskID, elems).then(res => {  //в саночку нужно положить каким то образом elems который ждет апишка
+            dispatch(setAppStatusAC('failed'))
             // -мы посылаем название таски и id тодолиста- put запрос
             // debugger
             dispatch(apdateTaskAC(todolistID, taskID, title))
@@ -180,6 +193,8 @@ type ActionType =
     | ReturnType<typeof getTasksAC>
     | ReturnType<typeof addTodolistsAC>
     | ReturnType<typeof getTodolistsAC>
+    | ReturnType<typeof setAppStatusAC> //крутилка
+    |  ReturnType<typeof errorAppMessageAC> //ошибка
 
 
 

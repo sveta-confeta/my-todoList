@@ -14,6 +14,7 @@ import {AppRootStateType, useAppSelector} from "../redux/redux-store";
 import {ItemType, todolistApi} from "../api/ todolist-api";
 import CircularProgress from "@mui/material/CircularProgress";
 import {RequestStatusType} from "../reducers/appReducer";
+import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 
 
 
@@ -93,6 +94,7 @@ function App() {
 
     return (
         <div className="App">
+            <ErrorSnackbar/>
             {/*крутилка:*/}
             { status==='loading' && <CircularProgress disableShrink/> }
 
