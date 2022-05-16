@@ -8,6 +8,7 @@ import {ItemType, TaskStatuses, todolistApi, UpdateTask} from "../api/ todolist-
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../redux/redux-store";
 import {errorAppMessageAC, setAppStatusAC} from "./appReducer";
+import {AxiosError} from "axios";
 
 
 const initialState: StateType = {
@@ -113,15 +114,21 @@ export const TasksDeleteThunkCreator = (todolistID: string, taskID: string) => (
 
 export const TasksAddThunkCreator = (todolistID: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistApi.createTask(todolistID, title).then(res => {  //добавление тасок в уже созданные тодолисты
-        if(res.data.resultCode===0){ //если нет ошибки то выполни добавление тасок
-            dispatch(setAppStatusAC('failed'))
-            dispatch(addTaskAC(res.data.data.item)) // -мы посылаем название таски и id тодолиста- post запрос
-        }else{
-            dispatch(setAppStatusAC('failed')) //опять же убираем крутилку
-            dispatch(errorAppMessageAC(res.data.messages[0]));
-        }
-    })
+    todolistApi.createTask(todolistID, title)
+        .then(res => {  //добавление тасок в уже созданные тодолисты
+            if (res.data.resultCode === 0) { //если нет ошибки то выполни добавление тасок
+                dispatch(setAppStatusAC('failed'))
+                dispatch(addTaskAC(res.data.data.item)) // -мы посылаем название таски и id тодолиста- post запрос
+            } else {
+                dispatch(setAppStatusAC('failed')) //опять же убираем крутилку
+                dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
+            }
+        })
+        .catch((err: AxiosError) => {
+            dispatch(setAppStatusAC('failed'))//крутилка отключилась
+            dispatch(errorAppMessageAC(err.message)) //текст ошибки диспатчим в стейт
+        })
+
 }
 
 export const TaskUpdateStatusThunkCreator = (todolistID: string, taskID: string, status: TaskStatuses) => (dispatch: Dispatch, getState: () => AppRootStateType) => { //getState функция которая возращает стейт всего приложения
@@ -194,7 +201,7 @@ type ActionType =
     | ReturnType<typeof addTodolistsAC>
     | ReturnType<typeof getTodolistsAC>
     | ReturnType<typeof setAppStatusAC> //крутилка
-    |  ReturnType<typeof errorAppMessageAC> //ошибка
+    | ReturnType<typeof errorAppMessageAC> //ошибка
 
 
 

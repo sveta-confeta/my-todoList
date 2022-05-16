@@ -1,6 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent} from 'react';
-import s from "./AddItemsForm/AddItemForm.module.css";
 import {TextField} from "@mui/material";
+import {RequestStatusType} from "../reducers/appReducer";
 
 
 type InputPropsType = {
@@ -8,6 +8,7 @@ type InputPropsType = {
     error: boolean
     onChangeHandler: (event: ChangeEvent<HTMLInputElement>) => void
     keyPress: (event: KeyboardEvent<HTMLInputElement>) => void
+    disabledStatus?:RequestStatusType
 
 }
 
@@ -22,6 +23,7 @@ export const Input = (props: InputPropsType) => {
             {/*       className={`${s.addtask} + ${props.error ? s.error:' '}`}*/}
             {/*       type="text"/>*/}
             <TextField
+                disabled={props.disabledStatus==='loading'}
                 value={props.newTaskTitle}
                 onKeyPress={props.keyPress}
                 onChange={props.onChangeHandler}

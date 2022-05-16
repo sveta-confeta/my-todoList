@@ -109,6 +109,7 @@ function App() {
 
                     return (
                         <Todolist
+                            disabledStatus={m.disabledStatus}
                             key={m.id}
                             todolistID={m.id}
                             title={m.title}

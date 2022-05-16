@@ -9,17 +9,19 @@ import {Provider} from "react-redux";
 import {TasksReducer} from "../reducers/tasksReducer";
 import {TodolistReducer} from "../reducers/todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
+import {appReducer} from "../reducers/appReducer";
 
 const rootReducer = combineReducers({
     tasks: TasksReducer,
     todolists:TodolistReducer,
+    app:appReducer,
 })
 
 const initialGlobalState = {
     todolists: [    //стартовый стейт для сторибук
-        {id: "todolistId1", title: "What to learn", filter: "All", "addedDate": '',
+        {id: "todolistId1", title: "What to learn", filter: "All", "addedDate": '',disabledStatus:'failed',
             "order": 0},
-        {id: "todolistId2", title: "What to buy", filter: "All", "addedDate": '',
+        {id: "todolistId2", title: "What to buy", filter: "All", "addedDate": '',disabledStatus:'failed',
             "order": 0},
     ] ,
     tasks: {

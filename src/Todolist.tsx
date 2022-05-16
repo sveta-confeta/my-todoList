@@ -9,6 +9,7 @@ import  ButtonGroup from "@mui/material/ButtonGroup";
 import {ItemType} from "./api/ todolist-api";
 import { TasksThunkCreator} from "./reducers/tasksReducer";
 import {useDispatch} from "react-redux";
+import {RequestStatusType} from "./reducers/appReducer";
 
 
 export type TodolistPropsType = {
@@ -18,7 +19,7 @@ export type TodolistPropsType = {
 
     filteredTask: (todolistID: string, value: string) => void
     addTask: (todolistID: string, value: string) => void
-
+    disabledStatus:RequestStatusType
     filter: string
     todolistID: string//это не меняется
     removeTodolist: (todolistID: string) => void
@@ -65,10 +66,10 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         <div className={s.todolist_wrapper}>
             <div className={s.wrapperForm}>
                 <h3><EditSpan title={props.title} apdateTask={(title: string) => callbackTitleTodolist(title)}/></h3>
-                <ButtonForm name={'x'} callback={removeTodolist}/>
+                <ButtonForm name={'x'} callback={removeTodolist} disabledStatus={props.disabledStatus}/>
             </div>
             <div className={s.input_wrapper}>
-                <AddItemForm addTask={addTask}/>
+                <AddItemForm addTask={addTask} disabledStatus={props.disabledStatus}/>
 
             </div>
             {/*map отдельно*/}

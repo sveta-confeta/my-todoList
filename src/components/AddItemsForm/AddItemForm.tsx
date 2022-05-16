@@ -2,9 +2,11 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {Input} from "../Input";
 import s from "./AddItemForm.module.css";
 import {ButtonForm} from "../Button";
+import {RequestStatusType} from "../../reducers/appReducer";
 
 type AddItemFormPropsType = {
     addTask: (title: string) => void
+    disabledStatus?:RequestStatusType
 
 }
 //эта универсальная компоента.поэтому внутри нее у нас не может быть подключения к редаксу.только через пропсы
@@ -41,7 +43,7 @@ export const AddItemForm =React.memo( (props: AddItemFormPropsType) => {
     return (
         <div>
             <div className={s.wrapper}>
-                <Input onChangeHandler={onChangeHandler} newTaskTitle={newTaskTitle} keyPress={keyPress} error={error}/>
+                <Input disabledStatus={props.disabledStatus} onChangeHandler={onChangeHandler} newTaskTitle={newTaskTitle} keyPress={keyPress} error={error}/>
                 <ButtonForm name={'+'} callback={blockButton}/>
             </div>
             {/*{error ? <div className={s.errorMessage}>Title is required</div> : ''}*/}
