@@ -4,25 +4,26 @@
 //Глядите, выше мы заюзали наш рабочий store для примера в Storybook-e. Пустой state у нас.. так себе для демонстрации вариант.
 //Давайте для сторибука при создании заполним стор какими-то данными.
 
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
 import {Provider} from "react-redux";
 import {TasksReducer} from "../reducers/tasksReducer";
 import {TodolistReducer} from "../reducers/todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 import {appReducer} from "../reducers/appReducer";
+import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
     tasks: TasksReducer,
     todolists:TodolistReducer,
     app:appReducer,
 })
-
+//когда создаем вне новый редьюсер, нужно его сдесь записывать
 const initialGlobalState = {
     todolists: [    //стартовый стейт для сторибук
-        {id: "todolistId1", title: "What to learn", filter: "All", "addedDate": '',disabledStatus:'failed',
-            "order": 0},
-        {id: "todolistId2", title: "What to buy", filter: "All", "addedDate": '',disabledStatus:'failed',
-            "order": 0},
+        {id: "todolistId1", title: "What to learn", filter: "All", addedDate: '',disabledStatus: 'failed',
+            order: 0},
+        {id: "todolistId2", title: "What to buy", filter: "All", addedDate: '' ,disabledStatus:'failed',
+            order: 0},
     ] ,
     tasks: {
         ["todolistId1"]: [
@@ -39,12 +40,17 @@ const initialGlobalState = {
                 description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId:"todolistId2",
                 order: 0, addedDate: ''}
         ]
+    },
+    app:{
+        status:'idle',error:null
     }
 };
-//storyBookStore-отправляем в провайдер:
- export const storyBookStore = createStore(rootReducer, initialGlobalState);
+type GlobalStateType = ReturnType<typeof rootReducer>
+    //storyBookStore-отправляем в провайдер:
+//@ts-ignore
+ export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk) );
 
-
+ // applyMiddleware тоже подключаем к стору, чтоб работали санки. это почти как стор приложения
 export const ReduxStoreProviderDecorator=(storyFn: () => React.ReactNode) => {
     return <Provider store={storyBookStore}>{storyFn()}</Provider>
 }

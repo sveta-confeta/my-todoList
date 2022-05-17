@@ -81,6 +81,7 @@ type TasksResponseType = {
     "totalCount": number,
     "error": null,
 }
+
  export type ItemType= { //get tasks
     description: string,
     title: string,

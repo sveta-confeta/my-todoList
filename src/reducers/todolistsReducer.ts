@@ -1,8 +1,9 @@
 import {v1} from "uuid";
 import {Dispatch} from "redux";
 import {todolistApi} from "../api/ todolist-api";
-import {errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
+import {AppActionsType, errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
 import {AxiosError} from "axios";
+import {handleServerNetworkError} from "../utils/error-util";
 
 
 export const todolistsTasksID = {
@@ -29,7 +30,7 @@ export const TodolistReducer = (state: Array<AllTodolistsType> = initialState, a
             return state.map(m => action.todolistID === m.id ? {...m, title: action.title} : m)
         }
         case 'DISABLED-STATUS': {
-            return state.map(m => action.todolistID === m.id ? {...m, disabledStatus:action.disabledStatus} : m)
+            return state.map(m => action.todolistID === m.id ? {...m, disabledStatus: action.disabledStatus} : m)
         }
         case  'ADD-TODOLIST': { //добавить еще один тодолист
             let newTodolist: AllTodolistsType = {...action.item, filter: 'All', disabledStatus: 'failed'};
@@ -47,20 +48,26 @@ export const TodolistReducer = (state: Array<AllTodolistsType> = initialState, a
 }
 
 
-export const filteredTaskAC = (todolistID: string, value: string) => ({type: 'FILTERED-TASK', todolistID,
-        value,} as const);
+export const filteredTaskAC = (todolistID: string, value: string) => ({
+    type: 'FILTERED-TASK', todolistID,
+    value,
+} as const);
 
 export const removeTodolistAC = (todolistID: string) => ({type: 'REMOVE-TODOLIST', todolistID} as const)
 
-export const titleTodolistAC = (todolistID: string, title: string) => ({type: 'TITLE-TODOLIST',
-        todolistID, title} as const);
+export const titleTodolistAC = (todolistID: string, title: string) => ({
+    type: 'TITLE-TODOLIST',
+    todolistID, title
+} as const);
 
 export const addTodolistsAC = (item: ApiTodolistsType) => ({type: 'ADD-TODOLIST', item,} as const); // newTodolistID:v1(), //генерируем 1 id и для тудулист и тасок если нет апи
 
 export const getTodolistsAC = (todolists: Array<ApiTodolistsType>) => ({type: 'GET-TODOLISTS', todolists,} as const);
 
-export const disabledStatusTodolistAC = (todolistID: string,disabledStatus: RequestStatusType) => ({type: 'DISABLED-STATUS',
-    todolistID,disabledStatus,} as const);//disabled buttons
+export const disabledStatusTodolistAC = (todolistID: string, disabledStatus: RequestStatusType) => ({
+    type: 'DISABLED-STATUS',
+    todolistID, disabledStatus,
+} as const);//disabled buttons
 
 export const todolistsThunk = (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
@@ -72,17 +79,19 @@ export const todolistsThunk = (dispatch: Dispatch) => {
 
 export const todolistDeleteThunkCreator = (todolistID: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading')) //крутилка включилась
-    dispatch(disabledStatusTodolistAC(todolistID,'loading')); //кнопка дизаблется
-    todolistApi.deleteTodolist(todolistID).then((res) => { //удаление тодолистов
-        dispatch(setAppStatusAC('failed'))//крутилка отключилась
-       // dispatch(disabledStatusTodolistAC(todolistID,'failed')); мы удаляем тодолист, поэтому нет смысла восстанавливать кнопку
-        dispatch(removeTodolistAC(todolistID))
-    })
-        .catch((err:AxiosError)=>{
+    dispatch(disabledStatusTodolistAC(todolistID, 'loading')); //кнопка дизаблется
+    todolistApi.deleteTodolist(todolistID)
+        .then((res) => { //удаление тодолистов
             dispatch(setAppStatusAC('failed'))//крутилка отключилась
-            dispatch(errorAppMessageAC(err.message))
+            // dispatch(disabledStatusTodolistAC(todolistID,'failed')); мы удаляем тодолист, поэтому нет смысла восстанавливать кнопку
+            dispatch(removeTodolistAC(todolistID))
+        })
+        .catch((err: AxiosError) => {
+             // handleServerNetworkError(err.message,dispatch)
+            // dispatch(setAppStatusAC('failed'))//крутилка отключилась
+            // dispatch(errorAppMessageAC(err.message))
 
-    })
+        })
 }
 export const todolistAddThunkCreator = (title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
@@ -112,8 +121,9 @@ export type ActionType = ReturnType<typeof filteredTaskAC>
     | ReturnType<typeof titleTodolistAC>
     | ReturnType<typeof getTodolistsAC>
     | ReturnType<typeof setAppStatusAC> //крутилка
-    | ReturnType<typeof errorAppMessageAC> //ошибка
+     | ReturnType<typeof errorAppMessageAC> //ошибка
     | ReturnType<typeof disabledStatusTodolistAC> //disabled
+
 
 export type ApiTodolistsType = {
     "id": string,
