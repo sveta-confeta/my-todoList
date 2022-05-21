@@ -1,14 +1,31 @@
-import {StateType} from "../app/App";
+
 import {
     removeTodolistAC,
     todolistsTasksID,
-    addTodolistsAC, getTodolistsAC,
+    addTodolistsAC, getTodolistsAC
 } from "./todolistsReducer";
-import {ItemType, TaskStatuses, todolistApi, UpdateTask} from "../api/ todolist-api";
+import {TaskPriorities, TaskStatuses, todolistApi, UpdateTask} from "../api/ todolist-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../redux/redux-store";
-import {errorAppMessageAC, setAppStatusAC} from "./appReducer";
+import {errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
 import {AxiosError} from "axios";
+
+export type ItemType = { //get tasks
+    description: string,
+    title: string,
+    status: TaskStatuses, //вместо isDone :обращение по номеру
+    priority: TaskPriorities,
+    startDate: string
+    deadline: string,
+    id: string,
+    todoListId: string,
+    order: number,
+    addedDate: string,
+    disabledStatus: RequestStatusType
+}
+export type StateType = {
+    [key: string]: Array<ItemType>
+}
 
 
 const initialState: StateType = {
@@ -73,17 +90,24 @@ export const TasksReducer = (state: StateType = initialState, action: ActionType
             return copyState;
         }
         case 'GET-TASKS': {
-            //debugger
             const copyState = {...state}
             copyState[action.todolistID] = action.tasks;
             return copyState;
         }
+        case 'DISABLED-STATUS-TASK':{
+            return {...state, [action.todolistID]: state[action.todolistID].map(m => m.id === action.taskID ? {
+                ...m, disabledStatus : action.disabledStatus} : m)}
+        }
         default:
             return state;
     }
+
 }
 
-
+export const disabledStatusTaskAC = (todolistID: string, taskID: string, disabledStatus: RequestStatusType) => ({
+    type: 'DISABLED-STATUS-TASK',
+    todolistID, taskID, disabledStatus,
+} as const);//disabled buttons
 export const removeTaskAC = (todolistID: string, taskID: string) =>
     ({type: "REMOVE-TASK", todolistID, taskID,} as const);
 export const addTaskAC = (item: ItemType) =>
@@ -106,8 +130,10 @@ export const TasksThunkCreator = (todolistID: string) => (dispatch: Dispatch) =>
 
 export const TasksDeleteThunkCreator = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
+    dispatch(disabledStatusTaskAC(todolistID, taskID,'loading'));
     todolistApi.deleteTask(todolistID, taskID).then(res => {  //удаление тасок delete запрос
         dispatch(setAppStatusAC('failed'))
+        dispatch(disabledStatusTaskAC(todolistID, taskID,'failed'))
         dispatch(removeTaskAC(todolistID, taskID))
     })
 }
@@ -202,6 +228,7 @@ type ActionType =
     | ReturnType<typeof getTodolistsAC>
     | ReturnType<typeof setAppStatusAC> //крутилка
     | ReturnType<typeof errorAppMessageAC> //ошибка
+    | ReturnType<typeof disabledStatusTaskAC> //disabled
 
 
 

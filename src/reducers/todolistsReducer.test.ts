@@ -1,12 +1,13 @@
 import {v1} from "uuid";
 import {
     addTodolistsAC,
-    AllTodolistsType,
+    AllTodolistsType, disabledStatusTodolistAC,
     filteredTaskAC, getTodolistsAC,
     removeTodolistAC,
     titleTodolistAC,
     TodolistReducer
 } from "./todolistsReducer";
+import {RequestStatusType} from "./appReducer";
 
 let  todolistID_1: string; //вынесем переменные глобально.чтоб их видели тесты
 let  todolistID_2: string;
@@ -74,5 +75,16 @@ test('GET-TODOLIST', ()=>{ //добавление тодолистов из api
 
     expect(endState[0].order).toBe(1);
     expect(endState.length).toBe(  2);
+
+})
+test('disabled status', ()=>{ //дисэйблим кнопки во время запроса
+//но когда мы создаем тодолисты -мы должны создать место для тасок в новосозданных тудулистах
+    let newStatus:RequestStatusType='loading';
+
+
+    const endState=TodolistReducer(startState, disabledStatusTodolistAC( todolistID_1,newStatus));
+
+    expect(endState[0].disabledStatus).toBe('loading');
+    expect(endState[1].disabledStatus).toBe('failed');
 
 })

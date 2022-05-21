@@ -11,6 +11,7 @@ import {TodolistReducer} from "../reducers/todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 import {appReducer} from "../reducers/appReducer";
 import thunk from "redux-thunk";
+import {AppRootStateType} from "./redux-store";
 
 const rootReducer = combineReducers({
     tasks: TasksReducer,
@@ -18,7 +19,7 @@ const rootReducer = combineReducers({
     app:appReducer,
 })
 //когда создаем вне новый редьюсер, нужно его сдесь записывать
-const initialGlobalState = {
+const initialGlobalState:AppRootStateType = {
     todolists: [    //стартовый стейт для сторибук
         {id: "todolistId1", title: "What to learn", filter: "All", addedDate: '',disabledStatus: 'failed',
             order: 0},
@@ -47,10 +48,10 @@ const initialGlobalState = {
 };
 type GlobalStateType = ReturnType<typeof rootReducer>
     //storyBookStore-отправляем в провайдер:
-//@ts-ignore
+
  export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk) );
 
- // applyMiddleware тоже подключаем к стору, чтоб работали санки. это почти как стор приложения
+ // applyMiddleware тоже подключаем к стору, чтоб работали санки. это почти как стор приложения только для сторибук
 export const ReduxStoreProviderDecorator=(storyFn: () => React.ReactNode) => {
     return <Provider store={storyBookStore}>{storyFn()}</Provider>
 }

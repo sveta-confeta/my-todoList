@@ -14,8 +14,9 @@ export const ButtonForm = (props:ButtonPropsType) => {
         props.callback() }
     return (
         props.name === 'x' ?
-        <IconButton disabled = {props.disabledStatus==='loading'} aria-label="delete" onClick={onClickHandler} style={{minHeight:'10px',maxWidth:'10px' }} ><Delete/> </IconButton> :
-             <Button  variant="contained" style={{maxWidth: '37px', minHeight: '38px', minWidth: '37px', maxHeight: '38px'}}
+        <IconButton disabled = {props.disabledStatus==='loading'}
+                    aria-label="delete" onClick={onClickHandler} style={{minHeight:'10px',maxWidth:'10px' }} ><Delete/> </IconButton> :
+             <Button   variant="contained" style={{maxWidth: '37px', minHeight: '38px', minWidth: '37px', maxHeight: '38px'}}
                      color="success" onClick={onClickHandler}>{props.name}</Button>
     );
 };

@@ -1,11 +1,12 @@
 import axios from "axios";
 import {ApiTodolistsType} from "../reducers/todolistsReducer";
+import {ItemType} from "../reducers/tasksReducer";
 
 export const instance = axios.create({
     withCredentials: true,
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
     headers: {
-        'API-KEY': 'ed2301ec-5c98-454a-b34e-49534b216f8b'
+        'API-KEY': '4ec89d4a-8510-4152-b8f7-64b51a98b1fe'
     }
 
 });
@@ -82,18 +83,7 @@ type TasksResponseType = {
     "error": null,
 }
 
- export type ItemType= { //get tasks
-    description: string,
-    title: string,
-    status:TaskStatuses, //вместо isDone :обращение по номеру
-    priority:TaskPriorities,
-    startDate: string
-    deadline: string,
-    id: string,
-    todoListId: string,
-    order: number,
-    addedDate:string,
-}
+
 export enum TaskStatuses { //вместо isDone идет перечисление
     New = 0,//isDone-false-не выполнено
     InProgress = 1,

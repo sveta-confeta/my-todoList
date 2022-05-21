@@ -4,16 +4,15 @@ import EditSpan from "../EditSpan/EditSpan";
 import {ButtonForm} from "../Button";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    apdateTaskAC,
-    chengeCheckBoxStatusAC,
-    removeTaskAC,
+    apdateTaskAC, ItemType,
     TasksDeleteThunkCreator,
     TaskUpdateStatusThunkCreator, TaskUpdateTitleThunkCreator
 } from "../../reducers/tasksReducer";
 import {AppRootStateType} from "../../redux/redux-store";
 import {AllTodolistsType} from "../../reducers/todolistsReducer";
-import {ItemType, TaskStatuses} from "../../api/ todolist-api";
+import {TaskStatuses} from "../../api/ todolist-api";
 import s from './../../Todolist.module.css'
+import {RequestStatusType} from "../../reducers/appReducer";
 
 type TaskPropsType={
     // changeTaskStatus: (id: string,newIsDoneValue: boolean,todolistID:string) => void
@@ -22,6 +21,7 @@ type TaskPropsType={
     // removeTask: (mID: string,todolistID:string) => void//функция удаления
     // task:TaskType //то что мапится приходит из тасок, cдесь один обьект из тасок.т есть одна таска
     taskID:string
+    disabledStatus:RequestStatusType
 }
 
 export const Task = (props:TaskPropsType) => {
@@ -41,6 +41,7 @@ export const Task = (props:TaskPropsType) => {
 
     const removeTaskHandler = useCallback((tId: string) => {  //удаление тасок
         dispatch(TasksDeleteThunkCreator(props.todolistID,tId)) //вместо АС диспатчим в санккреатор, который будет диспатчить в АС
+
     }, [])
 
 const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{    //!!!!!!!!!!!!!!
@@ -58,7 +59,7 @@ const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{    //!!!!!!!!!!!!!
             <span className={tasks.status===TaskStatuses.Completed ? s.isDone : s.notDone}>
                 <EditSpan title={tasks.title} apdateTask={(title: string) => callbackApdateTask(tasks.id, title)}/>
                 {/*<button onClick={() => props.removeTask(el.id)}>x</button>*/}
-                <ButtonForm name={'x'} callback={() => removeTaskHandler(tasks.id)}/>
+                <ButtonForm name={'x'} callback={() => removeTaskHandler(tasks.id)} disabledStatus={props.disabledStatus}/>
                     </span>
         </div>
     );

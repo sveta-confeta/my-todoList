@@ -6,8 +6,7 @@ import EditSpan from "./components/EditSpan/EditSpan";
 import {ButtonForm} from "./components/Button";
 import Button from "@mui/material/Button";
 import  ButtonGroup from "@mui/material/ButtonGroup";
-import {ItemType} from "./api/ todolist-api";
-import { TasksThunkCreator} from "./reducers/tasksReducer";
+import {ItemType, TasksThunkCreator} from "./reducers/tasksReducer";
 import {useDispatch} from "react-redux";
 import {RequestStatusType} from "./reducers/appReducer";
 
@@ -74,6 +73,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
             </div>
             {/*map отдельно*/}
             <TasksMap
+                // disabledStatus={props.disabledStatus}
                 filter={props.filter}
                 todolistID={props.todolistID}/>
             {/*MaterialUI использует под капотом React.memo -только нет useCallback/нужно оборачивать*/}

@@ -1,7 +1,7 @@
 import {v1} from "uuid";
 import {Dispatch} from "redux";
 import {todolistApi} from "../api/ todolist-api";
-import {AppActionsType, errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
+import { errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
 import {AxiosError} from "axios";
 import {handleServerNetworkError} from "../utils/error-util";
 
@@ -87,7 +87,7 @@ export const todolistDeleteThunkCreator = (todolistID: string) => (dispatch: Dis
             dispatch(removeTodolistAC(todolistID))
         })
         .catch((err: AxiosError) => {
-             // handleServerNetworkError(err.message,dispatch)
+            handleServerNetworkError(err, dispatch)
             // dispatch(setAppStatusAC('failed'))//крутилка отключилась
             // dispatch(errorAppMessageAC(err.message))
 
@@ -95,24 +95,37 @@ export const todolistDeleteThunkCreator = (todolistID: string) => (dispatch: Dis
 }
 export const todolistAddThunkCreator = (title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistApi.createNewTodolist(title).then((res) => {
-        if (res.data.resultCode === 0) {
-            dispatch(setAppStatusAC('failed'))
-            dispatch(addTodolistsAC(res.data.data.item))
-        } else {
-            dispatch(setAppStatusAC('failed'))
-            dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
-        }
+    todolistApi.createNewTodolist(title)
+        .then((res) => {
+            if (res.data.resultCode === 0) {
+                dispatch(setAppStatusAC('failed'))
+                dispatch(addTodolistsAC(res.data.data.item))
+            } else {
+                dispatch(setAppStatusAC('failed'))
+                dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
+            }
 
-    })
+        })
+        .catch((err: AxiosError) => {
+            handleServerNetworkError(err, dispatch)
+        })
 }
 
 export const titleTodolistThunkCreator = (todolistID: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistApi.updateTodoTitle(todolistID, title).then((res) => {
-        dispatch(setAppStatusAC('failed'))
-        dispatch(titleTodolistAC(todolistID, title))
-    })
+    todolistApi.updateTodoTitle(todolistID, title)
+        .then((res) => {
+            if (res.data.resultCode === 0) {
+                dispatch(setAppStatusAC('failed'))
+                dispatch(titleTodolistAC(todolistID, title))
+            } else {
+                dispatch(setAppStatusAC('failed'))
+                dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
+            }
+        })
+        .catch((err: AxiosError) => {
+            handleServerNetworkError(err,dispatch)
+        })
 }
 //types
 export type ActionType = ReturnType<typeof filteredTaskAC>
@@ -121,7 +134,7 @@ export type ActionType = ReturnType<typeof filteredTaskAC>
     | ReturnType<typeof titleTodolistAC>
     | ReturnType<typeof getTodolistsAC>
     | ReturnType<typeof setAppStatusAC> //крутилка
-     | ReturnType<typeof errorAppMessageAC> //ошибка
+    | ReturnType<typeof errorAppMessageAC> //ошибка
     | ReturnType<typeof disabledStatusTodolistAC> //disabled
 
 
