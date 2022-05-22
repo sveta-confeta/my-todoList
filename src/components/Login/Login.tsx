@@ -24,6 +24,11 @@ export const Login = () => {
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
             errors.email = 'Invalid email address';
         }
+        if (!values.password) {
+            errors.password = 'Required';
+        } else if (values.password.length <=3) {
+            errors.password = 'symbol of password should > 3';
+        }
 
         return errors;
     };
@@ -36,7 +41,9 @@ export const Login = () => {
         validate,
         onSubmit: values => {
             alert(JSON.stringify(values)); //это для теста что все работает)
+            formik.resetForm();
         },
+
     })
 
 
@@ -56,11 +63,19 @@ export const Login = () => {
                     <p>Password: free</p>
                 </FormLabel>
                 <FormGroup>
-                    <TextField label="Email" margin="normal" name="email" onChange={formik.handleChange} value={formik.values.email}/>
-                    <TextField type="password" label="Password" name="password" onChange={formik.handleChange} value={formik.values.password}
+                    <TextField label="Email" margin="normal"  {...formik.getFieldProps('email')} />
+
+                    {formik.touched.email && formik.errors.email &&  <div style={{color:"red"}}>{formik.errors.email}</div> }
+
+                    <TextField type="password" label="Password" {...formik.getFieldProps('password')}
                                margin="normal"
                     />
-                    <FormControlLabel label={'Remember me'} control={<Checkbox  name="rememberMe" onChange={formik.handleChange} checked={formik.values.rememberMe}/>}/>
+                    {formik.touched.password && formik.errors.password &&  <div style={{color:"red"}}>{formik.errors.password}</div> }
+                    <FormControlLabel label={'Remember me'} control={<Checkbox  name="rememberMe" onChange={formik.handleChange}
+                                                                                checked={formik.values.rememberMe}/> //благодаря этой строке чекбокс тоже сбрасывается
+                    }/>
+                    {formik.touched.password && formik.errors.password &&  <div style={{color:"red"}}>{formik.errors.password}</div> }
+
                     <Button type={'submit'} variant={'contained'} color={'primary'}>
                         Login
                     </Button>
