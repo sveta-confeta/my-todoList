@@ -13,7 +13,7 @@ import {
     todolistsThunk
 } from "./reducers/todolistsReducer";
 import {RequestStatusType} from "./reducers/appReducer";
-import s from "./Todolist.module.css"
+import {Navigate, useNavigate} from "react-router-dom";
 
 
 export const CreateTodolists = () => {
@@ -41,12 +41,19 @@ export const CreateTodolists = () => {
     const tasks = useSelector<AppRootStateType, StateType>(state => state.tasks);
     const todolists = useSelector<AppRootStateType, Array<AllTodolistsType>>(state => state.todolists);
     const status = useAppSelector<RequestStatusType>(state => state.app.status); //для крутилки
+    const isLogin= useAppSelector<boolean>(state => state.auth.isLoggedIn);
+    const navigate =useNavigate();
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(todolistsThunk);
-    }, []) //1 раз нужно получить тодолисты
+         if(isLogin){
+            dispatch(todolistsThunk()); //если залогинены то запрос за тодолистами
+        } else{
+             navigate('login') //если нет-то на страницу логин
+         }
+
+    }, [isLogin]) //1 раз нужно получить тодолисты
 
     const addTask = useCallback((todolistID: string, value: string) => { //функция добавить таску через инпут
         // const copyTasks = {...tasks};
@@ -80,6 +87,10 @@ export const CreateTodolists = () => {
         // setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));
         dispatch(titleTodolistThunkCreator(todolistID, title))
     }, []);
+
+    // if(!isLogin){
+    //   return   <Navigate to ={`login`}/ эту логику мы прописали вверху в else
+    // }
 
 
     return (

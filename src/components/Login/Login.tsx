@@ -9,6 +9,11 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
+import {useDispatch} from "react-redux";
+import {loginTC} from "../../reducers/authReducer";
+import {useAppSelector} from "../../redux/redux-store";
+import {Navigate} from "react-router-dom";
+import {ErrorSnackbar} from "../ErrorSnackbar/ErrorSnackbar";
 type FormikErrorType = {
     email?: string
     password?: string
@@ -16,6 +21,8 @@ type FormikErrorType = {
 }
 
 export const Login = () => {
+    const dispatch=useDispatch();
+    const isLogin= useAppSelector<boolean>(state => state.auth.isLoggedIn);
     const validate = (values:any) => {
         const errors: FormikErrorType= {};
 
@@ -40,14 +47,19 @@ export const Login = () => {
         },
         validate,
         onSubmit: values => {
-            alert(JSON.stringify(values)); //это для теста что все работает)
+           // alert(JSON.stringify(values)); //это для теста что все работает)
+            dispatch(loginTC(values));
             formik.resetForm();
         },
 
     })
+    if (isLogin){ //если тру-то сделай редирект на страницу с тодолистами
+        return <Navigate to ={'/'}/>
+    }
 
 
     return <Grid container justifyContent={'center'}>
+
         <Grid item justifyContent={'center'}>
             {/*//оборачиваем наши все формы тегом form..*/}
             <form onSubmit={formik.handleSubmit}>
@@ -63,7 +75,7 @@ export const Login = () => {
                     <p>Password: free</p>
                 </FormLabel>
                 <FormGroup>
-                    <TextField label="Email" margin="normal"  {...formik.getFieldProps('email')} />
+                    <TextField label="Email" margin="normal" {...formik.getFieldProps('email')} />
 
                     {formik.touched.email && formik.errors.email &&  <div style={{color:"red"}}>{formik.errors.email}</div> }
 
@@ -71,7 +83,7 @@ export const Login = () => {
                                margin="normal"
                     />
                     {formik.touched.password && formik.errors.password &&  <div style={{color:"red"}}>{formik.errors.password}</div> }
-                    <FormControlLabel label={'Remember me'} control={<Checkbox  name="rememberMe" onChange={formik.handleChange}
+                    <FormControlLabel label={'Remember me'} control={<Checkbox  {...formik.getFieldProps('rememberMe')}
                                                                                 checked={formik.values.rememberMe}/> //благодаря этой строке чекбокс тоже сбрасывается
                     }/>
                     {formik.touched.password && formik.errors.password &&  <div style={{color:"red"}}>{formik.errors.password}</div> }
@@ -79,6 +91,7 @@ export const Login = () => {
                     <Button type={'submit'} variant={'contained'} color={'primary'}>
                         Login
                     </Button>
+                    <ErrorSnackbar/>
                 </FormGroup>
             </FormControl>
             </form>

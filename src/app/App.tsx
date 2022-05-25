@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 
 
@@ -7,12 +7,36 @@ import {Login} from "../components/Login/Login";
 import {CreateTodolists} from "../CreateTodolists";
 import {Route} from "react-router-dom";
 import {Navigate} from "react-router-dom";
+import {initializeAppTC} from "../reducers/appReducer";
+import {useDispatch} from "react-redux";
+import {useAppSelector} from "../redux/redux-store";
+import CircularProgress from "@mui/material/CircularProgress";
+import {logautTC} from "../reducers/authReducer";
+
 
 
 function App() {
+    const dispatch=useDispatch();
+    const isIniatialize=useAppSelector<boolean>(state => state.app.isInitialized);
+    const isLogin=useAppSelector<boolean>(state => state.auth.isLoggedIn);
+
+    useEffect(() => {
+        dispatch(initializeAppTC()) //get запрос залогинена я или нет
+
+    }, []) //1 раз нужно получить тодолисты
+
+    if(!isIniatialize){
+        return <CircularProgress disableShrink/> //покажи крутилку
+    }
+    const logautHandler=()=>{
+        dispatch(logautTC());
+    }
 
     return (
         <div className="App">
+            <div className={"header"}>
+                {isLogin && <button onClick={logautHandler} className={"btnHeader"}>Logaut</button>}
+            </div>
             <Routes>
                 <Route path='/' element={<CreateTodolists/>}/>
                 <Route path='login' element={<Login/>}/>

@@ -41,11 +41,30 @@ export const todolistApi = {
 
     },
     updateTask(todolistID:string ,taskID:string, elems:UpdateTask ){
-        return  instance.put<CommonResponseType<{item:ItemType}>>(`todo-lists/${todolistID}/tasks/${taskID}`,elems )
+        return  instance.put<CommonResponseType<{item:ItemType}>>(`todo-lists/${todolistID}/tasks/${taskID}`, elems )
 
     },
 
 }
+
+export const authAPI = {
+    login(data:LoginParamsType) {
+        return instance.post<CommonResponseType<{userId:number}>>(`auth/login`,data)
+    },
+    me(){
+        return instance.get<CommonResponseType<{id:number, email:string, login:string }>>(`auth/me`)
+    },
+    logaut(){
+        return instance.delete<CommonResponseType<{}>>(`auth/login`)
+    },
+
+}
+
+export type LoginParamsType={
+    email:string,
+    password:string,
+    rememberMe?:boolean, //на сервере они необязательны
+    captcha?:string}
 
 
 // export type TodoType = {

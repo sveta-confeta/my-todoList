@@ -69,7 +69,7 @@ export const disabledStatusTodolistAC = (todolistID: string, disabledStatus: Req
     todolistID, disabledStatus,
 } as const);//disabled buttons
 
-export const todolistsThunk = (dispatch: Dispatch) => {
+export const todolistsThunk =()=> (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
     todolistApi.getTodolist().then((res) => { //get запрос за тодолистами
         dispatch(setAppStatusAC('failed'))
