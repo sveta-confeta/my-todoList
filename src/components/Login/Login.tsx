@@ -60,7 +60,6 @@ export const Login = () => {
 
     return <Grid container justifyContent={'center'}>
 
-        <Grid item justifyContent={'center'}>
             {/*//оборачиваем наши все формы тегом form..*/}
             <form onSubmit={formik.handleSubmit}>
             <FormControl>
@@ -95,7 +94,7 @@ export const Login = () => {
                 </FormGroup>
             </FormControl>
             </form>
-        </Grid>
+
     </Grid>
 }
 

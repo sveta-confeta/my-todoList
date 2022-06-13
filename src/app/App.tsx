@@ -8,15 +8,18 @@ import {CreateTodolists} from "../CreateTodolists";
 import {Route} from "react-router-dom";
 import {Navigate} from "react-router-dom";
 import {initializeAppTC} from "../reducers/appReducer";
-import {useDispatch} from "react-redux";
-import {useAppSelector} from "../redux/redux-store";
+
+import { useAppDispatch, useAppSelector} from "../redux/redux-store";
 import CircularProgress from "@mui/material/CircularProgress";
 import {logautTC} from "../reducers/authReducer";
 
 
 
+
 function App() {
-    const dispatch=useDispatch();
+    //const dispatch=useDispatch<ThunkDispatch<AppRootStateType,any,AnyAction>>();
+    const dispatch=useAppDispatch();
+
     const isIniatialize=useAppSelector<boolean>(state => state.app.isInitialized);
     const isLogin=useAppSelector<boolean>(state => state.auth.isLoggedIn);
 

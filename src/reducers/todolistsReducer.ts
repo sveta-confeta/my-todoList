@@ -2,8 +2,8 @@ import {v1} from "uuid";
 import {Dispatch} from "redux";
 import {todolistApi} from "../api/ todolist-api";
 import { errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
-import {AxiosError} from "axios";
 import {handleServerNetworkError} from "../utils/error-util";
+import {AxiosError} from "axios";
 
 
 export const todolistsTasksID = {
@@ -93,10 +93,11 @@ export const todolistDeleteThunkCreator = (todolistID: string) => (dispatch: Dis
 
         })
 }
-export const todolistAddThunkCreator = (title: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'))
-    todolistApi.createNewTodolist(title)
-        .then((res) => {
+export const todolistAddThunkCreator = (title: string) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(setAppStatusAC('loading'))
+            const res = await todolistApi.createNewTodolist(title)
             if (res.data.resultCode === 0) {
                 dispatch(setAppStatusAC('failed'))
                 dispatch(addTodolistsAC(res.data.data.item))
@@ -104,11 +105,11 @@ export const todolistAddThunkCreator = (title: string) => (dispatch: Dispatch) =
                 dispatch(setAppStatusAC('failed'))
                 dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
             }
-
-        })
-        .catch((err: AxiosError) => {
-            handleServerNetworkError(err, dispatch)
-        })
+        } catch (err) {
+            let error = err as AxiosError
+            handleServerNetworkError(error, dispatch)
+        }
+    };
 }
 
 export const titleTodolistThunkCreator = (todolistID: string, title: string) => (dispatch: Dispatch) => {
