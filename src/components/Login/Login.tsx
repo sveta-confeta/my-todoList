@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import {useDispatch} from "react-redux";
 import {loginTC} from "../../reducers/authReducer";
-import {useAppSelector} from "../../redux/redux-store";
+import {useAppDispatch, useAppSelector} from "../../redux/redux-store";
 import {Navigate} from "react-router-dom";
 import {ErrorSnackbar} from "../ErrorSnackbar/ErrorSnackbar";
 type FormikErrorType = {
@@ -21,7 +21,7 @@ type FormikErrorType = {
 }
 
 export const Login = () => {
-    const dispatch=useDispatch();
+    const dispatch=useAppDispatch();
     const isLogin= useAppSelector<boolean>(state => state.auth.isLoggedIn);
     const validate = (values:any) => {
         const errors: FormikErrorType= {};

@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import {Todolist} from "./Todolist";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType, useAppSelector} from "./redux/redux-store";
+import {AppRootStateType, useAppDispatch, useAppSelector} from "./redux/redux-store";
 import {addTaskAC, StateType, TasksAddThunkCreator} from "./reducers/tasksReducer";
 import {
     AllTodolistsType,
@@ -44,7 +44,7 @@ export const CreateTodolists = () => {
     const isLogin= useAppSelector<boolean>(state => state.auth.isLoggedIn);
     const navigate =useNavigate();
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
          if(isLogin){

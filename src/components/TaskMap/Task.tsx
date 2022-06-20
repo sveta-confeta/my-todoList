@@ -8,7 +8,7 @@ import {
     TasksDeleteThunkCreator,
     TaskUpdateStatusThunkCreator, TaskUpdateTitleThunkCreator
 } from "../../reducers/tasksReducer";
-import {AppRootStateType} from "../../redux/redux-store";
+import {AppRootStateType, useAppDispatch} from "../../redux/redux-store";
 import {AllTodolistsType} from "../../reducers/todolistsReducer";
 import {TaskStatuses} from "../../api/ todolist-api";
 import s from './../../Todolist.module.css'
@@ -28,7 +28,7 @@ export const Task = (props:TaskPropsType) => {
     // const todolist=useSelector<AppRootStateType,AllTodolistsType[]>(state=> state.todolists.filter(f=>f.id ==props.todolistID)[0])
     const todolist=useSelector<AppRootStateType,AllTodolistsType>(state=> state.todolists.filter(f=> f.id===props.todolistID)[0])
     const tasks=useSelector<AppRootStateType,ItemType>(state=> state.tasks[props.todolistID].filter(f=> f.id==props.taskID)[0])
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
 
     const callbackApdateTask = useCallback((elID: string, title: string) => {
