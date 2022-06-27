@@ -3,6 +3,7 @@ import {authAPI} from "../api/ todolist-api";
 import {setIsLoggedInAC} from "./authReducer";
 import {AxiosError} from "axios";
 import {handleServerNetworkError} from "../utils/error-util";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
@@ -14,45 +15,66 @@ const initialState = {
 //если статус 'loading' показываем крутилку
 // если статус 'idle', 'succeeded' | 'failed' -прячем крутилку
 
-type InitialStateType = typeof initialState
-
-export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
-    switch (action.type) {
-        case 'APP/SET-STATUS':
-            return {...state, status: action.status}
-        case 'APP-ERROR':
-            return {...state, error: action.error}
-        case 'INITIALIZED':
-            return {...state,  isInitialized: action.value}
-
-        default:
-            return state
+const slice=createSlice({
+    name:'app',
+    initialState:initialState,
+    reducers:{
+        setAppStatusAC(state,action:PayloadAction<{value: RequestStatusType}>){
+            state.status=action.payload.value
+        },
+        errorAppMessageAC(state,action:PayloadAction<{value: string | null}>){
+            state.error=action.payload.value
+        },
+        initializedAC(state,action:PayloadAction<{value:boolean}>){
+            state.isInitialized=action.payload.value
+        },
     }
-}
 
-export const setAppStatusAC = (status: RequestStatusType) => ({type: 'APP/SET-STATUS', status,} as const);
-export const errorAppMessageAC = (error: string | null) => ({type: 'APP-ERROR', error,} as const);
-export const initializedAC = (value: boolean) => ({type: 'INITIALIZED', value,} as const);
+});
+
+export const appReducer=slice.reducer;
+
+export const {setAppStatusAC,errorAppMessageAC,initializedAC}=slice.actions;
+
+
+
+// export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
+//     switch (action.type) {
+//         case 'APP/SET-STATUS':
+//             return {...state, status: action.status}
+//         case 'APP-ERROR':
+//             return {...state, error: action.error}
+//         case 'INITIALIZED':
+//             return {...state,  isInitialized: action.value}
+//
+//         default:
+//             return state
+//     }
+// }
+
+//export const setAppStatusAC = (status: RequestStatusType) => ({type: 'APP/SET-STATUS', status,} as const);
+//export const errorAppMessageAC = (error: string | null) => ({type: 'APP-ERROR', error,} as const);
+//export const initializedAC = (value: boolean) => ({type: 'INITIALIZED', value,} as const);
 
 
 
 export const initializeAppTC = () => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading')) //крутилка вкл
+    dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
     authAPI.me()
         .then(res => {
             if (res.data.resultCode === 0) {
-                dispatch(setAppStatusAC('failed')) //крутилка выкл
+                dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
                 dispatch(setIsLoggedInAC({value:true}));
             } else {
-                dispatch(setAppStatusAC('failed'))
-                dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
+                dispatch(setAppStatusAC({value:'failed'}))
+                dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
             }
         })
         .catch((err: AxiosError) => {
             handleServerNetworkError(err,dispatch)
         })
         .finally(()=>{
-            dispatch(initializedAC(true));
+            dispatch(initializedAC({value:true}));
         })
 }
 

@@ -20,7 +20,7 @@ export function ErrorSnackbar() {
             return;
         }
 
-        dispatch( errorAppMessageAC(null));
+        dispatch( errorAppMessageAC({value:null}));
     };
 
     return (

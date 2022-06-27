@@ -39,15 +39,15 @@ export const setIsLoggedInAC=slice.actions.setIsLoggedInAC;
 // thunks
 export const loginTC = (data:LoginParamsType) => {
     return (dispatch: Dispatch) => {
-        dispatch(setAppStatusAC('loading')) //крутилка вкл
+        dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
         authAPI.login(data)
             .then((res) => {
                 if (res.data.resultCode === 0) {
-                    dispatch(setAppStatusAC('failed')) //крутилка выкл
+                    dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
                     dispatch(setIsLoggedInAC({value:true}));
                 } else {
-                    dispatch(setAppStatusAC('failed'))
-                    dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
+                    dispatch(setAppStatusAC({value:'failed'}))
+                    dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
                 }
             })
             .catch((err: AxiosError) => {
@@ -58,15 +58,15 @@ export const loginTC = (data:LoginParamsType) => {
 
 export const logautTC = () => {  //санка вылогинивания
     return (dispatch: Dispatch) => {
-        dispatch(setAppStatusAC('loading')) //крутилка вкл
+        dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
         authAPI.logaut()
             .then((res) => {
                 if (res.data.resultCode === 0) {
-                    dispatch(setAppStatusAC('failed')) //крутилка выкл
+                    dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
                     dispatch(setIsLoggedInAC({value:false}));
                 } else {
-                    dispatch(setAppStatusAC('failed'))
-                    dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
+                    dispatch(setAppStatusAC({value:'failed'}))
+                    dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
                 }
             })
             .catch((err: AxiosError) => {
