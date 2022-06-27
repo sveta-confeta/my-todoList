@@ -1,5 +1,5 @@
-import {StateType} from "../app/App";
-import { TasksReducer} from "./tasksReducer";
+
+import {StateType, TasksReducer} from "./tasksReducer";
 import {
     addTodolistsAC,
     AllTodolistsType,
@@ -39,17 +39,17 @@ test('property with todolistId should be deleted', () => {
     const startState: StateType = {
         ["todolistId1"]: [
             { id: '1', title: 'Css', description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId1",
-                order: 0, addedDate: ''},
+                order: 0, addedDate: '',disabledStatus:'idle'},
             {id: '2', title: 'JS',
                 description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: "todolistId1",
-                order: 0, addedDate: ''}
+                order: 0, addedDate: '',disabledStatus:'idle'}
         ],
         ["todolistId2"]: [
             { id: '1', title:  "Milk", description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId2",
-                order: 0, addedDate: ''},
+                order: 0, addedDate: '',disabledStatus:'idle'},
             {id: '2', title:  "React Book",
                 description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId:"todolistId2",
-                order: 0, addedDate: ''}
+                order: 0, addedDate: '',disabledStatus:'idle'}
         ]
     };
 

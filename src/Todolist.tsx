@@ -9,6 +9,7 @@ import  ButtonGroup from "@mui/material/ButtonGroup";
 import {ItemType, TasksThunkCreator} from "./reducers/tasksReducer";
 import {useDispatch} from "react-redux";
 import {RequestStatusType} from "./reducers/appReducer";
+import {useAppDispatch} from "./redux/redux-store";
 
 
 export type TodolistPropsType = {
@@ -29,7 +30,7 @@ export type TodolistPropsType = {
 
 export const Todolist = React.memo((props: TodolistPropsType) => {
     //console.log('Todolist')
-    const dispatch=useDispatch()
+    const dispatch=useAppDispatch();
 
     useEffect(()=>{  // вызов get запрос тасок
         dispatch(TasksThunkCreator(props.todolistID)); //мне нужны таски. вот вам айди тодолиста -отдайте мне таски в этот тодолист!!!

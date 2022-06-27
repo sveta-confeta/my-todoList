@@ -29,21 +29,24 @@ const initialGlobalState:AppRootStateType = {
     tasks: {
         ["todolistId1"]: [
             { id: '1', title: 'Css', description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId1",
-                           order: 0, addedDate: ''},
+                           order: 0, addedDate: '',disabledStatus:'idle'},
             {id: '2', title: 'JS',
                 description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: "todolistId1",
-                order: 0, addedDate: ''}
+                order: 0, addedDate: '',disabledStatus:'idle'}
         ],
         ["todolistId2"]: [
             { id: '1', title:  "Milk", description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '',  todoListId:"todolistId2",
-                order: 0, addedDate: ''},
+                order: 0, addedDate: '',disabledStatus:'idle'},
             {id: '2', title:  "React Book",
                 description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId:"todolistId2",
-                order: 0, addedDate: ''}
+                order: 0, addedDate: '',disabledStatus:'idle'}
         ]
     },
     app:{
-        status:'idle',error:null
+        status:'idle',error:null, isInitialized:false,
+    },
+    auth:{
+        isLoggedIn: false,
     }
 };
 type GlobalStateType = ReturnType<typeof rootReducer>
