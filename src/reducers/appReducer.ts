@@ -42,7 +42,7 @@ export const initializeAppTC = () => (dispatch: Dispatch) => {
         .then(res => {
             if (res.data.resultCode === 0) {
                 dispatch(setAppStatusAC('failed')) //крутилка выкл
-                dispatch(setIsLoggedInAC(true));
+                dispatch(setIsLoggedInAC({value:true}));
             } else {
                 dispatch(setAppStatusAC('failed'))
                 dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
