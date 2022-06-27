@@ -9,6 +9,7 @@ import {Dispatch} from "redux";
 import {AppRootStateType} from "../redux/redux-store";
 import {errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
 import {AxiosError} from "axios";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export type ItemType = { //get tasks
     description: string,
@@ -41,73 +42,84 @@ const initialState: StateType = {
     ]
 };
 
-export const TasksReducer = (state: StateType = initialState, action: ActionType): StateType => {
-    switch (action.type) {
-        case "REMOVE-TASK": {
-            return {...state, [action.todolistID]: state[action.todolistID].filter(t => t.id !== action.taskID)}
+const slice=createSlice({
+    name:'task',
+    initialState:initialState,
+    reducers:{
+        disabledStatusTaskAC(state,action:PayloadAction<{todolistID: string, taskID: string, disabledStatus: RequestStatusType}>){
+            state.isLoggedIn=action.payload.value
         }
-        case 'ADD-TASK': { //это добавить одну таску
-            // let newObj: ItemType = {
-            //     id: v1(), title: action.value,
-            //     description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: action.todolistID,
-            //     order: 0, addedDate: ''
-            // };
-            return {...state, [action.item.todoListId]: [action.item, ...state[action.item.todoListId]]}
-        }
-        case 'CHENGE-STATUS-CHECKBOX': {
-            return {
-                ...state,
-                [action.todolistID]: state[action.todolistID].map(m => m.id === action.id ? {
-                    ...m,
-                    status: action.status
-                } : m)
-            }
-        }
-        case  'APDATE-TASK': {
-            return {
-                ...state,
-                [action.todolistID]: state[action.todolistID].map(t => t.id === action.taskID ? {
-                    ...t,
-                    title: action.title
-                } : t)
-            }
-        }
-        case  'ADD-TODOLIST': {
-            // let newTodolist = {id: action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'};
-            // return [newTodolist, ...state];
-            return {...state, [action.item.id]: []}
-        }
-        case "REMOVE-TODOLIST": {
-            let newState = {...state}
-            delete newState[action.todolistID];
-            return newState
-        }
-        case  'GET-TODOLISTS': {
-            const copyState = {...state}
-            action.todolists.forEach(tl => {
-                copyState[tl.id] = [];
-            })
-            return copyState;
-        }
-        case 'GET-TASKS': {
-            const copyState = {...state}
-            copyState[action.todolistID] = action.tasks;
-            return copyState;
-        }
-        case 'DISABLED-STATUS-TASK':{
-            return {...state, [action.todolistID]: state[action.todolistID].map(m => m.id === action.taskID ? {
-                ...m, disabledStatus : action.disabledStatus} : m)}
-        }
-        default:
-            return state;
     }
 
-}
+});
+export const TasksReducer=slice.reducer;
+// export const TasksReducer = (state: StateType = initialState, action: ActionType): StateType => {
+//     switch (action.type) {
+//         case "REMOVE-TASK": {
+//             return {...state, [action.todolistID]: state[action.todolistID].filter(t => t.id !== action.taskID)}
+//         }
+//         case 'ADD-TASK': { //это добавить одну таску
+//             // let newObj: ItemType = {
+//             //     id: v1(), title: action.value,
+//             //     description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: action.todolistID,
+//             //     order: 0, addedDate: ''
+//             // };
+//             return {...state, [action.item.todoListId]: [action.item, ...state[action.item.todoListId]]}
+//         }
+//         case 'CHENGE-STATUS-CHECKBOX': {
+//             return {
+//                 ...state,
+//                 [action.todolistID]: state[action.todolistID].map(m => m.id === action.id ? {
+//                     ...m,
+//                     status: action.status
+//                 } : m)
+//             }
+//         }
+//         case  'APDATE-TASK': {
+//             return {
+//                 ...state,
+//                 [action.todolistID]: state[action.todolistID].map(t => t.id === action.taskID ? {
+//                     ...t,
+//                     title: action.title
+//                 } : t)
+//             }
+//         }
+//         case  'ADD-TODOLIST': {
+//             // let newTodolist = {id: action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'};
+//             // return [newTodolist, ...state];
+//             return {...state, [action.item.id]: []}
+//         }
+//         case "REMOVE-TODOLIST": {
+//             let newState = {...state}
+//             delete newState[action.todolistID];
+//             return newState
+//         }
+//         case  'GET-TODOLISTS': {
+//             const copyState = {...state}
+//             action.todolists.forEach(tl => {
+//                 copyState[tl.id] = [];
+//             })
+//             return copyState;
+//         }
+//         case 'GET-TASKS': {
+//             const copyState = {...state}
+//             copyState[action.todolistID] = action.tasks;
+//             return copyState;
+//         }
+//         case 'DISABLED-STATUS-TASK':{
+//             return {...state, [action.todolistID]: state[action.todolistID].map(m => m.id === action.taskID ? {
+//                 ...m, disabledStatus : action.disabledStatus} : m)}
+//         }
+//         default:
+//             return state;
+//     }
+//
+// }
 
-export const disabledStatusTaskAC = (todolistID: string, taskID: string, disabledStatus: RequestStatusType) => ({
-    type: 'DISABLED-STATUS-TASK',
-    todolistID, taskID, disabledStatus,
-} as const);//disabled buttons
+//export const disabledStatusTaskAC = (todolistID: string, taskID: string, disabledStatus: RequestStatusType) => ({
+   // type: 'DISABLED-STATUS-TASK',
+ //   todolistID, taskID, disabledStatus,
+//} as const);//disabled buttons
 export const removeTaskAC = (todolistID: string, taskID: string) =>
     ({type: "REMOVE-TASK", todolistID, taskID,} as const);
 export const addTaskAC = (item: ItemType) =>
@@ -121,38 +133,38 @@ export const getTasksAC = (tasks: ItemType[], todolistID: string) =>  //c апи
 
 
 export const TasksThunkCreator = (todolistID: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatusAC({value:'loading'}))
     todolistApi.getTasks(todolistID).then((res) => { //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
-        dispatch(setAppStatusAC('failed'))
+        dispatch(setAppStatusAC({value:'failed'}))
         dispatch(getTasksAC(res.data.items, todolistID))
     })
 }
 
 export const TasksDeleteThunkCreator = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatusAC({value:'loading'}))
     dispatch(disabledStatusTaskAC(todolistID, taskID,'loading'));
     todolistApi.deleteTask(todolistID, taskID).then(res => {  //удаление тасок delete запрос
-        dispatch(setAppStatusAC('failed'))
+        dispatch(setAppStatusAC({value:'failed'}))
         dispatch(disabledStatusTaskAC(todolistID, taskID,'failed'))
         dispatch(removeTaskAC(todolistID, taskID))
     })
 }
 
 export const TasksAddThunkCreator = (todolistID: string, title: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppStatusAC({value:'loading'}))
     todolistApi.createTask(todolistID, title)
         .then(res => {  //добавление тасок в уже созданные тодолисты
             if (res.data.resultCode === 0) { //если нет ошибки то выполни добавление тасок
-                dispatch(setAppStatusAC('failed'))
+                dispatch(setAppStatusAC({value:'failed'}))
                 dispatch(addTaskAC(res.data.data.item)) // -мы посылаем название таски и id тодолиста- post запрос
             } else {
-                dispatch(setAppStatusAC('failed')) //опять же убираем крутилку
-                dispatch(errorAppMessageAC(res.data.messages[0])); //достаем из массива сообщение об ошибке
+                dispatch(setAppStatusAC({value:'failed'})) //опять же убираем крутилку
+                dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
             }
         })
         .catch((err: AxiosError) => {
-            dispatch(setAppStatusAC('failed'))//крутилка отключилась
-            dispatch(errorAppMessageAC(err.message)) //текст ошибки диспатчим в стейт
+            dispatch(setAppStatusAC({value:'failed'}))//крутилка отключилась
+            dispatch(errorAppMessageAC({value:err.message})) //текст ошибки диспатчим в стейт
         })
 
 }
@@ -177,11 +189,11 @@ export const TaskUpdateStatusThunkCreator = (todolistID: string, taskID: string,
         }
         //теперь нам нужно в currentTask изменить статус,
         //  const elems:any={...currentTask,status:status} //делаем копию currentTask и говорим замени мне status на status из параметров которые пришли
-        dispatch(setAppStatusAC('loading'))
+        dispatch(setAppStatusAC({value:'loading'}))
         todolistApi.updateTask(todolistID, taskID, elems).then(res => {  //в саночку нужно положить каким то образом elems который ждет апишка
             // -мы посылаем название таски и id тодолиста- put запрос
             // debugger
-            dispatch(setAppStatusAC('failed'))
+            dispatch(setAppStatusAC({value:'failed'}))
             dispatch(chengeCheckBoxStatusAC(todolistID, taskID, status))
         })
     }
@@ -207,9 +219,9 @@ export const TaskUpdateTitleThunkCreator = (todolistID: string, taskID: string, 
         }
         //теперь нам нужно в currentTask изменить статус,
         //  const elems:any={...currentTask,status:status} //делаем копию currentTask и говорим замени мне status на status из параметров которые пришли
-        dispatch(setAppStatusAC('loading'))
+        dispatch(setAppStatusAC({value:'loading'}))
         todolistApi.updateTask(todolistID, taskID, elems).then(res => {  //в саночку нужно положить каким то образом elems который ждет апишка
-            dispatch(setAppStatusAC('failed'))
+            dispatch(setAppStatusAC({value:'failed'}))
             // -мы посылаем название таски и id тодолиста- put запрос
             // debugger
             dispatch(apdateTaskAC(todolistID, taskID, title))
