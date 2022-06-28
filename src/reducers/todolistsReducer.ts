@@ -167,7 +167,7 @@ export const titleTodolistThunkCreator = (todolistID: string, title: string) => 
         })
 }
 //types
- export type disabledStatusTodolistACType = ReturnType<typeof disabledStatusTodolistAC> //disabled
+ export type addTodolistsACType = ReturnType<typeof addTodolistsAC> //disabled
      //ReturnType<typeof filteredTaskAC>
 //     | ReturnType<typeof removeTodolistAC>
 //     | ReturnType<typeof addTodolistsAC>
