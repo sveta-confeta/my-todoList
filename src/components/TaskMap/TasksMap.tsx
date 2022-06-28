@@ -9,14 +9,9 @@ import {RequestStatusType} from "../../reducers/appReducer";
 import {ItemType} from "../../reducers/tasksReducer";
 
 type TasksMapPropsType = {
-    // tasks:Array<TasksType> //будем делать через Redux
-    // removeTask: (id: string, todolistID: string) => void
-    // chengeCheckBoxStatus: (todolistID:string,id:string,value:boolean) => void
     filter:string
     todolistID: string//это то что нам нужно чтобы идентифицировать тодолист
-    // disabledStatus:RequestStatusType
 
-    // apdateTask: (title: string, todolistID: string, taskID: string) => void
 }
 
 export const TasksMap = React.memo(({ todolistID,filter}: TasksMapPropsType) => {

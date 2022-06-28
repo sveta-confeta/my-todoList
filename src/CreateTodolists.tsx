@@ -3,17 +3,19 @@ import {ErrorSnackbar} from "./components/ErrorSnackbar/ErrorSnackbar";
 import CircularProgress from "@mui/material/CircularProgress";
 import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import {Todolist} from "./Todolist";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch, useAppSelector} from "./redux/redux-store";
 import {addTaskAC, StateType, TasksAddThunkCreator} from "./reducers/tasksReducer";
 import {
     AllTodolistsType,
-    filteredTaskAC, titleTodolistThunkCreator, todolistAddThunkCreator,
+    filteredTaskAC,
+    titleTodolistThunkCreator,
+    todolistAddThunkCreator,
     todolistDeleteThunkCreator,
     todolistsThunk
 } from "./reducers/todolistsReducer";
 import {RequestStatusType} from "./reducers/appReducer";
-import {Navigate, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 
 export const CreateTodolists = () => {
@@ -65,7 +67,7 @@ export const CreateTodolists = () => {
 
     const filteredTask = useCallback((todolistID: string, value: string) => {
         //setTodolist(todolist.map(m=> m.id===todolistID ? {...m,filter:value}: m)
-        dispatch(filteredTaskAC(todolistID, value))
+        dispatch(filteredTaskAC({todolistID, value}))
     }, [dispatch, filteredTaskAC]);
 
     const removeTodolist = useCallback((todolistID: string) => {

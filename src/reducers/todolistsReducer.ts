@@ -18,7 +18,7 @@ const initialState: Array<AllTodolistsType> = [
     // {id: todolistsTasksID.todolistID_2, titleTodolist: 'What to read', filter: 'All'},
 ];
 
-const slice = createSlice({
+export const slice = createSlice({
     name: 'todolists',
     initialState: initialState,
     reducers: {
@@ -167,14 +167,15 @@ export const titleTodolistThunkCreator = (todolistID: string, title: string) => 
         })
 }
 //types
-export type ActionType = ReturnType<typeof filteredTaskAC>
-    | ReturnType<typeof removeTodolistAC>
-    | ReturnType<typeof addTodolistsAC>
-    | ReturnType<typeof titleTodolistAC>
-    | ReturnType<typeof getTodolistsAC>
-    | ReturnType<typeof setAppStatusAC> //крутилка
-    | ReturnType<typeof errorAppMessageAC> //ошибка
-    | ReturnType<typeof disabledStatusTodolistAC> //disabled
+ export type disabledStatusTodolistACType = ReturnType<typeof disabledStatusTodolistAC> //disabled
+     //ReturnType<typeof filteredTaskAC>
+//     | ReturnType<typeof removeTodolistAC>
+//     | ReturnType<typeof addTodolistsAC>
+//     | ReturnType<typeof titleTodolistAC>
+//     | ReturnType<typeof getTodolistsAC>
+//     | ReturnType<typeof setAppStatusAC> //крутилка
+//     | ReturnType<typeof errorAppMessageAC> //ошибка
+//     | ReturnType<typeof disabledStatusTodolistAC> //disabled
 
 
 export type ApiTodolistsType = {

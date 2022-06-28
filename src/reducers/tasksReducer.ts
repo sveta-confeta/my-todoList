@@ -1,9 +1,4 @@
-
-import {
-    removeTodolistAC,
-    todolistsTasksID,
-    addTodolistsAC, getTodolistsAC
-} from "./todolistsReducer";
+import {todolistsTasksID} from "./todolistsReducer";
 import {TaskPriorities, TaskStatuses, todolistApi, UpdateTask} from "../api/ todolist-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../redux/redux-store";
@@ -47,12 +42,46 @@ const slice=createSlice({
     initialState:initialState,
     reducers:{
         disabledStatusTaskAC(state,action:PayloadAction<{todolistID: string, taskID: string, disabledStatus: RequestStatusType}>){
-            state.isLoggedIn=action.payload.value
-        }
-    }
+            state[action.payload.todolistID]= state[action.payload.todolistID].map(m => m.id === action.payload.taskID ? {
+                ...m, disabledStatus : action.payload.disabledStatus} : m)
+        },
+        removeTaskAC(state,action:PayloadAction<{todolistID: string, taskID: string}>){
+            state[action.payload.todolistID]=state[action.payload.todolistID].filter(t => t.id !== action.payload.taskID)
+        },
+        addTaskAC(state,action:PayloadAction<{item: ItemType}>){
 
-});
+           state[action.payload.item.todoListId]=[action.payload.item, ...state[action.payload.item.todoListId]]
+        },
+        chengeCheckBoxStatusAC(state,action:PayloadAction<{todolistID: string, id: string, status: TaskStatuses}>){
+
+
+                state[action.payload.todolistID]= state[action.payload.todolistID].map(m => m.id === action.payload.id ? {
+                    ...m,
+                    status: action.payload.status
+                } : m)
+
+        },
+        apdateTaskAC(state,action:PayloadAction<{todolistID: string, taskID: string, title: string}>){
+
+
+                state[action.payload.todolistID]= state[action.payload.todolistID].map(t => t.id === action.payload.taskID ? {
+                    ...t,
+                    title: action.payload.title
+                } : t)
+
+        },
+        getTasksAC(state,action:PayloadAction<{tasks: ItemType[], todolistID: string}>){
+            state[action.payload.todolistID] = action.payload.tasks;
+
+        },
+    }});
+
 export const TasksReducer=slice.reducer;
+export const {
+    disabledStatusTaskAC, removeTaskAC, addTaskAC, chengeCheckBoxStatusAC,
+    apdateTaskAC, getTasksAC
+} = slice.actions;
+
 // export const TasksReducer = (state: StateType = initialState, action: ActionType): StateType => {
 //     switch (action.type) {
 //         case "REMOVE-TASK": {
@@ -120,33 +149,33 @@ export const TasksReducer=slice.reducer;
    // type: 'DISABLED-STATUS-TASK',
  //   todolistID, taskID, disabledStatus,
 //} as const);//disabled buttons
-export const removeTaskAC = (todolistID: string, taskID: string) =>
-    ({type: "REMOVE-TASK", todolistID, taskID,} as const);
-export const addTaskAC = (item: ItemType) =>
-    ({type: 'ADD-TASK', item} as const);
-export const chengeCheckBoxStatusAC = (todolistID: string, id: string, status: TaskStatuses) =>
-    ({type: 'CHENGE-STATUS-CHECKBOX', todolistID, id, status,} as const);
-export const apdateTaskAC = (todolistID: string, taskID: string, title: string) =>
-    ({type: 'APDATE-TASK', todolistID, taskID, title,} as const);
-export const getTasksAC = (tasks: ItemType[], todolistID: string) =>  //c апи пришли все таски
-    ({type: 'GET-TASKS', tasks, todolistID} as const);
+//export const removeTaskAC = (todolistID: string, taskID: string) =>
+   // ({type: "REMOVE-TASK", todolistID, taskID,} as const);
+//export const addTaskAC = (item: ItemType) =>
+   // ({type: 'ADD-TASK', item} as const);
+// export const chengeCheckBoxStatusAC = (todolistID: string, id: string, status: TaskStatuses) =>
+//     ({type: 'CHENGE-STATUS-CHECKBOX', todolistID, id, status,} as const);
+// export const apdateTaskAC = (todolistID: string, taskID: string, title: string) =>
+//     ({type: 'APDATE-TASK', todolistID, taskID, title,} as const);
+// export const getTasksAC = (tasks: ItemType[], todolistID: string) =>  //c апи пришли все таски
+//     ({type: 'GET-TASKS', tasks, todolistID} as const);
 
 
 export const TasksThunkCreator = (todolistID: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC({value:'loading'}))
     todolistApi.getTasks(todolistID).then((res) => { //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
         dispatch(setAppStatusAC({value:'failed'}))
-        dispatch(getTasksAC(res.data.items, todolistID))
+        dispatch(getTasksAC({tasks:res.data.items, todolistID}))
     })
 }
 
 export const TasksDeleteThunkCreator = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC({value:'loading'}))
-    dispatch(disabledStatusTaskAC(todolistID, taskID,'loading'));
+    dispatch(disabledStatusTaskAC({todolistID, taskID,disabledStatus:'loading'}));
     todolistApi.deleteTask(todolistID, taskID).then(res => {  //удаление тасок delete запрос
         dispatch(setAppStatusAC({value:'failed'}))
-        dispatch(disabledStatusTaskAC(todolistID, taskID,'failed'))
-        dispatch(removeTaskAC(todolistID, taskID))
+        dispatch(disabledStatusTaskAC({todolistID, taskID,disabledStatus:'failed'}))
+        dispatch(removeTaskAC({todolistID, taskID}))
     })
 }
 
@@ -156,7 +185,7 @@ export const TasksAddThunkCreator = (todolistID: string, title: string) => (disp
         .then(res => {  //добавление тасок в уже созданные тодолисты
             if (res.data.resultCode === 0) { //если нет ошибки то выполни добавление тасок
                 dispatch(setAppStatusAC({value:'failed'}))
-                dispatch(addTaskAC(res.data.data.item)) // -мы посылаем название таски и id тодолиста- post запрос
+                dispatch(addTaskAC({item:res.data.data.item})) // -мы посылаем название таски и id тодолиста- post запрос
             } else {
                 dispatch(setAppStatusAC({value:'failed'})) //опять же убираем крутилку
                 dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
@@ -194,7 +223,7 @@ export const TaskUpdateStatusThunkCreator = (todolistID: string, taskID: string,
             // -мы посылаем название таски и id тодолиста- put запрос
             // debugger
             dispatch(setAppStatusAC({value:'failed'}))
-            dispatch(chengeCheckBoxStatusAC(todolistID, taskID, status))
+            dispatch(chengeCheckBoxStatusAC({todolistID,id: taskID, status}))
         })
     }
 
@@ -224,23 +253,17 @@ export const TaskUpdateTitleThunkCreator = (todolistID: string, taskID: string, 
             dispatch(setAppStatusAC({value:'failed'}))
             // -мы посылаем название таски и id тодолиста- put запрос
             // debugger
-            dispatch(apdateTaskAC(todolistID, taskID, title))
+            dispatch(apdateTaskAC({todolistID, taskID, title}))
         })
     }
 }
 //types
-type ActionType =
-    ReturnType<typeof removeTaskAC>
-    | ReturnType<typeof addTaskAC>
-    | ReturnType<typeof chengeCheckBoxStatusAC>
-    | ReturnType<typeof apdateTaskAC>
-    | ReturnType<typeof removeTodolistAC>
-    | ReturnType<typeof getTasksAC>
-    | ReturnType<typeof addTodolistsAC>
-    | ReturnType<typeof getTodolistsAC>
-    | ReturnType<typeof setAppStatusAC> //крутилка
-    | ReturnType<typeof errorAppMessageAC> //ошибка
-    | ReturnType<typeof disabledStatusTaskAC> //disabled
+// export type ActionType =
+//      ReturnType<typeof setAppStatusAC> //крутилка
+//     | ReturnType<typeof errorAppMessageAC> //ошибка
+
+
+
 
 
 
