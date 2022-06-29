@@ -3,6 +3,6 @@ import {Dispatch} from "redux";
 import {AxiosError} from "axios";
 
 export const handleServerNetworkError = (err: AxiosError, dispatch: Dispatch<AppActionsType>) => {
-    dispatch(setAppStatusAC('failed'))//крутилка отключилась
-    dispatch(errorAppMessageAC(err.message ? err.message : 'Some error occurred'))
+    dispatch(setAppStatusAC({value:'failed'}))//крутилка отключилась
+    dispatch(errorAppMessageAC({value:err.message ? err.message : 'Some error occurred'}))
 }

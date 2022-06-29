@@ -26,7 +26,7 @@ test('FILTERED-TASK', ()=>{
 
     let newFilter='Completed';
 
-    const endState=TodolistReducer(startState,filteredTaskAC(todolistID_1,newFilter));
+    const endState=TodolistReducer(startState,filteredTaskAC({todolistID:todolistID_1,value:newFilter}));
 
     expect(endState[0].filter).toBe(newFilter);
     expect(endState[1].filter).toBe( 'All');
@@ -34,7 +34,7 @@ test('FILTERED-TASK', ()=>{
 
 test('REMOVE-TODOLIST', ()=>{
 
-    const endState=TodolistReducer(startState,removeTodolistAC(todolistID_1));
+    const endState=TodolistReducer(startState,removeTodolistAC({todolistID:todolistID_1}));
 
     expect(endState.length).toBe(1);
 })
@@ -43,7 +43,7 @@ test('TITLE-TODOLIST', ()=>{
 
     let newTitle='What to watch TV';
 
-    const endState=TodolistReducer(startState,titleTodolistAC(todolistID_1,newTitle));
+    const endState=TodolistReducer(startState,titleTodolistAC({todolistID:todolistID_1,title:newTitle}));
 
     expect(endState[0].title).toBe(newTitle);
     expect(endState[1].title).toBe(   "What to buy");
@@ -60,7 +60,7 @@ test('ADD-TODOLIST', ()=>{
     }
 
 
-    const endState=TodolistReducer(startState,addTodolistsAC(item));
+    const endState=TodolistReducer(startState,addTodolistsAC({item}));
 
      expect(endState[0].title).toBe('REACT');
     expect(endState.length).toBe(  3);
@@ -71,7 +71,7 @@ test('GET-TODOLIST', ()=>{ //добавление тодолистов из api
     let todolists=startState;//тодолисты возьмем из startState как будто мы из получили из сервера
 
 
-    const endState=TodolistReducer(startState,getTodolistsAC(todolists));
+    const endState=TodolistReducer(startState,getTodolistsAC({todolists}));
 
     expect(endState[0].order).toBe(1);
     expect(endState.length).toBe(  2);
@@ -82,7 +82,7 @@ test('disabled status', ()=>{ //дисэйблим кнопки во время 
     let newStatus:RequestStatusType='loading';
 
 
-    const endState=TodolistReducer(startState, disabledStatusTodolistAC( todolistID_1,newStatus));
+    const endState=TodolistReducer(startState, disabledStatusTodolistAC({todolistID: todolistID_1,disabledStatus:newStatus}));
 
     expect(endState[0].disabledStatus).toBe('loading');
     expect(endState[1].disabledStatus).toBe('failed');

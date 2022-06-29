@@ -34,7 +34,7 @@ beforeEach(()=>{
 
 test ( "REMOVE-TASK",()=>{
 
-    const endState=TasksReducer(startState,removeTaskAC("todolistId2",'2'))
+    const endState=TasksReducer(startState,removeTaskAC({todolistID:"todolistId2",taskID:'2'}))
 
     expect(endState["todolistId2"].length).toBe(1);
     expect(endState["todolistId1"].length).toBe(2);
@@ -47,7 +47,7 @@ test ( 'ADD-TASK',()=>{
 
     let task=startState["todolistId1"][0];
 
-    const endState=TasksReducer(startState,addTaskAC(task));
+    const endState=TasksReducer(startState,addTaskAC({item:task}));
 
     expect(endState["todolistId1"][0].title).toBe( 'Css');
 });
@@ -56,7 +56,7 @@ test ( 'CHENGE-STATUS-CHECKBOX',()=>{
 
 
 
-    const endState=TasksReducer(startState,chengeCheckBoxStatusAC("todolistId1",'1',TaskStatuses.New))
+    const endState=TasksReducer(startState,chengeCheckBoxStatusAC({todolistID:"todolistId1",id:'1',status:TaskStatuses.New}))
 
     expect(endState["todolistId1"][0].status).toBe(TaskStatuses.New);
     expect(endState["todolistId2"][0].status).toBe( TaskStatuses.New);
@@ -64,7 +64,7 @@ test ( 'CHENGE-STATUS-CHECKBOX',()=>{
 
 test ( 'APDATE-TASK',() => {
     let newTitle='ggggg';
-    const endState=TasksReducer(startState,apdateTaskAC("todolistId1",'2',newTitle))
+    const endState=TasksReducer(startState,apdateTaskAC({todolistID:"todolistId1",taskID:'2',title: newTitle}))
 
     expect(endState["todolistId2"][0].title).toBe(  "Milk");
     expect(endState["todolistId1"][1].title).toBe('ggggg');
@@ -78,7 +78,7 @@ test ( 'ADD-TODOLIST',()=>{
         "addedDate": '',
         "order": 4,
     }
-    const endState=TasksReducer(startState,addTodolistsAC(item));
+    const endState=TasksReducer(startState,addTodolistsAC({item}));
 
 
     const keys = Object.keys(endState);//возращает массив в виде строковых ключей передаваемого обьекта
@@ -97,10 +97,10 @@ test ( 'GET-TODOLIST i tasks',()=>{  //получили с "сервера" то
     //{[id]:[],[id]:[],},те добавить пустые массивы
 
 
-    let action=getTodolistsAC([
+    let action=getTodolistsAC({todolists:[
         {id: '1', title: "What to learn",addedDate:'',order:1},
         {id: '2', title: "What to buy",addedDate:'',order:2},
-    ]);
+    ]});
 
     const endState=TasksReducer({},action);
 
@@ -117,7 +117,7 @@ test ( 'GET-TODOLIST i tasks',()=>{  //получили с "сервера" то
 test ( 'get tasks for api',()=>{
 
 
-  const action=getTasksAC(startState["todolistId1"],"todolistId1");
+  const action=getTasksAC({tasks:startState["todolistId1"],todolistID:"todolistId1"});
 
     const endState=TasksReducer({"todolistId1":[],"todolistId2":[]},action)
 

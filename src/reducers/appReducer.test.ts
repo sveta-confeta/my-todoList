@@ -16,7 +16,7 @@ beforeEach(()=>{
 
 test ( 'set-status',()=> {
 
-    const endState = appReducer(startState, setAppStatusAC('loading'))
+    const endState = appReducer(startState, setAppStatusAC({value:'loading'}))
 
     expect(endState.status).toBe('loading');
 
@@ -24,7 +24,7 @@ test ( 'set-status',()=> {
 
 test ( 'error',()=>{
 
-    const endState=appReducer(startState,errorAppMessageAC('error'))
+    const endState=appReducer(startState,errorAppMessageAC({value:'error'}))
 
     expect(endState.error).toBe( 'error');
 })

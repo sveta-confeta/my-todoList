@@ -18,7 +18,7 @@ test('ids should be equals', () => {
         "addedDate": '',
         "order": 4,
     }
-    const action = addTodolistsAC(item);
+    const action = addTodolistsAC({item});
 
     const endTasksState =  TasksReducer(startTasksState, action) //в результате будет создана 'ggg':[]
     const endTodolistsState = TodolistReducer(startTodolistsState, action)//в результате будет создана {id:action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'}
@@ -27,8 +27,8 @@ test('ids should be equals', () => {
     const idFromTasks = keys[0];
     const idFromTodolists = endTodolistsState[0].id;
 
-    expect(idFromTasks).toBe(action.item.id); //ключи должны совпадать
-    expect(idFromTodolists).toBe(action.item.id); //ключи должны совпадать
+    expect(idFromTasks).toBe(action.payload.item.id); //ключи должны совпадать
+    expect(idFromTodolists).toBe(action.payload.item.id); //ключи должны совпадать
     expect(idFromTodolists).toBe(idFromTasks);
 });
 
@@ -50,10 +50,10 @@ test('property with todolistId should be deleted', () => {
             {id: '2', title:  "React Book",
                 description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId:"todolistId2",
                 order: 0, addedDate: '',disabledStatus:'idle'}
-        ]
+        ],
     };
 
-    const action = removeTodolistAC("todolistId2");
+    const action = removeTodolistAC({todolistID:"todolistId2"});
 
     const endState =  TasksReducer(startState, action)
 
