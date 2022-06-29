@@ -1,4 +1,4 @@
-import {ApiTodolistsType, todolistsTasksID} from "./todolistsReducer";
+import {addTodolistsAC, ApiTodolistsType, todolistsTasksID} from "./todolistsReducer";
 import {TaskPriorities, TaskStatuses, todolistApi, UpdateTask} from "../api/ todolist-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../redux/redux-store";
@@ -41,25 +41,20 @@ const slice = createSlice({
     name: 'task',
     initialState: initialState,
     reducers: {
-        addTodolistsAC(state, action: PayloadAction<{ item: ApiTodolistsType }>) {
-            return {...state, [action.payload.item.id]: []}
 
-        },
-        disabledStatusTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string, disabledStatus: RequestStatusType }>) {
-            state[action.payload.todolistID] = state[action.payload.todolistID].map(m => m.id === action.payload.taskID ? {
-                ...m, disabledStatus: action.payload.disabledStatus
-            } : m)
-        },
         removeTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string }>) {
-            state[action.payload.todolistID] = state[action.payload.todolistID].filter(t => t.id !== action.payload.taskID)
+            const tasks=state[action.payload.todolistID];
+            const index=tasks.findIndex(t=>t.id===action.payload.taskID);
+            if (index > -1) {
+                tasks.splice(index, 1);
+            }
+            // state[action.payload.todolistID] = state[action.payload.todolistID].filter(t => t.id !== action.payload.taskID)
         },
         addTaskAC(state, action: PayloadAction<{ item: ItemType }>) {
-
-            state[action.payload.item.todoListId] = [action.payload.item, ...state[action.payload.item.todoListId]]
+            state[action.payload.item.todoListId].unshift(action.payload.item);
+            // state[action.payload.item.todoListId] = [action.payload.item, ...state[action.payload.item.todoListId]]
         },
         chengeCheckBoxStatusAC(state, action: PayloadAction<{ todolistID: string, id: string, status: TaskStatuses }>) {
-
-
             state[action.payload.todolistID] = state[action.payload.todolistID].map(m => m.id === action.payload.id ? {
                 ...m,
                 status: action.payload.status
@@ -67,104 +62,39 @@ const slice = createSlice({
 
         },
         apdateTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string, title: string }>) {
+            const tasks=state[action.payload.todolistID];
+            const index=tasks.findIndex(t=>t.id===action.payload.taskID);
+            tasks[index].title=action.payload.title;
 
-
-            state[action.payload.todolistID] = state[action.payload.todolistID].map(t => t.id === action.payload.taskID ? {
-                ...t,
-                title: action.payload.title
-            } : t)
+            // state[action.payload.todolistID] = state[action.payload.todolistID].map(t => t.id === action.payload.taskID ? {
+            //     ...t,
+            //     title: action.payload.title
+            // } : t)
 
         },
         getTasksAC(state, action: PayloadAction<{tasks: ItemType[], todolistID: string }>) {
             state[action.payload.todolistID] = action.payload.tasks;
-
         },
-    }
+        disabledStatusTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string, disabledStatus: RequestStatusType }>) {
+            state[action.payload.todolistID] = state[action.payload.todolistID].map(m => m.id === action.payload.taskID ? {
+                ...m, disabledStatus: action.payload.disabledStatus
+            } : m)
+        },
+    },
+    extraReducers:(builder)=>{
+       builder.addCase(addTodolistsAC,(state, action)=>{
+        return  {...state, [action.payload.item.id]: []} //без этого кейса все работает)
+
+
+       })},
+
 });
 
 export const TasksReducer = slice.reducer;
 export const {
     disabledStatusTaskAC, removeTaskAC, addTaskAC, chengeCheckBoxStatusAC,
-    apdateTaskAC, getTasksAC, addTodolistsAC
+    apdateTaskAC, getTasksAC,
 } = slice.actions;
-
-// export const TasksReducer = (state: StateType = initialState, action: ActionType): StateType => {
-//     switch (action.type) {
-//         case "REMOVE-TASK": {
-//             return {...state, [action.todolistID]: state[action.todolistID].filter(t => t.id !== action.taskID)}
-//         }
-//         case 'ADD-TASK': { //это добавить одну таску
-//             // let newObj: ItemType = {
-//             //     id: v1(), title: action.value,
-//             //     description: '', status:TaskStatuses.New, priority:TaskPriorities.Low , startDate: '', deadline: '', todoListId: action.todolistID,
-//             //     order: 0, addedDate: ''
-//             // };
-//             return {...state, [action.item.todoListId]: [action.item, ...state[action.item.todoListId]]}
-//         }
-//         case 'CHENGE-STATUS-CHECKBOX': {
-//             return {
-//                 ...state,
-//                 [action.todolistID]: state[action.todolistID].map(m => m.id === action.id ? {
-//                     ...m,
-//                     status: action.status
-//                 } : m)
-//             }
-//         }
-//         case  'APDATE-TASK': {
-//             return {
-//                 ...state,
-//                 [action.todolistID]: state[action.todolistID].map(t => t.id === action.taskID ? {
-//                     ...t,
-//                     title: action.title
-//                 } : t)
-//             }
-//         }
-//         case  'ADD-TODOLIST': {
-//             // let newTodolist = {id: action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'};
-//             // return [newTodolist, ...state];
-//             return {...state, [action.item.id]: []}
-//         }
-//         case "REMOVE-TODOLIST": {
-//             let newState = {...state}
-//             delete newState[action.todolistID];
-//             return newState
-//         }
-//         case  'GET-TODOLISTS': {
-//             const copyState = {...state}
-//             action.todolists.forEach(tl => {
-//                 copyState[tl.id] = [];
-//             })
-//             return copyState;
-//         }
-//         case 'GET-TASKS': {
-//             const copyState = {...state}
-//             copyState[action.todolistID] = action.tasks;
-//             return copyState;
-//         }
-//         case 'DISABLED-STATUS-TASK':{
-//             return {...state, [action.todolistID]: state[action.todolistID].map(m => m.id === action.taskID ? {
-//                 ...m, disabledStatus : action.disabledStatus} : m)}
-//         }
-//         default:
-//             return state;
-//     }
-//
-// }
-
-//export const disabledStatusTaskAC = (todolistID: string, taskID: string, disabledStatus: RequestStatusType) => ({
-// type: 'DISABLED-STATUS-TASK',
-//   todolistID, taskID, disabledStatus,
-//} as const);//disabled buttons
-//export const removeTaskAC = (todolistID: string, taskID: string) =>
-// ({type: "REMOVE-TASK", todolistID, taskID,} as const);
-//export const addTaskAC = (item: ItemType) =>
-// ({type: 'ADD-TASK', item} as const);
-// export const chengeCheckBoxStatusAC = (todolistID: string, id: string, status: TaskStatuses) =>
-//     ({type: 'CHENGE-STATUS-CHECKBOX', todolistID, id, status,} as const);
-// export const apdateTaskAC = (todolistID: string, taskID: string, title: string) =>
-//     ({type: 'APDATE-TASK', todolistID, taskID, title,} as const);
-// export const getTasksAC = (tasks: ItemType[], todolistID: string) =>  //c апи пришли все таски
-//     ({type: 'GET-TASKS', tasks, todolistID} as const);
 
 
 export const TasksThunkCreator = (todolistID: string) => (dispatch: Dispatch) => {
@@ -263,10 +193,9 @@ export const TaskUpdateTitleThunkCreator = (todolistID: string, taskID: string, 
         })
     }
 }
-//type
-export type addTodolistsACType =ReturnType<typeof addTodolistsAC>
-//      ReturnType<typeof setAppStatusAC> //крутилка
-//     | ReturnType<typeof errorAppMessageAC> //ошибка
+
+ export type addTodolistsACType =ReturnType<typeof addTodolistsAC>
+
 
 
 

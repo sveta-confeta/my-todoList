@@ -1,10 +1,9 @@
 import React from 'react';
 import s from "../../Todolist.module.css";
 
-import {AppRootStateType, useAppSelector} from "../../redux/redux-store";
+import {useAppSelector} from "../../redux/redux-store";
 import {Task} from "./Task";
-import {useSelector} from "react-redux";
-import { TaskStatuses} from "../../api/ todolist-api";
+import {TaskStatuses} from "../../api/ todolist-api";
 import {RequestStatusType} from "../../reducers/appReducer";
 import {ItemType} from "../../reducers/tasksReducer";
 
@@ -31,7 +30,7 @@ export const TasksMap = React.memo(({ todolistID,filter}: TasksMapPropsType) => 
     return (
         //MaterialUI использует под капотом React.memo -только нет useCallback/нужно оборачивать
         <ul className={s.todolist_tasks}>
-            {tasksFilter?.map ( el => {
+            {tasksFilter?.map ( el => {//без ? не отрисовываются
 
                return  <li key={el.id}>
 

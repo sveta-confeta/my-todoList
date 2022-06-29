@@ -38,7 +38,7 @@ export const slice = createSlice({
             state[index].title=action.payload.title;
         },
         addTodolistsAC(state, action: PayloadAction<{ item: ApiTodolistsType }>) {
-            state.push({...action.payload.item, filter: 'All', disabledStatus: 'failed'})
+            state.unshift({...action.payload.item, filter: 'All', disabledStatus: 'failed'})
         },
         getTodolistsAC(state, action: PayloadAction<{ todolists: Array<ApiTodolistsType> }>) {
             return action.payload.todolists.map(m => ({...m, filter: 'All', disabledStatus: 'failed'}))
@@ -167,7 +167,6 @@ export const titleTodolistThunkCreator = (todolistID: string, title: string) => 
         })
 }
 //types
- export type addTodolistsACType = ReturnType<typeof addTodolistsAC> //disabled
      //ReturnType<typeof filteredTaskAC>
 //     | ReturnType<typeof removeTodolistAC>
 //     | ReturnType<typeof addTodolistsAC>
