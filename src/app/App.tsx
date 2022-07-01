@@ -12,6 +12,7 @@ import {initializeAppTC} from "../reducers/appReducer";
 import { useAppDispatch, useAppSelector} from "../redux/redux-store";
 import CircularProgress from "@mui/material/CircularProgress";
 import {logautTC} from "../reducers/authReducer";
+import {Button} from "@mui/material";
 
 
 
@@ -38,7 +39,7 @@ function App() {
     return (
         <div className="App">
             <div className={"header"}>
-                {isLogin && <button onClick={logautHandler} className={"btnHeader"}>Logaut</button>}
+                {isLogin && <Button variant="contained"  onClick={logautHandler} className={"btnHeader"}>Logaut</Button>}
             </div>
             <Routes>
                 <Route path='/' element={<CreateTodolists/>}/>

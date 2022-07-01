@@ -2,7 +2,7 @@ import React, {ChangeEvent, useCallback, useEffect} from 'react';
 import {Checkbox} from "@mui/material";
 import EditSpan from "../EditSpan/EditSpan";
 import {ButtonForm} from "../Button";
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import {
     apdateTaskAC, ItemType,
     TasksDeleteThunkCreator,
@@ -52,11 +52,11 @@ const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{    //!!!!!!!!!!!!!
         dispatch( TaskUpdateStatusThunkCreator(props.todolistID,elID, status)) //диспатчим в санку .пут запрос
     }, [dispatch,props.todolistID])
     return (
-        <div>
-            <Checkbox color="success" checked={tasks.status===TaskStatuses.Completed}//было tasks.isDone
+        <div className={s.liTask}>
+            <Checkbox  className={s.checkbox} color="success" checked={tasks.status===TaskStatuses.Completed}//было tasks.isDone
                       onChange={checkedHandler}/>
             {/*<span>{el.task}</span> так было */}
-            <span className={tasks.status===TaskStatuses.Completed ? s.isDone : s.notDone}>
+            <span className={`${s.span} ${tasks.status===TaskStatuses.Completed ? s.isDone : s.notDone}`}>
                 <EditSpan title={tasks.title} apdateTask={(title: string) => callbackApdateTask(tasks.id, title)}/>
                 {/*<button onClick={() => props.removeTask(el.id)}>x</button>*/}
                 <ButtonForm name={'x'} callback={() => removeTaskHandler(tasks.id)} disabledStatus={props.disabledStatus}/>

@@ -9,11 +9,14 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
-import {useDispatch} from "react-redux";
 import {loginTC} from "../../reducers/authReducer";
 import {useAppDispatch, useAppSelector} from "../../redux/redux-store";
 import {Navigate} from "react-router-dom";
 import {ErrorSnackbar} from "../ErrorSnackbar/ErrorSnackbar";
+import {Paper} from "@mui/material";
+import s from './login.module.css';
+
+
 type FormikErrorType = {
     email?: string
     password?: string
@@ -59,19 +62,14 @@ export const Login = () => {
 
 
     return <Grid container justifyContent={'center'}>
+        <Paper className={s.loginForm}  elevation={3}>
+            <p className={s.title}>Login In</p>
 
             {/*//оборачиваем наши все формы тегом form..*/}
             <form onSubmit={formik.handleSubmit}>
             <FormControl>
                 <FormLabel>
-                    <p>To log in get registered
-                        <a href={'https://social-network.samuraijs.com/'}
-                           target={'_blank'}> here
-                        </a>
-                    </p>
-                    <p>or use common test account credentials:</p>
-                    <p>Email: free@samuraijs.com</p>
-                    <p>Password: free</p>
+
                 </FormLabel>
                 <FormGroup>
                     <TextField label="Email" margin="normal" {...formik.getFieldProps('email')} />
@@ -94,7 +92,7 @@ export const Login = () => {
                 </FormGroup>
             </FormControl>
             </form>
-
+        </Paper>
     </Grid>
 }
 

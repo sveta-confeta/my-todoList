@@ -1,3 +1,10 @@
+*{
+ margin:0;
+ padding: 0;
+ box-sizing: border-box;
+ /*border:red 1px solid*/
+}
+
 body {
  background-color: peachpuff;
  padding: 40px;
@@ -5,6 +12,7 @@ body {
  max-width: 1600px;
  height: auto;
  margin: 0 auto;
+
 }
 
 .App{
@@ -26,14 +34,12 @@ body {
 
 
 }
-.btnHeader{
+.btnHeader {
  font-size: 18px;
- background:transparent;
- color: white;
+ background: peachpuff !important;
+ color: #000 !important;
  padding: 5px;
- margin-right: 40px;
-
-
+ margin-right: 40px !important;
 
 }
 
@@ -47,6 +53,8 @@ body {
 }
 .CreateTodolists{
  margin-bottom: 40px;
+ display: flex;
+ justify-content: center;
 }
 
 

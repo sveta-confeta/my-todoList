@@ -1,47 +1,76 @@
 
-.todolist_wrapper{
+.todolist_wrapper {
+    background-color: #fafff3 !important;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: lightgoldenrodyellow;
+    justify-content: center;
     border: 1px solid aquamarine;
     padding: 20px;
     max-width: 250px;
 }
-
-ul.todolist_tasks{
-    padding: 0;
+.wrapperForm{
+    margin-bottom: 20px;
 }
-
-
-
-ul.todolist_tasks li{
-    max-width: 250px;
-    list-style: none;
-    padding:  10px 25px 10px 15px;
-    border: 1px solid #000;
+.input_wrapper{
+    margin-bottom: 6px;
+}
+ul.todolist_tasks {
+    width: 100%;
     margin-bottom: 10px;
+}
+
+ul.todolist_tasks .li {
+    margin: 10px 0;
+    list-style: none;
+    border-radius: 5px;
+    background-color: transparent !important;
+}
+
+
+.liTask {
+    width: 100%;
+    display: grid;
+    grid-template-columns:  1fr 8fr;
+    border-radius: 20px;
+}
+
+.span{
+    margin-right: 20px;
+    width: 100%;
+    word-wrap: break-word;
     display: flex;
-    border-radius:20px ;
-
-}
-ul.todolist_tasks li button{
- margin-left: auto;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
 
 
 }
-ul.todolist_tasks li input{
-    margin-right: 10px;
+ul.todolist_tasks .li button {
+    padding: 5px;
+
 }
-ul.todolist_tasks li span{
-    margin-right: 10px;
+
+
+
+.checkbox {
+    max-width: 42px;
+    justify-self: center;
 }
- /* классы для предупреждения в инпуте*/
+
+
+
+
+
+
+
+/* классы для предупреждения в инпуте*/
 
 /*цвет кнопок*/
 .activeFilter {
     background-color: aquamarine;
 }
+
 /* цвет выполненных тасок*/
 .isDone {
     opacity: 0.5;
@@ -49,24 +78,30 @@ ul.todolist_tasks li span{
     justify-content: space-between;
     align-items: center;
 }
-.notDone{
+
+.notDone {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.wrapperForm{
+
+.wrapperForm {
     display: flex;
     align-items: center;
 }
-h3{
+
+h3 {
     margin-right: 20px;
 }
-.btn_set{
+
+.btn_set {
     margin-top: auto;
+
+    width: 100%;
 }
 
 
-.appWrapper{
+.appWrapper {
     display: flex;
     justify-content: space-around;
     margin-top: 50px;
@@ -74,7 +109,8 @@ h3{
     flex-wrap: wrap;
 
 }
-.CreateTodolists{
+
+.CreateTodolists {
     margin-bottom: 40px;
 }
 

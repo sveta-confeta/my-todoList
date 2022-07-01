@@ -1,11 +1,12 @@
 import React from 'react';
-import s from "../../Todolist.module.css";
+import s from "./../../Todolist.module.css";
 
 import {useAppSelector} from "../../redux/redux-store";
 import {Task} from "./Task";
 import {TaskStatuses} from "../../api/ todolist-api";
 import {RequestStatusType} from "../../reducers/appReducer";
 import {ItemType} from "../../reducers/tasksReducer";
+import {Paper} from "@mui/material";
 
 type TasksMapPropsType = {
     filter:string
@@ -30,13 +31,13 @@ export const TasksMap = React.memo(({ todolistID,filter}: TasksMapPropsType) => 
     return (
         //MaterialUI использует под капотом React.memo -только нет useCallback/нужно оборачивать
         <ul className={s.todolist_tasks}>
-            {tasksFilter?.map ( el => {//без ? не отрисовываются
+            {tasksFilter?.map ( el => {//без ? не отрисовываются тасок с апи может пока и не быть
 
-               return  <li key={el.id}>
+               return  <Paper className={s.li} elevation={2} key={el.id}>
 
                 {/*//в статусе прилетает 'loading'*/}
                 <Task taskID={el.id} todolistID={todolistID} disabledStatus={status}/>
-            </li>})}
+               </Paper>})}
 
         </ul>
     );
