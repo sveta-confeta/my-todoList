@@ -11,12 +11,17 @@ import {TodolistReducer} from "../reducers/todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 import {appReducer} from "../reducers/appReducer";
 import thunk from "redux-thunk";
-import {AppRootStateType} from "./redux-store";
+import {AppRootStateType, AppRootType} from "./redux-store";
+import {authReducer} from "../reducers/authReducer";
+import {configureStore} from "@reduxjs/toolkit";
+import {HashRouter} from "react-router-dom";
 
-const rootReducer = combineReducers({
+const rootReducer:AppRootType = combineReducers({
     tasks: TasksReducer,
     todolists:TodolistReducer,
     app:appReducer,
+    auth:authReducer,
+
 })
 //когда создаем вне новый редьюсер, нужно его сдесь записывать
 const initialGlobalState:AppRootStateType = {
@@ -43,18 +48,33 @@ const initialGlobalState:AppRootStateType = {
         ]
     },
     app:{
-        status:'idle',error:null, isInitialized:false,
+        status:'succeeded',error:null, isInitialized:true,
     },
     auth:{
-        isLoggedIn: false,
+        isLoggedIn: true,
     }
 };
-type GlobalStateType = ReturnType<typeof rootReducer>
-    //storyBookStore-отправляем в провайдер:
+// type GlobalStateType = ReturnType<typeof rootReducer>
+//     //storyBookStore-отправляем в провайдер:
 
- export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk) );
+ // export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk) ); когда был просто redux
+//когда redux-toolkit:
+export const storyBookStore = configureStore({
+    reducer: rootReducer,
+    preloadedState:initialGlobalState,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware()
+            .prepend(
+                thunk
+            )
+
+});
 
  // applyMiddleware тоже подключаем к стору, чтоб работали санки. это почти как стор приложения только для сторибук
 export const ReduxStoreProviderDecorator=(storyFn: () => React.ReactNode) => {
     return <Provider store={storyBookStore}>{storyFn()}</Provider>
 }
+ export const BrowserRouterDecorator=(storyFn: any) => (
+    <HashRouter>
+        {storyFn()}
+    </HashRouter>)
