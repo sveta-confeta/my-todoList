@@ -44,8 +44,8 @@ function App() {
                 {isLogin && <Button variant="contained"  onClick={logautHandler} className={"btnHeader"}>Logaut</Button>}
             </div>
             <Routes>
-                <Route path='/' element={<CreateTodolists/>}/>
-                <Route path='login' element={<Login/>}/>
+                <Route path='myTodoList/' element={<CreateTodolists/>}/>
+                <Route path='myTodoList/login' element={<Login/>}/>
                 <Route path='*' element={<h1>404 page not foun</h1>}/>
 
             </Routes>
