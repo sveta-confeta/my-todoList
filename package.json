@@ -2,6 +2,7 @@
   "name": "my_todolist",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://sveta-confeta.github.io/myTodoList",
   "engines": {
     "node": "16.13.0"
   },
@@ -17,13 +18,14 @@
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^28.1.1",
     "@types/node": "^16.7.13",
-    "@types/react": "^18.0.12",
-    "@types/react-dom": "^18.0.5",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
     "@types/react-redux": "^7.1.24",
     "@types/storybook-react-router": "^1.0.1",
     "@types/uuid": "^8.3.3",
     "axios": "^0.27.2",
     "formik": "^2.2.9",
+    "gh-pages": "^4.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.0.2",
@@ -36,6 +38,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

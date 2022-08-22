@@ -25,11 +25,13 @@ function App() {
     const isLogin=useAppSelector<boolean>(state => state.auth.isLoggedIn);
 
     useEffect(() => {
+        debugger
         dispatch(initializeAppTC()) //get запрос залогинена я или нет
 
     }, []) //1 раз нужно получить тодолисты
 
     if(!isIniatialize){
+        debugger
         return <CircularProgress disableShrink/> //покажи крутилку
     }
     const logautHandler=()=>{
@@ -44,8 +46,7 @@ function App() {
             <Routes>
                 <Route path='/' element={<CreateTodolists/>}/>
                 <Route path='login' element={<Login/>}/>
-                <Route path='404' element={<h1>404 page not foun</h1>}/>
-                <Route path='*' element={<Navigate to ='/404'/>}/>
+                <Route path='*' element={<h1>404 page not foun</h1>}/>
 
             </Routes>
         </div>
