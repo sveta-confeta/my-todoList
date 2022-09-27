@@ -15,6 +15,7 @@ type TasksMapPropsType = {
 }
 
 export const TasksMap = React.memo(({ todolistID,filter}: TasksMapPropsType) => {
+    debugger
     const tasks =useAppSelector<Array<ItemType>>(state => state.tasks[todolistID]); //filter возращает массив-а нам нужен 1 обьект в массиве
     const status=useAppSelector<RequestStatusType>(state=>state.app.status);
     let tasksFilter = tasks;
@@ -32,10 +33,8 @@ export const TasksMap = React.memo(({ todolistID,filter}: TasksMapPropsType) => 
         //MaterialUI использует под капотом React.memo -только нет useCallback/нужно оборачивать
         <ul className={s.todolist_tasks}>
             {tasksFilter?.map ( el => {//без ? не отрисовываются тасок с апи может пока и не быть
-
-               return  <Paper className={s.li} elevation={2} key={el.id}>
-
-                {/*//в статусе прилетает 'loading'*/}
+                return  <Paper className={s.li} elevation={2} key={el.id}>
+                    {/*//в статусе прилетает 'loading'*/}
                 <Task taskID={el.id} todolistID={todolistID} disabledStatus={status}/>
                </Paper>})}
 

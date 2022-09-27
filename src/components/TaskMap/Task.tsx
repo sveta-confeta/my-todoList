@@ -15,11 +15,7 @@ import s from './../../Todolist.module.css'
 import {RequestStatusType} from "../../reducers/appReducer";
 
 type TaskPropsType={
-    // changeTaskStatus: (id: string,newIsDoneValue: boolean,todolistID:string) => void
     todolistID:string
-    // apdateTaskTitle:(todolistsID:string,taskID:string,title:string)=>void
-    // removeTask: (mID: string,todolistID:string) => void//функция удаления
-    // task:TaskType //то что мапится приходит из тасок, cдесь один обьект из тасок.т есть одна таска
     taskID:string
     disabledStatus:RequestStatusType
 }
@@ -35,12 +31,8 @@ export const Task = (props:TaskPropsType) => {
         dispatch(TaskUpdateTitleThunkCreator(props.todolistID,elID, title))
     }, [dispatch, apdateTaskAC,props.todolistID])
 
-    // const removeTaskHandler = useCallback((tId: string) => {
-    //     dispatch(removeTaskAC(props.todolistID,tId))
-    // }, [dispatch,removeTaskAC,props.todolistID])
-
-    const removeTaskHandler = useCallback((tId: string) => {  //удаление тасок
-        dispatch(TasksDeleteThunkCreator(props.todolistID,tId)) //вместо АС диспатчим в санккреатор, который будет диспатчить в АС
+    const removeTaskHandler = useCallback(( taskID: string) => {  //удаление тасок
+        dispatch(TasksDeleteThunkCreator({todolistID: props.todolistID, taskID}))
 
     }, [])
 

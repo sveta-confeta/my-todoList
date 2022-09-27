@@ -27,13 +27,10 @@ export type StateType = {
 const initialState: StateType = {
     [todolistsTasksID.todolistID_1]: [
         // {id: v1(), title: "название1 из инпут", isDone: false},
-        // {id: v1(), title: "название2 из инпут", isDone: true},
-        // {id: v1(), title: "название3 из инпут", isDone: true},
+
     ],
     [todolistsTasksID.todolistID_2]: [
         // {id: v1(), title: "название1 из инпут", isDone: false},
-        // {id: v1(), title: "название2 из инпут", isDone: true},
-        // {id: v1(), title: "название3 из инпут", isDone: true},
     ]
 };
 
@@ -55,21 +52,23 @@ export const TasksThunkCreator = createAsyncThunk('task/TasksThunkCreator', (tod
 //         dispatch(getTasksAC({tasks: res.data.items, todolistID}))
 //     })
 // }
-
+export const TasksDeleteThunkCreator = createAsyncThunk ('task/TasksDeleteThunkCreator', (param:{todolistID: string, taskID: string},thunkAPI) =>{
+    thunkAPI.dispatch(setAppStatusAC({value: 'loading'}))
+    thunkAPI.dispatch(disabledStatusTaskAC({todolistID:param.todolistID, taskID:param.taskID, disabledStatus: 'loading'}));
+    return todolistApi.deleteTask(param.todolistID,param.taskID).then(res => {  //удаление тасок delete запрос
+        thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+        thunkAPI.dispatch(disabledStatusTaskAC({todolistID:param.todolistID, taskID:param.taskID, disabledStatus: 'failed'}))
+       return {todolistID:param.todolistID, taskID:param.taskID}
+    })
+})
 
 const slice = createSlice({
         name: 'task',
         initialState: initialState,
         reducers: {
-
-            removeTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string }>) {
-                const tasks = state[action.payload.todolistID];
-                const index = tasks.findIndex(t => t.id === action.payload.taskID);
-                if (index > -1) {
-                    tasks.splice(index, 1);
-                }
-                // state[action.payload.todolistID] = state[action.payload.todolistID].filter(t => t.id !== action.payload.taskID)
-            },
+            // логику удаления таски переносим в экстраредьюсскр
+            //    имутабельное удаление:
+            // state[action.payload.todolistID] = state[action.payload.todolistID].filter(t => t.id !== action.payload.taskID)
             addTaskAC(state, action: PayloadAction<{ item: ItemType }>) {
                 state[action.payload.item.todoListId].unshift(action.payload.item);
                 // state[action.payload.item.todoListId] = [action.payload.item, ...state[action.payload.item.todoListId]]
@@ -92,9 +91,6 @@ const slice = createSlice({
                 // } : t)
 
             },
-            // getTasksAC(state, action: PayloadAction<{ tasks: ItemType[], todolistID: string }>) {
-            //     state[action.payload.todolistID] = action.payload.tasks;
-            // },
             disabledStatusTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string, disabledStatus: RequestStatusType }>) {
                 state[action.payload.todolistID] = state[action.payload.todolistID].map(m => m.id === action.payload.taskID ? {
                     ...m, disabledStatus: action.payload.disabledStatus
@@ -107,7 +103,14 @@ const slice = createSlice({
             });
             builder.addCase(TasksThunkCreator.fulfilled, (state, action) => {
                 state[action.payload.todolistID] = action.payload.tasks;
-            })
+            });
+            builder.addCase(TasksDeleteThunkCreator.fulfilled,(state, action) => {
+                const tasks = state[action.payload.todolistID];
+                    const index = tasks.findIndex(t => t.id === action.payload.taskID);
+                    if (index > -1) {
+                        tasks.splice(index, 1);
+                    }
+            });
         },
 
 
@@ -116,21 +119,10 @@ const slice = createSlice({
 
 export const TasksReducer = slice.reducer;
 export const {
-    disabledStatusTaskAC, removeTaskAC, addTaskAC, chengeCheckBoxStatusAC,
+    disabledStatusTaskAC, addTaskAC, chengeCheckBoxStatusAC,
     apdateTaskAC,
 } = slice.actions;
 
-
-
-export const TasksDeleteThunkCreator = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC({value: 'loading'}))
-    dispatch(disabledStatusTaskAC({todolistID, taskID, disabledStatus: 'loading'}));
-    todolistApi.deleteTask(todolistID, taskID).then(res => {  //удаление тасок delete запрос
-        dispatch(setAppStatusAC({value: 'failed'}))
-        dispatch(disabledStatusTaskAC({todolistID, taskID, disabledStatus: 'failed'}))
-        dispatch(removeTaskAC({todolistID, taskID}))
-    })
-}
 
 export const TasksAddThunkCreator = (todolistID: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC({value: 'loading'}))

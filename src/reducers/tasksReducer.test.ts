@@ -2,8 +2,7 @@ import {
     addTaskAC,
     apdateTaskAC,
     chengeCheckBoxStatusAC,
-    removeTaskAC,
-    StateType,
+    StateType, TasksDeleteThunkCreator,
     TasksReducer, TasksThunkCreator
 } from "./tasksReducer";
 import {addTodolistsAC, getTodolistsAC} from "./todolistsReducer";
@@ -74,7 +73,7 @@ beforeEach(() => {
 
 test("REMOVE-TASK", () => {
 
-    const endState = TasksReducer(startState, removeTaskAC({todolistID: "todolistId2", taskID: '2'}))
+    const endState = TasksReducer(startState,TasksDeleteThunkCreator.fulfilled({todolistID: "todolistId2", taskID: '2'},'', {todolistID: "todolistId2", taskID: '2'}))
 
     expect(endState["todolistId2"].length).toBe(1);
     expect(endState["todolistId1"].length).toBe(2);

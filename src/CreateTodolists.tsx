@@ -19,7 +19,6 @@ import {useNavigate} from "react-router-dom";
 
 
 export const CreateTodolists = () => {
-    debugger
     // const todolistID_1 = v1();
     // const todolistID_2 = v1();
 

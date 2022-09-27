@@ -21,13 +21,11 @@ function App() {
     const isLogin = useAppSelector<boolean>(state => state.auth.isLoggedIn);
 
     useEffect(() => {
-        debugger
         dispatch(initializeAppTC()) //get запрос залогинена я или нет
 
     }, []) //1 раз нужно получить тодолисты
 
     if (!isIniatialize) {
-        debugger
         return <CircularProgress disableShrink/> //покажи крутилку
     }
     const logautHandler = () => {
