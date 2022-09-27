@@ -62,7 +62,7 @@ export const {
 //             return state.map(m => m.id === action.todolistID ? {...m, filter: action.value} : m)
 //         }
 //         case 'REMOVE-TODOLIST': {
-//             return state.filter(f => f.id !== action.todolistID)
+//
 //         }
 //         case 'TITLE-TODOLIST': {
 //             return state.map(m => action.todolistID === m.id ? {...m, title: action.title} : m)
@@ -166,16 +166,6 @@ export const titleTodolistThunkCreator = (todolistID: string, title: string) => 
             handleServerNetworkError(err, dispatch)
         })
 }
-//types
-     //ReturnType<typeof filteredTaskAC>
-//     | ReturnType<typeof removeTodolistAC>
-//     | ReturnType<typeof addTodolistsAC>
-//     | ReturnType<typeof titleTodolistAC>
-//     | ReturnType<typeof getTodolistsAC>
-//     | ReturnType<typeof setAppStatusAC> //крутилка
-//     | ReturnType<typeof errorAppMessageAC> //ошибка
-//     | ReturnType<typeof disabledStatusTodolistAC> //disabled
-
 
 export type ApiTodolistsType = {
     "id": string,

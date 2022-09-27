@@ -26,7 +26,6 @@ const slice = createSlice({
             state.error = action.payload.value
         },
         initializedAC(state, action: PayloadAction<{ value: boolean }>) {
-            debugger
             state.isInitialized = action.payload.value
         },
     }
