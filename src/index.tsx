@@ -12,7 +12,7 @@ let root = ReactDOM.createRoot(container as HTMLElement ) ;
 root.render(<React.StrictMode>
 
     <Provider store={store}>
-        <HashRouter>
+        <HashRouter basename ="/my-todolist">
             <App/>
         </HashRouter>
     </Provider>,

@@ -3,13 +3,34 @@ import {errorAppMessageAC, setAppStatusAC} from "./appReducer";
 import {authAPI, LoginParamsType, todolistApi} from "../api/ todolist-api";
 import {AxiosError} from "axios";
 import {handleServerNetworkError} from "../utils/error-util";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
 
 const initialState = {
-    isLoggedIn: false //сразу мы не залогинены
+    isLoggedIn: true //eсли false -сразу мы не залогинены, для просмотра другими людьми-пусть будет true
 }
+
+export const loginTC=createAsyncThunk('auth/Login',async (data:LoginParamsType,thunkAPI)=>{
+    thunkAPI.dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
+    try{
+        const res=await authAPI.login(data);
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
+           return{isLoggedIn:true};
+        } else {
+            thunkAPI.dispatch(setAppStatusAC({value:'failed'}))
+            thunkAPI.dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
+            return{isLoggedIn:false};
+        }
+    }catch(err: any) {
+            handleServerNetworkError(err, thunkAPI.dispatch)
+        return {isLoggedIn:false};
+
+        }
+})
+
+
 const slice=createSlice({
     name:'auth',
     initialState:initialState,
@@ -17,6 +38,11 @@ const slice=createSlice({
         setIsLoggedInAC(state,action:PayloadAction<{value:boolean}>){
             state.isLoggedIn=action.payload.value
 }
+    },
+    extraReducers:builder => {
+        builder.addCase(loginTC.fulfilled,(state,action)=>{
+            state.isLoggedIn=action.payload.isLoggedIn
+        })
     }
 
 });
@@ -38,24 +64,7 @@ export const setIsLoggedInAC=slice.actions.setIsLoggedInAC;
   //  ({type: 'login/SET-IS-LOGGED-IN', value} as const)
 
 // thunks
-export const loginTC = (data:LoginParamsType) => {
-    return (dispatch: Dispatch) => {
-        dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
-        authAPI.login(data)
-            .then((res) => {
-                if (res.data.resultCode === 0) {
-                    dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
-                    dispatch(setIsLoggedInAC({value:true}));
-                } else {
-                    dispatch(setAppStatusAC({value:'failed'}))
-                    dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
-                }
-            })
-            .catch((err: AxiosError) => {
-                handleServerNetworkError(err, dispatch)
-            })
-    };
-}
+
 
 export const logautTC = () => {  //санка вылогинивания
     return (dispatch: Dispatch) => {
