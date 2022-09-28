@@ -14,20 +14,20 @@ export const loginTC = createAsyncThunk('auth/Login', async (data: LoginParamsTy
         const res = await authAPI.login(data);
         if (res.data.resultCode === 0) {
             thunkAPI.dispatch(setAppStatusAC({value: 'failed'})) //крутилка выкл
-            return {isLoggedIn: true};
+            return;
         } else {
             thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
             thunkAPI.dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
-            return {isLoggedIn: false};
+            return thunkAPI.rejectWithValue({})
         }
     } catch (err: any) {
         handleServerNetworkError(err, thunkAPI.dispatch)
-        return {isLoggedIn: false};
+        return thunkAPI.rejectWithValue({})
 
     }
 })
 
-export const logautTC = createAsyncThunk('auth/Logaut', async (param, thunkAPI) => {  //санка вылогинивания
+export const logautTC = createAsyncThunk('auth/logaut', async (param, thunkAPI) => {  //санка вылогинивания
         thunkAPI.dispatch(setAppStatusAC({value: 'loading'})) //крутилка вкл
         try {
             const res = await authAPI.logaut();
@@ -54,16 +54,16 @@ const slice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
-        setIsLoggedInAC(state,action:PayloadAction<{isLoggedIn:boolean}>){
-            state.isLoggedIn=action.payload.isLoggedIn
+        setIsLoggedInAC(state,action:PayloadAction<{value:boolean}>){
+            state.isLoggedIn=action.payload.value;
         }
     },
     extraReducers: builder => {
-        builder.addCase(loginTC.fulfilled, (state, action) => {
-            state.isLoggedIn = action.payload.isLoggedIn
+        builder.addCase(loginTC.fulfilled, (state) => {
+            state.isLoggedIn =true;
         });
         builder.addCase(logautTC.fulfilled, (state) => {
-            state.isLoggedIn =false
+            state.isLoggedIn =false;
         })
     }
 
