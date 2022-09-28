@@ -3,7 +3,7 @@ import {authAPI} from "../api/ todolist-api";
 import {setIsLoggedInAC} from "./authReducer";
 import {AxiosError} from "axios";
 import {handleServerNetworkError} from "../utils/error-util";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
@@ -15,6 +15,27 @@ const initialState = {
 //если статус 'loading' показываем крутилку
 // если статус 'idle', 'succeeded' | 'failed' -прячем крутилку
 
+export const initializeAppTC = createAsyncThunk('app/initializeApp', async (param,thunkAPI)  => {
+    thunkAPI.dispatch(setAppStatusAC({value: 'loading'})) //крутилка вкл
+    try {
+        const res = await authAPI.me();
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'})) //крутилка выкл
+           //при удачном запросе автоматом попадаем в экстраредьюссер фулфилд и там меняется initial state
+        } else {
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+            thunkAPI.dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
+        }
+    }
+    catch(err:any) {
+            handleServerNetworkError(err, thunkAPI.dispatch)
+        }
+    finally{
+             return; //тоже всегда попадаем в экстраредьюссер и меняем логику
+        }
+
+
+})
 const slice = createSlice({
     name: 'app',
     initialState: initialState,
@@ -24,17 +45,18 @@ const slice = createSlice({
         },
         errorAppMessageAC(state, action: PayloadAction<{ value: string | null }>) {
             state.error = action.payload.value
-        },
-        initializedAC(state, action: PayloadAction<{ value: boolean }>) {
-            state.isInitialized = action.payload.value
-        },
-    }
+        }
+    },
+    extraReducers:builder => {
+        builder.addCase(initializeAppTC.fulfilled,(state)=>{
+        state.isInitialized=true;
+    })}
 
 });
 
 export const appReducer = slice.reducer;
 
-export const {setAppStatusAC, errorAppMessageAC, initializedAC} = slice.actions;
+export const {setAppStatusAC, errorAppMessageAC} = slice.actions;
 
 
 // export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
@@ -56,25 +78,7 @@ export const {setAppStatusAC, errorAppMessageAC, initializedAC} = slice.actions;
 //export const initializedAC = (value: boolean) => ({type: 'INITIALIZED', value,} as const);
 
 
-export const initializeAppTC = () => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC({value: 'loading'})) //крутилка вкл
-    authAPI.me()
-        .then(res => {
-            if (res.data.resultCode === 0) {
-                dispatch(setAppStatusAC({value: 'failed'})) //крутилка выкл
-                dispatch(setIsLoggedInAC({value: true}));
-            } else {
-                dispatch(setAppStatusAC({value: 'failed'}))
-                dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
-            }
-        })
-        .catch((err: AxiosError) => {
-            handleServerNetworkError(err, dispatch)
-        })
-        .finally(() => {
-            dispatch(initializedAC({value: true}));
-        })
-}
+
 
 
 export type AppActionsType = ReturnType<typeof setAppStatusAC>
@@ -82,4 +86,4 @@ export type AppActionsType = ReturnType<typeof setAppStatusAC>
     | ReturnType<typeof setIsLoggedInAC>
     | ReturnType<typeof setAppStatusAC> //крутилка
     | ReturnType<typeof errorAppMessageAC> //ошибка
-    | ReturnType<typeof initializedAC> //инициализация
+
