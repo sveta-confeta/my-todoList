@@ -1,56 +1,77 @@
-import {Dispatch} from "redux";
 import {errorAppMessageAC, setAppStatusAC} from "./appReducer";
-import {authAPI, LoginParamsType, todolistApi} from "../api/ todolist-api";
-import {AxiosError} from "axios";
+import {authAPI, LoginParamsType} from "../api/ todolist-api";
 import {handleServerNetworkError} from "../utils/error-util";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-
 const initialState = {
-    isLoggedIn: true //eсли false -сразу мы не залогинены, для просмотра другими людьми-пусть будет true
+    isLoggedIn: false //eсли false -сразу мы не залогинены
 }
 
-export const loginTC=createAsyncThunk('auth/Login',async (data:LoginParamsType,thunkAPI)=>{
-    thunkAPI.dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
-    try{
-        const res=await authAPI.login(data);
+export const loginTC = createAsyncThunk('auth/Login', async (data: LoginParamsType, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({value: 'loading'})) //крутилка вкл
+    try {
+        const res = await authAPI.login(data);
         if (res.data.resultCode === 0) {
-            thunkAPI.dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
-           return{isLoggedIn:true};
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'})) //крутилка выкл
+            return {isLoggedIn: true};
         } else {
-            thunkAPI.dispatch(setAppStatusAC({value:'failed'}))
-            thunkAPI.dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
-            return{isLoggedIn:false};
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+            thunkAPI.dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
+            return {isLoggedIn: false};
         }
-    }catch(err: any) {
-            handleServerNetworkError(err, thunkAPI.dispatch)
-        return {isLoggedIn:false};
+    } catch (err: any) {
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return {isLoggedIn: false};
 
-        }
+    }
 })
 
+export const logautTC = createAsyncThunk('auth/Logaut', async (param, thunkAPI) => {  //санка вылогинивания
+        thunkAPI.dispatch(setAppStatusAC({value: 'loading'})) //крутилка вкл
+        try {
+            const res = await authAPI.logaut();
+            if (res.data.resultCode === 0) {
+                thunkAPI.dispatch(setAppStatusAC({value: 'failed'})) //крутилка выкл
+                return;// если все хорошо то мы полюбому попадаем в екстраредьюссер фуллфилд
+            } else {
+                thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+                thunkAPI.dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
+                return thunkAPI.rejectWithValue({}) //нужно вернуть хотьб и пустой обьект
 
-const slice=createSlice({
-    name:'auth',
-    initialState:initialState,
-    reducers:{
-        setIsLoggedInAC(state,action:PayloadAction<{value:boolean}>){
-            state.isLoggedIn=action.payload.value
+            }
+        }
+
+        catch (err:any) {
+            handleServerNetworkError(err, thunkAPI.dispatch)
+            return thunkAPI.rejectWithValue({}) //нужно вернуть хотьб и пустой обьект
+        }
 }
-    },
-    extraReducers:builder => {
-        builder.addCase(loginTC.fulfilled,(state,action)=>{
+)
+
+
+const slice = createSlice({
+    name: 'auth',
+    initialState: initialState,
+    reducers: {
+        setIsLoggedInAC(state,action:PayloadAction<{isLoggedIn:boolean}>){
             state.isLoggedIn=action.payload.isLoggedIn
+        }
+    },
+    extraReducers: builder => {
+        builder.addCase(loginTC.fulfilled, (state, action) => {
+            state.isLoggedIn = action.payload.isLoggedIn
+        });
+        builder.addCase(logautTC.fulfilled, (state) => {
+            state.isLoggedIn =false
         })
     }
 
 });
 
 
-export const authReducer=slice.reducer;
-export const setIsLoggedInAC=slice.actions.setIsLoggedInAC;
-
+export const authReducer = slice.reducer;
+export const {setIsLoggedInAC}=slice.actions
 // export const authReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
 //     switch (action.type) {
 //         case 'login/SET-IS-LOGGED-IN':
@@ -61,33 +82,33 @@ export const setIsLoggedInAC=slice.actions.setIsLoggedInAC;
 // }
 // actions
 //export const setIsLoggedInAC = (value: boolean) =>
-  //  ({type: 'login/SET-IS-LOGGED-IN', value} as const)
+//  ({type: 'login/SET-IS-LOGGED-IN', value} as const)
 
 // thunks
 
 
-export const logautTC = () => {  //санка вылогинивания
-    return (dispatch: Dispatch) => {
-        dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
-        authAPI.logaut()
-            .then((res) => {
-                if (res.data.resultCode === 0) {
-                    dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
-                    dispatch(setIsLoggedInAC({value:false}));
-                } else {
-                    dispatch(setAppStatusAC({value:'failed'}))
-                    dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
-                }
-            })
-            .catch((err: AxiosError) => {
-                handleServerNetworkError(err, dispatch)
-            })
-    };
-}
+// export const logautTC = () => {  //санка вылогинивания
+//     return (dispatch: Dispatch) => {
+//         dispatch(setAppStatusAC({value:'loading'})) //крутилка вкл
+//         authAPI.logaut()
+//             .then((res) => {
+//                 if (res.data.resultCode === 0) {
+//                     dispatch(setAppStatusAC({value:'failed'})) //крутилка выкл
+//                     dispatch(setIsLoggedInAC({value:false}));
+//                 } else {
+//                     dispatch(setAppStatusAC({value:'failed'}))
+//                     dispatch(errorAppMessageAC({value:res.data.messages[0]})); //достаем из массива сообщение об ошибке
+//                 }
+//             })
+//             .catch((err: AxiosError) => {
+//                 handleServerNetworkError(err, dispatch)
+//             })
+//     };
+// }
 
 
 // types
-type ActionsType = ReturnType<typeof setIsLoggedInAC>
-    | ReturnType<typeof setAppStatusAC> //крутилка
-    | ReturnType<typeof errorAppMessageAC> //ошибка
+// type ActionsType =
+//     | ReturnType<typeof setAppStatusAC> //крутилка
+//     | ReturnType<typeof errorAppMessageAC> //ошибка
 

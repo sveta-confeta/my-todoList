@@ -61,7 +61,9 @@ export const Login = () => {
     }
 
 
-    return <Grid container justifyContent={'center'}>
+    return <>
+        <p>для теста введите email: _svet_@tut.by , password:101080</p>
+    <Grid container justifyContent={'center'}>
         <Paper className={s.loginForm}  elevation={3}>
             <p className={s.title}>Login In</p>
 
@@ -92,5 +94,6 @@ export const Login = () => {
             </form>
         </Paper>
     </Grid>
+    </>
 }
 

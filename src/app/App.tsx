@@ -40,7 +40,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<CreateTodolists/>}/>
                 <Route path="/login" element={<Login/>}/>
-                {/*<Route path='*' element={<h1>404 page not found</h1>}/>*/}
+                <Route path='*' element={<h1>404 page not found</h1>}/>
 
             </Routes>
         </div>
