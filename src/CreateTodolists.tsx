@@ -5,7 +5,7 @@ import {AddItemForm} from "./components/AddItemsForm/AddItemForm";
 import {Todolist} from "./Todolist";
 import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch, useAppSelector} from "./redux/redux-store";
-import {addTaskAC, StateType, TasksAddThunkCreator} from "./reducers/tasksReducer";
+import { StateType, TasksAddThunkCreator} from "./reducers/tasksReducer";
 import {
     AllTodolistsType,
     filteredTaskAC,
@@ -61,8 +61,8 @@ export const CreateTodolists = () => {
         // const copyTasks = {...tasks};
         // copyTasks[todolistID] = [{id: v1(), task: value, isDone: false}, ...tasks[todolistID]];
         // setTasks(copyTasks);
-        dispatch(TasksAddThunkCreator(todolistID, value))
-    }, [dispatch, addTaskAC])
+        dispatch(TasksAddThunkCreator({todolistID, title:value}))
+    }, [])
 
 
     const filteredTask = useCallback((todolistID: string, value: string) => {
@@ -87,7 +87,7 @@ export const CreateTodolists = () => {
 
     const titleTodolist = useCallback((todolistID: string, title: string) => {
         // setTodolists(todolists.map(m => todolistID === m.id ? {...m, titleTodolist: title} : m));
-        dispatch(titleTodolistThunkCreator(todolistID, title))
+        dispatch(titleTodolistThunkCreator({todolistID, title}))
     }, []);
 
     // if(!isLogin){

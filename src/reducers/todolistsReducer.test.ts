@@ -1,11 +1,8 @@
 import {v1} from "uuid";
 import {
-    addTodolistsAC,
     AllTodolistsType, disabledStatusTodolistAC,
-    filteredTaskAC, getTodolistsAC,
-    removeTodolistAC,
-    titleTodolistAC,
-    TodolistReducer
+    filteredTaskAC, titleTodolistThunkCreator, todolistAddThunkCreator, todolistDeleteThunkCreator,
+    TodolistReducer, todolistsThunk
 } from "./todolistsReducer";
 import {RequestStatusType} from "./appReducer";
 
@@ -34,7 +31,7 @@ test('FILTERED-TASK', ()=>{
 
 test('REMOVE-TODOLIST', ()=>{
 
-    const endState=TodolistReducer(startState,removeTodolistAC({todolistID:todolistID_1}));
+    const endState=TodolistReducer(startState,todolistDeleteThunkCreator.fulfilled({todolistID:todolistID_1}, '',todolistID_1 ));
 
     expect(endState.length).toBe(1);
 })
@@ -43,7 +40,7 @@ test('TITLE-TODOLIST', ()=>{
 
     let newTitle='What to watch TV';
 
-    const endState=TodolistReducer(startState,titleTodolistAC({todolistID:todolistID_1,title:newTitle}));
+    const endState=TodolistReducer(startState,titleTodolistThunkCreator.fulfilled({todolistID:todolistID_1,title:newTitle},'',{todolistID:todolistID_1,title:newTitle},));
 
     expect(endState[0].title).toBe(newTitle);
     expect(endState[1].title).toBe(   "What to buy");
@@ -60,7 +57,7 @@ test('ADD-TODOLIST', ()=>{
     }
 
 
-    const endState=TodolistReducer(startState,addTodolistsAC({item}));
+    const endState=TodolistReducer(startState,(todolistAddThunkCreator.fulfilled({item},'',item.title)));
 
      expect(endState[0].title).toBe('REACT');
     expect(endState.length).toBe(  3);
@@ -68,10 +65,10 @@ test('ADD-TODOLIST', ()=>{
 })
 test('GET-TODOLIST', ()=>{ //добавление тодолистов из api
 //но когда мы создаем тодолисты -мы должны создать место для тасок в новосозданных тудулистах
-    let todolists=startState;//тодолисты возьмем из startState как будто мы из получили из сервера
+    let todolists={todolists:startState};//тодолисты возьмем из startState как будто мы из получили из сервера
 
 
-    const endState=TodolistReducer(startState,getTodolistsAC({todolists}));
+    const endState=TodolistReducer(startState,todolistsThunk.fulfilled(todolists,''));//ecли параметров нет то нету и второго todolists в конце
 
     expect(endState[0].order).toBe(1);
     expect(endState.length).toBe(  2);

@@ -1,7 +1,5 @@
-import React, {ChangeEvent, useCallback, useState,} from 'react';
+import React, {ChangeEvent, useState,} from 'react';
 import {TextField} from "@mui/material";
-import s from './../TaskMap/Task.module.css'
-
 
 
 type EditSpanPropsType={
@@ -14,7 +12,6 @@ const EditSpan = React.memo((props:EditSpanPropsType) =>{
     const[editMode,setEditMode]=useState<boolean>(false);//для редактирования
 
     const onChangeHandler=(event:ChangeEvent<HTMLInputElement>)=>{
-        //debugger
         setTitle(event.currentTarget.value)
     }
     const onBlurHanter= (()=>{

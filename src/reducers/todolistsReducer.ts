@@ -4,7 +4,7 @@ import {todolistApi} from "../api/ todolist-api";
 import {errorAppMessageAC, RequestStatusType, setAppStatusAC} from "./appReducer";
 import {handleServerNetworkError} from "../utils/error-util";
 import {AxiosError} from "axios";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
 export const todolistsTasksID = {
@@ -18,43 +18,117 @@ const initialState: Array<AllTodolistsType> = [
     // {id: todolistsTasksID.todolistID_2, titleTodolist: 'What to read', filter: 'All'},
 ];
 
+export const todolistsThunk = createAsyncThunk('task/todolistsThunk', async (param, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({value: 'loading'}))
+    const res = await todolistApi.getTodolist()
+    try {
+        thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+        return {todolists: res.data}
+
+    } //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
+    catch (err: any) {
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({})
+    }
+
+})
+
+
+export const todolistDeleteThunkCreator = createAsyncThunk('task/todolistDelete', async (todolistID: string, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({value: 'loading'}))
+    thunkAPI.dispatch(disabledStatusTodolistAC({todolistID, disabledStatus: 'loading'})); //кнопка дизаблется
+    const res = await todolistApi.deleteTodolist(todolistID)
+    try {
+        thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+        // dispatch(disabledStatusTodolistAC(todolistID,'failed')); мы удаляем тодолист, поэтому нет смысла восстанавливать кнопку
+        return {todolistID: todolistID}
+
+    } //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
+    catch (err: any) {
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({})
+    }
+
+})
+
+export const todolistAddThunkCreator = createAsyncThunk('task/todolistAdd', async (title: string, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({value: 'loading'}))
+    const res = await todolistApi.createNewTodolist(title)
+    try {
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+            return  {item: res.data.data.item}
+        } else {
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+            thunkAPI.dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
+            return thunkAPI.rejectWithValue({})
+        }
+    } //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
+    catch (err: any) {
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({})
+    }
+})
+
+export const titleTodolistThunkCreator = createAsyncThunk('task/titleTodolis', async (param:{todolistID: string, title: string}, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({value: 'loading'}))
+    const res = await todolistApi.updateTodoTitle(param.todolistID, param.title)
+    try {
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+           return {todolistID: param.todolistID, title: param.title}
+        } else {
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
+            thunkAPI.dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
+            return thunkAPI.rejectWithValue({})
+        }
+    } //get запрос за тасками. хочет id тодолиста в котором создавать будем таски
+    catch (err: any) {
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({})
+    }
+})
+
 export const slice = createSlice({
     name: 'todolists',
     initialState: initialState,
     reducers: {
         filteredTaskAC(state, action: PayloadAction<{ todolistID: string, value: string }>) {
             const index = state.findIndex(fi => fi.id === action.payload.todolistID);
-            state[index].filter=action.payload.value;
+            state[index].filter = action.payload.value;
         },
-        removeTodolistAC(state, action: PayloadAction<{ todolistID: string }>) {
+        disabledStatusTodolistAC(state, action: PayloadAction<{ todolistID: string, disabledStatus: RequestStatusType }>) {
+            const index = state.findIndex(fi => fi.id === action.payload.todolistID);
+            state[index].disabledStatus = action.payload.disabledStatus
+        },
+
+    },
+    extraReducers: builder => {
+        builder.addCase(todolistsThunk.fulfilled, (state, action) => {
+            return action.payload.todolists.map(m => ({...m, filter: 'All', disabledStatus: 'failed'}))
+        })
+        builder.addCase(todolistDeleteThunkCreator.fulfilled, (state, action) => {
             const index = state.findIndex(fi => fi.id === action.payload.todolistID);
             if (index > -1) {
                 state.splice(index, 1);
             }
-
-        },
-        titleTodolistAC(state, action: PayloadAction<{ todolistID: string, title: string }>) {
-            const index = state.findIndex(fi => fi.id === action.payload.todolistID);
-            state[index].title=action.payload.title;
-        },
-        addTodolistsAC(state, action: PayloadAction<{ item: ApiTodolistsType }>) {
+        })
+        builder.addCase(todolistAddThunkCreator.fulfilled, (state, action) => {
             state.unshift({...action.payload.item, filter: 'All', disabledStatus: 'failed'})
-        },
-        getTodolistsAC(state, action: PayloadAction<{ todolists: Array<ApiTodolistsType> }>) {
-            return action.payload.todolists.map(m => ({...m, filter: 'All', disabledStatus: 'failed'}))
-        },
-        disabledStatusTodolistAC(state, action: PayloadAction<{ todolistID: string, disabledStatus: RequestStatusType }>) {
+        })
+        builder.addCase(titleTodolistThunkCreator.fulfilled, (state, action) => {
             const index = state.findIndex(fi => fi.id === action.payload.todolistID);
-            state[index].disabledStatus=action.payload.disabledStatus
-        },
+            state[index].title = action.payload.title;
+        })
+
     }
 
 });
 
 export const TodolistReducer = slice.reducer;
 export const {
-    filteredTaskAC, removeTodolistAC, titleTodolistAC, addTodolistsAC,
-    getTodolistsAC, disabledStatusTodolistAC
+    filteredTaskAC,
+    disabledStatusTodolistAC
 } = slice.actions;
 // export const TodolistReducer = (state: Array<AllTodolistsType> = initialState, action: ActionType): Array<AllTodolistsType> => {
 //     switch (action.type) {
@@ -107,65 +181,6 @@ export const {
 //   todolistID, disabledStatus,
 //} as const);//disabled buttons
 
-export const todolistsThunk = () => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC({value: 'loading'}))
-    todolistApi.getTodolist().then((res) => { //get запрос за тодолистами
-        dispatch(setAppStatusAC({value: 'failed'}))
-        dispatch(getTodolistsAC({todolists: res.data}))
-    })
-}
-
-export const todolistDeleteThunkCreator = (todolistID: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC({value: 'loading'})) //крутилка включилась
-    dispatch(disabledStatusTodolistAC({todolistID: todolistID, disabledStatus: 'loading'})); //кнопка дизаблется
-    todolistApi.deleteTodolist(todolistID)
-        .then((res) => { //удаление тодолистов
-            dispatch(setAppStatusAC({value: 'failed'}))//крутилка отключилась
-            // dispatch(disabledStatusTodolistAC(todolistID,'failed')); мы удаляем тодолист, поэтому нет смысла восстанавливать кнопку
-            dispatch(removeTodolistAC({todolistID: todolistID}))
-        })
-        .catch((err: AxiosError) => {
-            handleServerNetworkError(err, dispatch)
-            // dispatch(setAppStatusAC('failed'))//крутилка отключилась
-            // dispatch(errorAppMessageAC(err.message))
-
-        })
-}
-export const todolistAddThunkCreator = (title: string) => {
-    return async (dispatch: Dispatch) => {
-        try {
-            dispatch(setAppStatusAC({value: 'loading'}))
-            const res = await todolistApi.createNewTodolist(title)
-            if (res.data.resultCode === 0) {
-                dispatch(setAppStatusAC({value: 'failed'}))
-                dispatch(addTodolistsAC({item: res.data.data.item}))
-            } else {
-                dispatch(setAppStatusAC({value: 'failed'}))
-                dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
-            }
-        } catch (err) {
-            let error = err as AxiosError
-            handleServerNetworkError(error, dispatch)
-        }
-    };
-}
-
-export const titleTodolistThunkCreator = (todolistID: string, title: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC({value: 'loading'}))
-    todolistApi.updateTodoTitle(todolistID, title)
-        .then((res) => {
-            if (res.data.resultCode === 0) {
-                dispatch(setAppStatusAC({value: 'failed'}))
-                dispatch(titleTodolistAC({todolistID: todolistID, title: title}))
-            } else {
-                dispatch(setAppStatusAC({value: 'failed'}))
-                dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
-            }
-        })
-        .catch((err: AxiosError) => {
-            handleServerNetworkError(err, dispatch)
-        })
-}
 
 export type ApiTodolistsType = {
     "id": string,

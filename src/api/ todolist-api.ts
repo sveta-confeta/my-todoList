@@ -121,12 +121,12 @@ export enum TaskPriorities {
 }
 
  export type UpdateTask={  //for put
-     title: string,
-     description: string,
-     status: number,
-     priority: number,
-     startDate: string,
-     deadline: string,
+     title?: string
+     description?: string
+     status?: TaskStatuses
+     priority?: TaskPriorities
+     startDate?: string
+     deadline?: string
 
  }
 

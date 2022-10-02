@@ -1,12 +1,9 @@
 
 import {StateType, TasksReducer} from "./tasksReducer";
 import {
-    addTodolistsAC,
-    AllTodolistsType,
-    removeTodolistAC,
+    AllTodolistsType, todolistAddThunkCreator,
     TodolistReducer
 } from "./todolistsReducer";
-import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
 
 test('ids should be equals', () => {
     const startTasksState: StateType = {};
@@ -18,7 +15,7 @@ test('ids should be equals', () => {
         "addedDate": '',
         "order": 4,
     }
-    const action = addTodolistsAC({item});
+    const action = todolistAddThunkCreator.fulfilled({item},'',item.title);
 
     const endTasksState =  TasksReducer(startTasksState, action) //в результате будет создана 'ggg':[]
     const endTodolistsState = TodolistReducer(startTodolistsState, action)//в результате будет создана {id:action.newTodolistID, titleTodolist: action.titleTodolist, filter: 'All'}

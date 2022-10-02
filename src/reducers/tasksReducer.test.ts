@@ -1,12 +1,9 @@
 import {
-    addTaskAC,
-    apdateTaskAC,
-    chengeCheckBoxStatusAC,
-    StateType, TasksDeleteThunkCreator,
-    TasksReducer, TasksThunkCreator
+    StateType, TasksAddThunkCreator, TasksDeleteThunkCreator,
+    TasksReducer, TasksThunkCreator, TaskUpdateStatusThunkCreator, TaskUpdateTitleThunkCreator
 } from "./tasksReducer";
-import {addTodolistsAC, getTodolistsAC} from "./todolistsReducer";
 import {TaskPriorities, TaskStatuses} from "../api/ todolist-api";
+import {todolistAddThunkCreator} from "./todolistsReducer";
 
 let startState: StateType;
 
@@ -84,34 +81,34 @@ test("REMOVE-TASK", () => {
 test('ADD-TASK', () => {
 
 
-    let task = startState["todolistId1"][0];
+    let task:any = startState["todolistId1"][0];
 
-    const endState = TasksReducer(startState, addTaskAC({item: task}));
+    const endState = TasksReducer(startState, TasksAddThunkCreator.fulfilled(task,"",{todolistID:task.todoListId,title:task.title}));
 
     expect(endState["todolistId1"][0].title).toBe('Css');
 });
 
 test('CHENGE-STATUS-CHECKBOX', () => {
 
+    const subject={taskID: '1', status: TaskStatuses.New, todolistID: "todolistId1"}
 
-    const endState = TasksReducer(startState, chengeCheckBoxStatusAC({
-        todolistID: "todolistId1",
-        id: '1',
-        status: TaskStatuses.New
-    }))
+
+    const endState = TasksReducer(startState, TaskUpdateStatusThunkCreator.fulfilled(subject,'',subject))
 
     expect(endState["todolistId1"][0].status).toBe(TaskStatuses.New);
     expect(endState["todolistId2"][0].status).toBe(TaskStatuses.New);
 });
 
-test('APDATE-TASK', () => {
-    let newTitle = 'ggggg';
-    const endState = TasksReducer(startState, apdateTaskAC({todolistID: "todolistId1", taskID: '2', title: newTitle}))
+test('UPDATE-TASK', () => {
+    let title = 'ggggg';
+    const subject={ taskId: '2',model: {title},todolistId: "todolistId1"}
+    const endState = TasksReducer(startState, TaskUpdateTitleThunkCreator.fulfilled(subject, "", subject))
 
     expect(endState["todolistId2"][0].title).toBe("Milk");
     expect(endState["todolistId1"][1].title).toBe('ggggg');
 
 });
+
 test('ADD-TODOLIST', () => {
 
     let item = {
@@ -120,7 +117,7 @@ test('ADD-TODOLIST', () => {
         "addedDate": '',
         "order": 4,
     }
-    const endState = TasksReducer(startState, addTodolistsAC({item}));
+    const endState = TasksReducer(startState, todolistAddThunkCreator.fulfilled({item},'',item.title));
 
 
     const keys = Object.keys(endState);//возращает массив в виде строковых ключей передаваемого обьекта
@@ -134,30 +131,6 @@ test('ADD-TODOLIST', () => {
     expect(endState[newKey]).toEqual([]); //если новый ключ нашелся то он должен быть равен пустому массиву
 
 });
-
-test('GET-TODOLIST i tasks', () => {  //получили с "сервера" тодолисты и теперь нам нужно добавть место для тасок
-    //{[id]:[],[id]:[],},те добавить пустые массивы
-
-
-    let action = getTodolistsAC({
-        todolists: [
-            {id: '1', title: "What to learn", addedDate: '', order: 1},
-            {id: '2', title: "What to buy", addedDate: '', order: 2},
-        ]
-    });
-
-    const endState = TasksReducer({}, action);
-
-
-    const keys = Object.keys(endState);//возращает массив в виде строковых ключей передаваемого обьекта
-
-
-    expect(keys.length).toBe(2);//в массиве кеу должно теперь быть 3 строковых ключа
-    expect(endState['1']).toStrictEqual([])
-    expect(endState['2']).toStrictEqual([])
-
-});
-
 //теперь вместо AC явного он сидит в TasksThunkCreator.fulfilled
 test('get tasks for api', () => {
 
