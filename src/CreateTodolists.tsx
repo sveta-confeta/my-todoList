@@ -99,7 +99,7 @@ export const CreateTodolists = () => {
         <div>
             <ErrorSnackbar/>
             {/*крутилка:*/}
-            {status === 'loading' && <CircularProgress disableShrink/>}
+            {status === 'loading' && <CircularProgress disableShrink style={{'position': 'absolute','top':'10%','left':'50%'}}/>}
                 <div className={'CreateTodolists'}>
                     <AddItemForm addTask={addTodolists}/>
                 </div>

@@ -15,7 +15,6 @@ type TasksMapPropsType = {
 }
 
 export const TasksMap = React.memo(({ todolistID,filter}: TasksMapPropsType) => {
-    debugger
     const tasks =useAppSelector<Array<ItemType>>(state => state.tasks[todolistID]); //filter возращает массив-а нам нужен 1 обьект в массиве
     const status=useAppSelector<RequestStatusType>(state=>state.app.status);
     let tasksFilter = tasks;

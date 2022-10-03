@@ -5,7 +5,7 @@ import {ButtonForm} from "../Button";
 import {useSelector} from "react-redux";
 import {
     ItemType,
-    TasksDeleteThunkCreator,
+    TasksDeleteThunkCreator, TaskUpdateStatusThunkCreator,
     TaskUpdateTitleThunkCreator
 } from "../../reducers/tasksReducer";
 import {AppRootStateType, useAppDispatch, useAppSelector} from "../../redux/redux-store";
@@ -27,7 +27,7 @@ export const Task = (props:TaskPropsType) => {
     const dispatch = useAppDispatch();
 
 
-    const callbackApdateTask = useCallback((elID: string, title: string) => {
+    const callbackUpdateTask = useCallback((elID: string, title: string) => {
         dispatch(TaskUpdateTitleThunkCreator({
             taskId: elID,
             model: {title},
@@ -39,22 +39,16 @@ export const Task = (props:TaskPropsType) => {
 
     }, [])
 
-// const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{    //!!!!!!!!!!!!!!
-//         // let doneValue= event.currentTarget.checked; //в чекед сидит либо тру либо фолз
-//     //  onChangeCheckbox(tasks.id, doneValue ? TaskStatuses.Completed :TaskStatuses.New)
-//     TaskUpdateStatusThunkCreator({
-//         taskID: props.taskID,
-//         status: {event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New},
-//         todolistID: props.todolistID
-//     })
+const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{
+        // let doneValue= event.currentTarget.checked; //в чекед сидит либо тру либо фолз
+    //  onChangeCheckbox(tasks.id, doneValue ? TaskStatuses.Completed :TaskStatuses.New)
 
-    const checkedHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        TaskUpdateTitleThunkCreator ({
-            taskId: props.taskID,
-            model: {status: e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New},
-            todolistId: props.todolistID
-        })
-    }, [])
+    dispatch(TaskUpdateStatusThunkCreator({
+        taskID: props.taskID,
+        status:event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New,
+        todolistID: props.todolistID
+    }))
+    }
 
 
     // const onChangeCheckbox = useCallback((elID: string, status:TaskStatuses) => { //изменения статуса таски
@@ -64,10 +58,8 @@ export const Task = (props:TaskPropsType) => {
         <div className={s.liTask}>
             <Checkbox  className={s.checkbox} color="success" checked={tasks.status===TaskStatuses.Completed}//было tasks.isDone
                       onChange={checkedHandler}/>
-            {/*<span>{el.task}</span> так было */}
             <span className={`${s.span} ${tasks.status===TaskStatuses.Completed ? s.isDone : s.notDone}`}>
-                <EditSpan title={tasks.title} apdateTask={(title: string) => callbackApdateTask(tasks.id, title)}/>
-                {/*<button onClick={() => props.removeTask(el.id)}>x</button>*/}
+                <EditSpan title={tasks.title} apdateTask={(title: string) => callbackUpdateTask(tasks.id, title)}/>
                 <ButtonForm name={'x'} callback={() => removeTaskHandler(tasks.id)} disabledStatus={props.disabledStatus}/>
                     </span>
         </div>

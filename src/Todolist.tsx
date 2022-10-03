@@ -16,14 +16,12 @@ export type TodolistPropsType = {
     title: string //это не меняется
     tasks: Array<ItemType> //а это каждый раз приходит разное, в зависимости от фильтра получается всегда новый обьект
     //поэтому фильтрацию мы будем делать в самом тудулисте
-
     filteredTask: (todolistID: string, value: string) => void
     addTask: (todolistID: string, value: string) => void
     disabledStatus: RequestStatusType
     filter: string
     todolistID: string//это не меняется
     removeTodolist: (todolistID: string) => void
-
     titleTodolist: (todolistID: string, title: string) => void
 }
 
