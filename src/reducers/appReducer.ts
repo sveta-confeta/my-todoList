@@ -15,26 +15,21 @@ const initialState = {
 //если статус 'loading' показываем крутилку
 // если статус 'idle', 'succeeded' | 'failed' -прячем крутилку
 
-export const initializeAppTC = createAsyncThunk('app/initializeApp', async (param,thunkAPI)  => {
+export const initializeAppTC = createAsyncThunk('app/initializeApp', async (param, thunkAPI) => {
     thunkAPI.dispatch(setAppStatusAC({value: 'loading'})) //крутилка вкл
     try {
         const res = await authAPI.me();
         if (res.data.resultCode === 0) {
             thunkAPI.dispatch(setAppStatusAC({value: 'failed'})) //крутилка выкл
-           //при удачном запросе автоматом попадаем в экстраредьюссер фулфилд и там меняется initial state
+            thunkAPI.dispatch(setIsLoggedInAC({value:true}));
+            //при удачном запросе автоматом попадаем в экстраредьюссер фулфилд и там меняется initial state
         } else {
             thunkAPI.dispatch(setAppStatusAC({value: 'failed'}))
             thunkAPI.dispatch(errorAppMessageAC({value: res.data.messages[0]})); //достаем из массива сообщение об ошибке
         }
+    } catch (err: any) {
+        handleServerNetworkError(err, thunkAPI.dispatch)
     }
-    catch(err:any) {
-            handleServerNetworkError(err, thunkAPI.dispatch)
-        }
-    finally{
-             return; //тоже всегда попадаем в экстраредьюссер и меняем логику
-        }
-
-
 })
 const slice = createSlice({
     name: 'app',
@@ -47,10 +42,11 @@ const slice = createSlice({
             state.error = action.payload.value
         }
     },
-    extraReducers:builder => {
-        builder.addCase(initializeAppTC.fulfilled,(state)=>{
-        state.isInitialized=true;
-    })}
+    extraReducers: builder => {
+        builder.addCase(initializeAppTC.fulfilled, (state) => {
+            state.isInitialized = true;
+        })
+    }
 
 });
 
@@ -76,9 +72,6 @@ export const {setAppStatusAC, errorAppMessageAC} = slice.actions;
 //export const setAppStatusAC = (status: RequestStatusType) => ({type: 'APP/SET-STATUS', status,} as const);
 //export const errorAppMessageAC = (error: string | null) => ({type: 'APP-ERROR', error,} as const);
 //export const initializedAC = (value: boolean) => ({type: 'INITIALIZED', value,} as const);
-
-
-
 
 
 export type AppActionsType = ReturnType<typeof setAppStatusAC>

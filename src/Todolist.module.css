@@ -7,11 +7,19 @@
     justify-content: center;
     border: 1px solid aquamarine;
     padding: 20px;
-    max-width: 250px;
+    width: 350px;
 }
-.wrapperForm{
-    margin-bottom: 20px;
+.wrapperForm {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
 }
+.wrapperForm span{
+    font-size: 25px;
+    word-wrap: break-word;
+    padding: 0 5px;
+}
+
 .input_wrapper{
     margin-bottom: 6px;
 }
@@ -22,6 +30,7 @@ ul.todolist_tasks {
 
 ul.todolist_tasks .li {
     margin: 10px 0;
+    padding: 10px 5px;
     list-style: none;
     border-radius: 5px;
     background-color: transparent !important;
@@ -85,10 +94,7 @@ ul.todolist_tasks .li button {
     align-items: center;
 }
 
-.wrapperForm {
-    display: flex;
-    align-items: center;
-}
+
 
 h3 {
     margin-right: 20px;
@@ -96,8 +102,6 @@ h3 {
 
 .btn_set {
     margin-top: auto;
-
-    width: 100%;
 }
 
 

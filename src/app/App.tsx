@@ -24,7 +24,7 @@ function App() {
         dispatch(initializeAppTC()) //get запрос залогинена я или нет
 
     }, []) //1 раз нужно получить тодолисты
-
+    console.log(isLogin)
     if (!isIniatialize) {
         return <CircularProgress disableShrink/> //покажи крутилку
     }

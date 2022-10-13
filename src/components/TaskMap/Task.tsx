@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback} from 'react';
+import React, {ChangeEvent, useCallback, useMemo} from 'react';
 import {Checkbox} from "@mui/material";
 import EditSpan from "../EditSpan/EditSpan";
 import {ButtonForm} from "../Button";
@@ -20,7 +20,7 @@ type TaskPropsType={
     disabledStatus:RequestStatusType
 }
 
-export const Task = (props:TaskPropsType) => {
+export const Task = React.memo(  (props:TaskPropsType) => {
     // const todolist=useSelector<AppRootStateType,AllTodolistsType[]>(state=> state.todolists.filter(f=>f.id ==props.todolistID)[0])
     const todolist=useSelector<AppRootStateType,AllTodolistsType>(state=> state.todolists.filter(f=> f.id===props.todolistID)[0])
     const tasks=useSelector<AppRootStateType,ItemType>(state=> state.tasks[props.todolistID].filter(f=> f.id==props.taskID)[0])
@@ -64,5 +64,5 @@ const checkedHandler=(event:ChangeEvent<HTMLInputElement>)=>{
                     </span>
         </div>
     )
-};
+});
 
