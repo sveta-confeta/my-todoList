@@ -90,8 +90,8 @@ export const TasksAddThunkCreator = createAsyncThunk('task/addTask', async (para
 
 export const TaskUpdateTitleThunkCreator = createAsyncThunk('tasks/updateTask', async (param: { taskId: string, model: UpdateTask, todolistId: string },
                                                                                        thunkAPI) => {
+    debugger
     const state = thunkAPI.getState() as AppRootStateType
-
     const task = state.tasks[param.todolistId].find(t => t.id === param.taskId)
     if (!task) {
         return thunkAPI.rejectWithValue('task not found in the state')
@@ -102,13 +102,14 @@ export const TaskUpdateTitleThunkCreator = createAsyncThunk('tasks/updateTask', 
         description: task.description,
         priority: task.priority,
         startDate: task.startDate,
-        title: task.title,
+        title: param.model.title,
         status: task.status,
     }
     thunkAPI.dispatch(setAppStatusAC({value: 'loading'}))
     const res = await todolistApi.updateTask(param.todolistId, param.taskId, apiModel)
     try {
         if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(setAppStatusAC({value: 'failed'})) //опять же убираем крутилку
             return param
         } else {
             thunkAPI.dispatch(setAppStatusAC({value: 'failed'})) //опять же убираем крутилку
